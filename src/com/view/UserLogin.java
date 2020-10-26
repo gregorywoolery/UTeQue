@@ -20,17 +20,38 @@ import java.awt.GridBagLayout;
 import java.awt.Image;
 import java.awt.GridBagConstraints;
 import java.awt.Rectangle;
+import java.awt.Toolkit;
+
 import javax.swing.SwingConstants;
 import javax.swing.JRadioButton;
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.border.TitledBorder;
 import javax.swing.JPasswordField;
+import java.awt.Cursor;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 public class UserLogin extends JFrame {
+	private JPanel mainPanel;
+	private JPanel bannerPanel;
+	private JLabel bannerIcon;
+	private JPanel systemInfo_Panel;
+	private JLabel systemTitle_Label;
+	private JLabel sysSchool_Label;
+	private JLabel sysType_Label;
+	private JPanel auth_panel;
+	private JLabel username_Label;
+	private JLabel password_Label;
 	private JTextField txtUsername;
 	private JPasswordField txtPassword;
+	private JPanel userSelect_Panel;
+	private JRadioButton student_rdbtn;
+	private JRadioButton staff_rdbtn;
 	private final ButtonGroup buttonGroup = new ButtonGroup();
+	private JPanel login_Panel;
+	private JButton login_btn;
+	private JLabel auth_message;
 
 	/**
 	 * Launch the application.
@@ -62,21 +83,21 @@ public class UserLogin extends JFrame {
 		ImageIcon frameIcon = new ImageIcon("./Resources/img/Utech_logo.jpg");
 		setIconImage(frameIcon.getImage());
 		
-		JPanel mainPanel = new JPanel();
+		mainPanel = new JPanel();
 		mainPanel.setBackground(new Color(0, 0, 51));
 		getContentPane().add(mainPanel, BorderLayout.EAST);
 		mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));
 		
-		JPanel bannerPanel = new JPanel();
+		bannerPanel = new JPanel();
 		bannerPanel.setBackground(new Color(0, 0, 51));
 		mainPanel.add(bannerPanel);
 		
-		JLabel bannerIcon = new JLabel(new ImageIcon(UserLogin.class.getResource("/img/usericon.png")));
+		bannerIcon = new JLabel(new ImageIcon(UserLogin.class.getResource("/img/usericon.png")));
 		bannerIcon.setPreferredSize(new Dimension(130, 150));
 		bannerIcon.setSize(new Dimension(20, 20));
 		bannerPanel.add(bannerIcon);
 		
-		JPanel systemInfo_Panel = new JPanel();
+		systemInfo_Panel = new JPanel();
 		systemInfo_Panel.setBackground(new Color(0, 0, 51));
 		systemInfo_Panel.setPreferredSize(new Dimension(400, 20));
 		systemInfo_Panel.setSize(new Dimension(400, 50));
@@ -88,7 +109,7 @@ public class UserLogin extends JFrame {
 		gbl_systemInfo_Panel.rowWeights = new double[]{0.0, 0.0, 0.0, Double.MIN_VALUE};
 		systemInfo_Panel.setLayout(gbl_systemInfo_Panel);
 		
-		JLabel systemTitle_Label = new JLabel("UTeQue");
+		systemTitle_Label = new JLabel("UTeQue");
 		systemTitle_Label.setAlignmentX(Component.CENTER_ALIGNMENT);
 		systemTitle_Label.setFont(new Font("Times New Roman", Font.BOLD | Font.ITALIC, 20));
 		systemTitle_Label.setForeground(new Color(255, 255, 255));
@@ -99,7 +120,7 @@ public class UserLogin extends JFrame {
 		gbc_systemTitle_Label.gridy = 0;
 		systemInfo_Panel.add(systemTitle_Label, gbc_systemTitle_Label);
 		
-		JLabel sysSchool_Label = new JLabel("University of Technology");
+		sysSchool_Label = new JLabel("University of Technology");
 		sysSchool_Label.setFont(new Font("Times New Roman", Font.BOLD, 15));
 		sysSchool_Label.setForeground(new Color(255, 255, 255));
 		GridBagConstraints gbc_sysSchool_Label = new GridBagConstraints();
@@ -109,7 +130,7 @@ public class UserLogin extends JFrame {
 		gbc_sysSchool_Label.gridy = 1;
 		systemInfo_Panel.add(sysSchool_Label, gbc_sysSchool_Label);
 		
-		JLabel sysType_Label = new JLabel("Query Portal");
+		sysType_Label = new JLabel("Query Portal");
 		sysType_Label.setAlignmentX(Component.CENTER_ALIGNMENT);
 		sysType_Label.setFont(new Font("Times New Roman", Font.ITALIC, 15));
 		sysType_Label.setForeground(new Color(255, 255, 255));
@@ -120,15 +141,15 @@ public class UserLogin extends JFrame {
 		systemInfo_Panel.add(sysType_Label, gbc_sysType_Label);
 
 		
-		JPanel auth_panel = new JPanel();
+		auth_panel = new JPanel();
 		auth_panel.setMinimumSize(new Dimension(10, 7));
 		auth_panel.setBackground(new Color(0, 0, 51));
 		mainPanel.add(auth_panel);
 		GridBagLayout gbl_auth_panel = new GridBagLayout();
 		gbl_auth_panel.columnWidths = new int[]{63, 0, 267, 0};
-		gbl_auth_panel.rowHeights = new int[] {40, 40};
+		gbl_auth_panel.rowHeights = new int[] {40, 40, 0, 0};
 		gbl_auth_panel.columnWeights = new double[]{0.0, 0.0, 0.0, Double.MIN_VALUE};
-		gbl_auth_panel.rowWeights = new double[]{0.0, 0.0};
+		gbl_auth_panel.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0};
 		auth_panel.setLayout(gbl_auth_panel);
 		
 		// Resize icon to fit on label 
@@ -140,7 +161,7 @@ public class UserLogin extends JFrame {
 		ImageIcon passwordimageIcon = new ImageIcon(new ImageIcon(UserLogin.class.getResource(
 				"/img/lock-closed.png")).getImage().getScaledInstance(15, 15, Image.SCALE_DEFAULT));
 		
-		JLabel username_Label = new JLabel("");
+		username_Label = new JLabel("");
 		username_Label.setAlignmentX(Component.CENTER_ALIGNMENT);
 		username_Label.setSize(new Dimension(15, 15));
 		username_Label.setPreferredSize(new Dimension(15, 15));
@@ -155,6 +176,7 @@ public class UserLogin extends JFrame {
 				auth_panel.add(username_Label, gbc_username_Label);
 		
 		txtUsername = new JTextField();
+		txtUsername.setCaretColor(Color.WHITE);
 		txtUsername.setHorizontalAlignment(SwingConstants.CENTER);
 		txtUsername.setForeground(new Color(255, 255, 255));
 		txtUsername.setBackground(new Color(0, 0, 51));
@@ -174,7 +196,7 @@ public class UserLogin extends JFrame {
 		auth_panel.add(txtUsername, gbc_txtUsername);
 		txtUsername.setColumns(23);
 		
-		JLabel password_Label = new JLabel("");
+		password_Label = new JLabel("");
 		password_Label.setAlignmentX(Component.RIGHT_ALIGNMENT);
 		password_Label.setSize(new Dimension(15, 15));
 		password_Label.setPreferredSize(new Dimension(15, 15));
@@ -188,6 +210,7 @@ public class UserLogin extends JFrame {
 				auth_panel.add(password_Label, gbc_password_Label);
 		
 		txtPassword = new JPasswordField();
+		txtPassword.setCaretColor(Color.WHITE);
 		txtPassword.setForeground(new Color(255, 255, 255));
 		txtPassword.setHorizontalAlignment(SwingConstants.CENTER);
 		txtPassword.setBackground(new Color(0, 0, 51));
@@ -207,30 +230,42 @@ public class UserLogin extends JFrame {
 		gbc_txtPassword.gridy = 1;
 		auth_panel.add(txtPassword, gbc_txtPassword);
 		
-		JPanel userSelect_Panel = new JPanel();
+		auth_message = new JLabel("Invalid username or password.");
+		auth_message.setVisible(false);
+		auth_message.setForeground(new Color(255, 0, 0));
+		auth_message.setFont(new Font("Times New Roman", Font.BOLD, 14));
+		GridBagConstraints gbc_auth_message = new GridBagConstraints();
+		gbc_auth_message.gridx = 2;
+		gbc_auth_message.gridy = 3;
+		auth_panel.add(auth_message, gbc_auth_message);
+		
+		userSelect_Panel = new JPanel();
 		userSelect_Panel.setBackground(new Color(0, 0, 51));
 		mainPanel.add(userSelect_Panel);
 		
-		JRadioButton student_rdbtn = new JRadioButton("Student");
+		student_rdbtn = new JRadioButton("Student");
 		student_rdbtn.setFont(new Font("Times New Roman", Font.PLAIN, 13));
 		student_rdbtn.setForeground(new Color(255, 255, 255));
 		student_rdbtn.setBackground(new Color(0, 0, 51));
 		buttonGroup.add(student_rdbtn);
 		userSelect_Panel.add(student_rdbtn);
 		
-		JRadioButton staff_rdbtn = new JRadioButton("Staff");
+		staff_rdbtn = new JRadioButton("Staff");
 		staff_rdbtn.setForeground(new Color(255, 255, 255));
 		staff_rdbtn.setBackground(new Color(0, 0, 51));
 		staff_rdbtn.setFont(new Font("Times New Roman", Font.PLAIN, 13));
 		buttonGroup.add(staff_rdbtn);
 		userSelect_Panel.add(staff_rdbtn);
 		
-		JPanel login_Panel = new JPanel();
+		login_Panel = new JPanel();
 		login_Panel.setPreferredSize(new Dimension(10, 100));
 		login_Panel.setBackground(new Color(0, 0, 51));
 		mainPanel.add(login_Panel);
 		
-		JButton login_btn = new JButton("LOGIN");
+		login_btn = new JButton("LOGIN");
+
+
+		login_btn.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		login_btn.setAlignmentY(Component.BOTTOM_ALIGNMENT);
 		login_btn.setBorderPainted(false);
 		login_btn.setPreferredSize(new Dimension(70, 30));
@@ -242,6 +277,45 @@ public class UserLogin extends JFrame {
 				
 		login_Panel.add(login_btn);
 		
+		//Centers frame on screen
+		Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
+		this.setLocation(dim.width/2-this.getSize().width/2, dim.height/2-this.getSize().height/2);
 		
+		registerListeners();
+	}
+
+	private void registerListeners() {
+		login_btn.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				if(authenticateUser())
+					System.exit(0);
+				else
+					loginErrorMessage();
+			}
+			
+			//Changes button color when hovered over
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				login_btn.setBackground(new Color(250, 120, 217));
+			}
+			
+			//Changes button color when exited from hover over
+			@Override
+			public void mouseExited(MouseEvent e) {
+				login_btn.setBackground(new Color(255, 51, 204));		
+			}
+		});
+	}
+
+	//To be found in controllers when naming conventions are set up
+	private boolean authenticateUser() {
+		boolean auth = false;
+		return auth;
+	}
+	
+	//Displays error message with login validation has failed.
+	private void loginErrorMessage(){
+		auth_message.setVisible(true);
 	}
 }
