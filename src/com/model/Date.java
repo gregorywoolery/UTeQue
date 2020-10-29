@@ -3,21 +3,21 @@ package com.model;
 import java.io.Serializable;
 public class Date implements Serializable{
 	private static final long serialVersionUID = 1L;
-	private int Day;
-	private int Month;
-	private int Year;
+	private int day;
+	private int month;
+	private int year;
 	
 	//Default Constructor 
 	public Date() {
-		Day = 1;
-		Month = 1;
-		Year = 1900;
+		day = 1;
+		month = 1;
+		year = 1900;
 	}
 	//Primary Constructor
-	public Date(int d, int m, int y) {
-			this.Day = d;
-			this.Month = m;
-			this.Year = y;
+	public Date(int day, int month, int year) {
+			this.day = day;
+			this.month = month;
+			this.year = year;
 	}
 	//Copy Constructor
 	public Date(Date date) {
@@ -26,29 +26,29 @@ public class Date implements Serializable{
 		setYear(date.getYear());
 	}
 	//Setters and Getters
-	public void setDay(int d) {
-		Day = d;
+	public void setDay(int day) {
+		this.day = day;
 	}
 	public int getDay() {
-		return Day;
+		return day;
 	}
 	
-	public void setMonth(int m) {
-		Month = m;
+	public void setMonth(int month) {
+		this.month = month;
 	}
 	public int getMonth() {
-		return Month;
+		return month;
 	}
 	
-	public void setYear(int y) {
-		Year = y;
+	public void setYear(int year) {
+		this.year = year;
 	}
 	public int getYear() {
-		return Year;
+		return year;
 	}
 	@Override
 	public String toString() {
-		return "Date [Day=" + Day + ", Month=" + Month + ", Year=" + Year + "]";
+		return "Date [Day=" + day + ", Month=" + month + ", Year=" + year + "]";
 	}
 
 	
