@@ -280,16 +280,22 @@ public class UserLogin extends JFrame {
 		//Centers frame on screen
 		Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
 		this.setLocation(dim.width/2-this.getSize().width/2, dim.height/2-this.getSize().height/2);
-		
+		this.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
 		registerListeners();
 	}
-
+	public void disposeFrame() {
+		this.setVisible(false);
+	}
+	
 	private void registerListeners() {
 		login_btn.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				if(authenticateUser())
-					System.exit(0);
+				if(authenticateUser()) {
+					Dashboard dash = new Dashboard();
+					dash.setVisible(true);
+					disposeFrame();
+				}
 				else
 					loginErrorMessage();
 			}
@@ -310,12 +316,13 @@ public class UserLogin extends JFrame {
 
 	//To be found in controllers when naming conventions are set up
 	private boolean authenticateUser() {
-		boolean auth = false;
+		boolean auth = true;
 		return auth;
 	}
 	
 	//Displays error message with login validation has failed.
 	private void loginErrorMessage(){
+		
 		auth_message.setVisible(true);
 	}
 }
