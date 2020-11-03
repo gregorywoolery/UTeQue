@@ -1,8 +1,79 @@
 package com.model;
 
-public class Issue {
+import java.io.*;
+
+public class Issue implements Serializable{
+	//Attributes
+	protected static final long serialVersionUID = 1L;
+	private String type;
+	private String studentId;
+	private String message;
+	private Date scheduledDate;
+	private Date scheduledTime;
+	private String repId;
+	
+	//Getters and Setters
+	public String getType() {
+		return type;
+	}
+
+	public void setType(String type) {
+		this.type = type;
+	}
+
+	public String getStudentId() {
+		return studentId;
+	}
+
+	public void setStudentId(String studentId) {
+		this.studentId = studentId;
+	}
+
+	public String getMessage() {
+		return message;
+	}
+
+	public void setMessage(String message) {
+		this.message = message;
+	}
+
+	public Date getScheduledDate() {
+		return scheduledDate;
+	}
+
+	public void setScheduledDate(Date scheduledDate) {
+		this.scheduledDate = scheduledDate;
+	}
+
+	public Date getScheduledTime() {
+		return scheduledTime;
+	}
+
+	public void setScheduledTime(Date scheduledTime) {
+		this.scheduledTime = scheduledTime;
+	}
+
+	public String getRepId() {
+		return repId;
+	}
+
+	public void setRepId(String repId) {
+		this.repId = repId;
+	}
+	
 	
 
+	@Override
+	public String toString() {
+		return "Issue [Type=" + type + ", StudentId=" + studentId + ", mMssage=" + message + ", ScheduledDate="
+				+ scheduledDate + ", ScheduledTime=" + scheduledTime + ", RepId=" + repId + "]";
+	}
+
+	public void display() {
+		System.out.println(toString());
+		
+	}
+	
 	//Methods
 	public void viewAll(String type){
 		/*
@@ -13,7 +84,7 @@ public class Issue {
 		
 		
 	}
-	public void viewSpecific(String type, String ID) {
+	public void viewSpecific(String type, String id) {
 		/*
 		 * - Students should also be able to view a specific complaint or query and all its associated responses.
 		 */

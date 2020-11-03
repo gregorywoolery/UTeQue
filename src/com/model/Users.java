@@ -1,5 +1,6 @@
 package com.model;
 
+import java.io.*;
 import java.io.Serializable;
 
 public class Users implements Serializable{
@@ -107,13 +108,16 @@ public class Users implements Serializable{
 	public void setPhone(String phone) {
 		this.phone = phone;
 	}
-
 	
 	//ToString
 	@Override
 	public String toString() {
 		return "Users [Type=" + type + ", ID=" + id + ", Password=" + password + ", First name=" + fname + ", Last name=" + lname
 				+ ", Gender=" + gender + ", Email=" + email + ", DOB=" + dob + ", Phone=" + phone + "]";
+	}
+	public void display() {
+		System.out.println(toString());
+		
 	}
 
 
