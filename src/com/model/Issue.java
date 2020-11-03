@@ -6,6 +6,7 @@ public class Issue implements Serializable{
 	//Attributes
 	protected static final long serialVersionUID = 1L;
 	private String type;
+	private String status;
 	private String studentId;
 	private String message;
 	private Date scheduledDate;
@@ -13,12 +14,21 @@ public class Issue implements Serializable{
 	private String repId;
 	
 	//Getters and Setters
+	
 	public String getType() {
 		return type;
 	}
 
 	public void setType(String type) {
 		this.type = type;
+	}
+
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
 	}
 
 	public String getStudentId() {
@@ -61,19 +71,17 @@ public class Issue implements Serializable{
 		this.repId = repId;
 	}
 	
-	
-
 	@Override
 	public String toString() {
-		return "Issue [Type=" + type + ", StudentId=" + studentId + ", mMssage=" + message + ", ScheduledDate="
-				+ scheduledDate + ", ScheduledTime=" + scheduledTime + ", RepId=" + repId + "]";
+		return "Issue [type=" + type + ", status=" + status + ", studentId=" + studentId + ", message=" + message
+				+ ", scheduledDate=" + scheduledDate + ", scheduledTime=" + scheduledTime + ", repId=" + repId + "]";
 	}
 
 	public void display() {
 		System.out.println(toString());
 		
 	}
-	
+
 	//Methods
 	public void viewAll(String type){
 		/*

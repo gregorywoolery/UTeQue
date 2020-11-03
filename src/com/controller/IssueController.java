@@ -17,6 +17,8 @@ public class IssueController {
 		try {
 			System.out.println("Enter Type: ");
 			IssueObj.setType(input.next());
+			System.out.println("Enter Status: ");
+			IssueObj.setStatus(input.next());
 			System.out.println("Enter Student ID: ");
 			IssueObj.setStudentId(input.next());
 			System.out.println("Enter Message: ");
