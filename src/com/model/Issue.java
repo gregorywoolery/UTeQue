@@ -5,6 +5,7 @@ import java.io.*;
 public class Issue implements Serializable{
 	//Attributes
 	protected static final long serialVersionUID = 1L;
+	private String IssueID;
 	private String type;
 	private String status;
 	private String studentId;
@@ -14,6 +15,14 @@ public class Issue implements Serializable{
 	private String repId;
 	
 	//Getters and Setters
+	public String getIssueID() {
+		return IssueID;
+	}
+
+	public void setIssueID(String issueID) {
+		IssueID = issueID;
+	}
+	
 	
 	public String getType() {
 		return type;
@@ -71,10 +80,13 @@ public class Issue implements Serializable{
 		this.repId = repId;
 	}
 	
+	
+
 	@Override
 	public String toString() {
-		return "Issue [type=" + type + ", status=" + status + ", studentId=" + studentId + ", message=" + message
-				+ ", scheduledDate=" + scheduledDate + ", scheduledTime=" + scheduledTime + ", repId=" + repId + "]";
+		return "Issue [IssueID=" + IssueID + ", type=" + type + ", status=" + status + ", studentId=" + studentId
+				+ ", message=" + message + ", scheduledDate=" + scheduledDate + ", scheduledTime=" + scheduledTime
+				+ ", repId=" + repId + "]";
 	}
 
 	public void display() {
@@ -115,6 +127,7 @@ public class Issue implements Serializable{
 	public int viewOutstandComplaints() {
 		return 0;
 	}
-	
+
+
 
 }
