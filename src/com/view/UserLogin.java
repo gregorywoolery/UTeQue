@@ -322,7 +322,6 @@ public class UserLogin extends JFrame {
 	
 	//Displays error message with login validation has failed.
 	private void loginErrorMessage(){
-		
 		auth_message.setVisible(true);
 	}
 }
