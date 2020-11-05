@@ -1,7 +1,7 @@
 package com.model;
 
-import java.io.*;
 import java.io.Serializable;
+import java.util.Date;
 
 public class Users implements Serializable{
 	//Attributes
@@ -25,7 +25,7 @@ public class Users implements Serializable{
 		this.lname = "";
 		this.gender = "";
 		this.email= "";
-		this.dob = new Date(0,0,0);
+		this.dob = null;
 		this.phone = "";
 	}
 	//Primary Constructor

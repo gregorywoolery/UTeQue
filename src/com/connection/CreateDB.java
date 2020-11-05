@@ -18,7 +18,7 @@ public class CreateDB {
 			
 		Statement stmt;
 		try {
-			dbConn = ConnectorFactoryDB.getDatabaseConnection();
+			dbConn = DBConnectorFactory.getDatabaseConnection();
 			stmt = (Statement) dbConn.createStatement();
 			stmt.execute(dbSql, 0);
 			
@@ -47,7 +47,7 @@ public class CreateDB {
 			
 		Statement stmt;
 		try {
-			dbConn = ConnectorFactoryDB.getDatabaseConnection();
+			dbConn = DBConnectorFactory.getDatabaseConnection();
 			stmt = (Statement) dbConn.createStatement();
 			stmt.execute(useSql, 0);
 			stmt.execute(tableSql, 0);
@@ -77,7 +77,7 @@ public class CreateDB {
 			
 		Statement stmt;
 		try {
-			dbConn = ConnectorFactoryDB.getDatabaseConnection();
+			dbConn = DBConnectorFactory.getDatabaseConnection();
 			stmt = (Statement) dbConn.createStatement();
 			stmt.execute(useSql, 0);
 			stmt.execute(tableSql, 0);
@@ -101,7 +101,7 @@ public class CreateDB {
 			
 		Statement stmt;
 		try {
-			dbConn = ConnectorFactoryDB.getDatabaseConnection();
+			dbConn = DBConnectorFactory.getDatabaseConnection();
 			stmt = (Statement) dbConn.createStatement();
 			stmt.execute(useSql, 0);
 			stmt.execute(tableSql, 0);

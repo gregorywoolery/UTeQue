@@ -1,8 +1,13 @@
 package com.controller;
 
-import com.model.Date;
+//import com.model.Date;
 import com.model.Issue;
 import com.model.Users;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Scanner;
 
 import java.io.*;
 import java.util.*;
@@ -12,9 +17,14 @@ public class IssueController {
 	Issue IssueObj = new Issue();
 	Date DateObj = new Date();
 	private static Scanner input = new Scanner(System.in);
+	DateFormat issueFormat = new SimpleDateFormat("yymmddhhmmss");
+	String dateString = issueFormat.format(new Date()).toString();	
 	
+	
+	@SuppressWarnings("deprecation")
 	public void addIssue() {
 		try {
+			String issueId = dateString; // Assign Issue ID based on (yy-mm-dd-hh-mm-ss) format of current date and time
 			System.out.println("Enter Type: ");
 			IssueObj.setType(input.next());
 			System.out.println("Enter Status: ");
@@ -26,35 +36,35 @@ public class IssueController {
 			
 			System.out.println("Enter Scheduled Date: ");
 			System.out.println("dd: ");
-			DateObj.setDay(input.nextInt());
+			DateObj.setDate(input.nextInt());
 			System.out.println("mm: ");
 			DateObj.setMonth(input.nextInt());
 			System.out.println("yyyy: ");
 			DateObj.setYear(input.nextInt());
-			IssueObj.setScheduledDate(DateObj);
 			
 			System.out.println("Enter Scheduled Time: ");
 			System.out.println("HR: ");
-			
+			DateObj.setHours(input.nextInt());
 			System.out.println("MM: ");
+			DateObj.setMinutes(input.nextInt());
+			//System.out.println("AM/PM: ");
 			
-			System.out.println("AM/PM: ");
-			
-			//IssueObj.setScheduledDate(DateObj);
+			IssueObj.setScheduledDateTime(DateObj);
 			
 			System.out.println("Enter Student Services Representative: ");
 			IssueObj.setRepId(input.next());
+
 		}catch(InputMismatchException e){
-			System.err.println("Wrong input type entered");
+			System.err.println("Wrong Input Type Entered");
 		}
 			
 	}
 	
-	public void modifyIssue() {
+	public void modifyIssue(String issueId) {
 			
 	}
 	
-	public void removeIssue() {
+	public void removeIssue(String issueId) {
 		
 	}
 	

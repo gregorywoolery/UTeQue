@@ -1,7 +1,6 @@
 package com.controller;
 
 import com.model.Users;
-import com.model.Date;
 import java.io.*;
 import java.util.*;
 
@@ -10,6 +9,7 @@ public class UsersController {
 	Date DateObj = new Date();
 	private static Scanner input = new Scanner(System.in);
 	
+	@SuppressWarnings("deprecation")
 	public void addUser() {
 		try {
 			System.out.println("Enter Type: ");
@@ -28,7 +28,7 @@ public class UsersController {
 			UsersObj.setEmail(input.next());
 			System.out.println("Enter Date of Birth: ");
 			System.out.println("dd: ");
-			DateObj.setDay(input.nextInt());
+			DateObj.setDate(input.nextInt());
 			System.out.println("mm: ");
 			DateObj.setMonth(input.nextInt());
 			System.out.println("yyyy: ");

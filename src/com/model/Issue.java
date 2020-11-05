@@ -1,26 +1,48 @@
 package com.model;
 
 import java.io.*;
+import java.util.Date;
 
 public class Issue implements Serializable{
 	//Attributes
 	protected static final long serialVersionUID = 1L;
-	private String IssueID;
+	private String issueId;
 	private String type;
 	private String status;
 	private String studentId;
 	private String message;
-	private Date scheduledDate;
-	private Date scheduledTime;
+	private Date scheduledDateTime;
 	private String repId;
 	
+	public Issue() {
+		this.issueId = "";
+		this.type = "";
+		this.status = "";
+		this.studentId = "";
+		this.message = "";
+		this.scheduledDateTime = null;
+		this.repId = "";	
+	}
+	
+	public Issue(String issueId, String type, String status, String studentId, String message, 
+			Date scheduledDateTime, String repId) {
+		this.issueId = issueId;
+		this.type = type;
+		this.status = status;
+		this.studentId = studentId;
+		this.message = message;
+		this.scheduledDateTime = scheduledDateTime;
+		this.repId = repId;	
+		
+	}
+	
 	//Getters and Setters
-	public String getIssueID() {
-		return IssueID;
+	public String getIssueId() {
+		return issueId;
 	}
 
-	public void setIssueID(String issueID) {
-		IssueID = issueID;
+	public void setIssueID(String issueId) {
+		this.issueId = issueId;
 	}
 	
 	
@@ -56,20 +78,12 @@ public class Issue implements Serializable{
 		this.message = message;
 	}
 
-	public Date getScheduledDate() {
-		return scheduledDate;
+	public Date getScheduledDateTime() {
+		return scheduledDateTime;
 	}
 
-	public void setScheduledDate(Date scheduledDate) {
-		this.scheduledDate = scheduledDate;
-	}
-
-	public Date getScheduledTime() {
-		return scheduledTime;
-	}
-
-	public void setScheduledTime(Date scheduledTime) {
-		this.scheduledTime = scheduledTime;
+	public void setScheduledDateTime(Date scheduledDateTime) {
+		this.scheduledDateTime = scheduledDateTime;
 	}
 
 	public String getRepId() {
@@ -80,18 +94,15 @@ public class Issue implements Serializable{
 		this.repId = repId;
 	}
 	
-	
-
 	@Override
 	public String toString() {
-		return "Issue [IssueID=" + IssueID + ", type=" + type + ", status=" + status + ", studentId=" + studentId
-				+ ", message=" + message + ", scheduledDate=" + scheduledDate + ", scheduledTime=" + scheduledTime
-				+ ", repId=" + repId + "]";
+		return "Issue [IssueID=" + issueId + ", Type=" + type + ", Status=" + status + ", Student Id=" + studentId
+				+ ", Message=" + message + ", Scheduled DateTime=" + scheduledDateTime
+				+ ", RepId=" + repId + "]";
 	}
 
 	public void display() {
 		System.out.println(toString());
-		
 	}
 
 	//Methods
@@ -100,9 +111,7 @@ public class Issue implements Serializable{
 		 * - Students should be able to view all past complaints or queries in a list. 
 		 	  For each complaint or query in the list, the last response date and who provided the response, 
 		 	  should be shown.
-		 */
-		
-		
+		 */	
 	}
 	public void viewSpecific(String type, String id) {
 		/*
