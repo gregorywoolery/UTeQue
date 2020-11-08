@@ -11,6 +11,7 @@ import java.util.Map;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.border.EmptyBorder;
 import java.awt.Image;
 import java.awt.GridBagLayout;
@@ -38,11 +39,14 @@ import javax.swing.JSeparator;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.JTableHeader;
 
 import com.github.lgooddatepicker.components.DatePicker;
 import com.github.lgooddatepicker.components.DatePickerSettings;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 public class Dashboard extends JFrame {
 	protected JPanel contentPane;
@@ -61,9 +65,8 @@ public class Dashboard extends JFrame {
 	protected JLabel notification_lbl;
 	protected JLabel userAvatar_lbl;
 	protected JDesktopPane workspace_desktopPane;
-	private JLabel dashBtn_lbl;
 	private JLabel issuesBtn_lbl;
-	private JLabel viewBtn_lbl;
+	private JButton viewBtnDash;
 	private JPanel addIssue_panel;
 	private JPanel updateIssue_panel;
 	private JPanel IssueDisplay_panel;
@@ -72,8 +75,7 @@ public class Dashboard extends JFrame {
 	private JComboBox addIssue_comboBox;
 	private JLabel addedDate_lbl;
 	private JButton addBtn;
-	private JLabel addBtnDetials_lbl;
-	private JButton btnNewButton_1;
+	private JButton liveChatBtn;
 	private JPanel userIssueStats_panel;
 	private JLabel updateIssueTitle_lbl;
 	private JMenuBar menuBar;
@@ -89,8 +91,8 @@ public class Dashboard extends JFrame {
 	private JLabel issuePendTitle_lbl;
 	private JLabel issuePending_lbl;
 	private JPanel issue_panel;
-	private JTable table;
-	private JLabel removeBtn_lbl;
+	private JTable issueTable;
+	private JButton removeBtnDash;
 	private JLabel tableTitle_lbl;
 	private JPanel search_panel;
 	private JLabel searchFor_lbl;
@@ -98,13 +100,14 @@ public class Dashboard extends JFrame {
 	private JTextField mainTagSearch_textField;
 	private JComboBox searchIssueType_comboBox;
 	private JButton searchIcon_lbl;
-	private JLabel updateBtn_lbl;
+	private JButton updateBtnDash;
 	private JButton removeBtn;
 	private JComboBox upadateIssue_comboBox;
 	private JButton updateBtn;
 	private JLabel dateMadeUpdate_lbl;
 	private JPanel date_panel;
 	private DatePicker updateDatePicker;
+	private JButton addBtnDash;
 
 
 	/**
@@ -214,23 +217,12 @@ public class Dashboard extends JFrame {
 		sidebar_panel.add(menu_panel, gbc_menu_panel);
 		menu_panel.setLayout(new BoxLayout(menu_panel, BoxLayout.Y_AXIS));
 		
-		dashBtn_lbl = new JLabel("Dash");
-		dashBtn_lbl.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-		dashBtn_lbl.setAlignmentY(Component.TOP_ALIGNMENT);
-		dashBtn_lbl.setAlignmentX(Component.CENTER_ALIGNMENT);
-		dashBtn_lbl.setHorizontalTextPosition(SwingConstants.LEADING);
-		dashBtn_lbl.setHorizontalAlignment(SwingConstants.LEFT);
-		dashBtn_lbl.setMaximumSize(new Dimension(140, 40));
-		dashBtn_lbl.setPreferredSize(new Dimension(99, 30));
-		dashBtn_lbl.setForeground(new Color(255, 255, 255));
-		dashBtn_lbl.setFont(new Font("Arial Rounded MT Bold", Font.PLAIN, 13));
-		menu_panel.add(dashBtn_lbl);
-		
 		issuesBtn_lbl = new JLabel("Issues");
+		issuesBtn_lbl.setIcon(new ImageIcon(Dashboard.class.getResource("/img/dash/search-paper.png")));
 		issuesBtn_lbl.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		issuesBtn_lbl.setAlignmentY(Component.TOP_ALIGNMENT);
 		issuesBtn_lbl.setAlignmentX(Component.CENTER_ALIGNMENT);
-		issuesBtn_lbl.setHorizontalTextPosition(SwingConstants.LEADING);
+		issuesBtn_lbl.setHorizontalTextPosition(SwingConstants.RIGHT);
 		issuesBtn_lbl.setHorizontalAlignment(SwingConstants.LEFT);
 		issuesBtn_lbl.setMaximumSize(new Dimension(140, 40));
 		issuesBtn_lbl.setPreferredSize(new Dimension(99, 30));
@@ -238,75 +230,87 @@ public class Dashboard extends JFrame {
 		issuesBtn_lbl.setFont(new Font("Arial Rounded MT Bold", Font.PLAIN, 13));
 		menu_panel.add(issuesBtn_lbl);
 		
-		viewBtn_lbl = new JLabel("View");
-		viewBtn_lbl.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-		viewBtn_lbl.setAlignmentY(Component.TOP_ALIGNMENT);
-		viewBtn_lbl.setBorder(null);
-		viewBtn_lbl.setHorizontalTextPosition(SwingConstants.LEADING);
-		viewBtn_lbl.setHorizontalAlignment(SwingConstants.LEFT);
-		viewBtn_lbl.setMaximumSize(new Dimension(140, 40));
-		viewBtn_lbl.setPreferredSize(new Dimension(99, 30));
-		viewBtn_lbl.setForeground(new Color(255, 255, 255));
-		viewBtn_lbl.setFont(new Font("Arial Rounded MT Bold", Font.PLAIN, 13));
-		menu_panel.add(viewBtn_lbl);
+		viewBtnDash = new JButton("View");
+		viewBtnDash.setToolTipText("View your issues.");
+		viewBtnDash.setBackground(new Color(0, 0, 51));
+		viewBtnDash.setAlignmentX(0.2f);
+		viewBtnDash.setIcon(new ImageIcon(Dashboard.class.getResource("/img/dash/view.png")));
+		viewBtnDash.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+		viewBtnDash.setAlignmentY(Component.TOP_ALIGNMENT);
+		viewBtnDash.setBorder(null);
+		viewBtnDash.setHorizontalTextPosition(SwingConstants.RIGHT);
+		viewBtnDash.setHorizontalAlignment(SwingConstants.LEFT);
+		viewBtnDash.setMaximumSize(new Dimension(140, 40));
+		viewBtnDash.setPreferredSize(new Dimension(99, 30));
+		viewBtnDash.setForeground(new Color(255, 255, 255));
+		viewBtnDash.setFont(new Font("Arial Rounded MT Bold", Font.PLAIN, 13));
+		menu_panel.add(viewBtnDash);
 		
-		JLabel addBtn_lbl = new JLabel("Add");
-		addBtn_lbl.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-		addBtn_lbl.setAlignmentY(Component.TOP_ALIGNMENT);
-		addBtn_lbl.setBorder(null);
-		addBtn_lbl.setHorizontalTextPosition(SwingConstants.LEADING);
-		addBtn_lbl.setHorizontalAlignment(SwingConstants.LEFT);
-		addBtn_lbl.setMaximumSize(new Dimension(140, 40));
-		addBtn_lbl.setPreferredSize(new Dimension(99, 30));
-		addBtn_lbl.setForeground(new Color(255, 255, 255));
-		addBtn_lbl.setFont(new Font("Arial Rounded MT Bold", Font.PLAIN, 13));
-		menu_panel.add(addBtn_lbl);
+		addBtnDash = new JButton("Add");
+
+
+		addBtnDash.setToolTipText("Add your issues.");
+		addBtnDash.setBackground(new Color(0, 0, 51));
+		addBtnDash.setAlignmentX(0.2f);
+		addBtnDash.setIcon(new ImageIcon(Dashboard.class.getResource("/img/dash/add.png")));
+		addBtnDash.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+		addBtnDash.setAlignmentY(Component.TOP_ALIGNMENT);
+		addBtnDash.setBorder(null);
+		addBtnDash.setHorizontalTextPosition(SwingConstants.RIGHT);
+		addBtnDash.setHorizontalAlignment(SwingConstants.LEFT);
+		addBtnDash.setMaximumSize(new Dimension(140, 40));
+		addBtnDash.setPreferredSize(new Dimension(99, 30));
+		addBtnDash.setForeground(new Color(255, 255, 255));
+		addBtnDash.setFont(new Font("Arial Rounded MT Bold", Font.PLAIN, 13));
+		menu_panel.add(addBtnDash);
 		
-		JLabel searchBtn_lbl = new JLabel("Search");
-		searchBtn_lbl.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-		searchBtn_lbl.setAlignmentY(Component.TOP_ALIGNMENT);
-		searchBtn_lbl.setBorder(null);
-		searchBtn_lbl.setHorizontalTextPosition(SwingConstants.LEADING);
-		searchBtn_lbl.setHorizontalAlignment(SwingConstants.LEFT);
-		searchBtn_lbl.setMaximumSize(new Dimension(140, 40));
-		searchBtn_lbl.setPreferredSize(new Dimension(99, 30));
-		searchBtn_lbl.setForeground(new Color(255, 255, 255));
-		searchBtn_lbl.setFont(new Font("Arial Rounded MT Bold", Font.PLAIN, 13));
-		menu_panel.add(searchBtn_lbl);
+		updateBtnDash = new JButton("Update");
+		updateBtnDash.setToolTipText("Update a previous issue.");
+		updateBtnDash.setBackground(new Color(0, 0, 51));
+		updateBtnDash.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+		updateBtnDash.setAlignmentX(0.2f);
+		updateBtnDash.setIcon(new ImageIcon(Dashboard.class.getResource("/img/dash/update.png")));
+		updateBtnDash.setPreferredSize(new Dimension(99, 30));
+		updateBtnDash.setMaximumSize(new Dimension(140, 40));
+		updateBtnDash.setHorizontalTextPosition(SwingConstants.RIGHT);
+		updateBtnDash.setHorizontalAlignment(SwingConstants.LEFT);
+		updateBtnDash.setForeground(Color.WHITE);
+		updateBtnDash.setFont(new Font("Arial Rounded MT Bold", Font.PLAIN, 13));
+		updateBtnDash.setBorder(null);
+		updateBtnDash.setAlignmentY(0.0f);
+		menu_panel.add(updateBtnDash);
 		
-		updateBtn_lbl = new JLabel("Update");
-		updateBtn_lbl.setPreferredSize(new Dimension(99, 30));
-		updateBtn_lbl.setMaximumSize(new Dimension(140, 40));
-		updateBtn_lbl.setHorizontalTextPosition(SwingConstants.LEADING);
-		updateBtn_lbl.setHorizontalAlignment(SwingConstants.LEFT);
-		updateBtn_lbl.setForeground(Color.WHITE);
-		updateBtn_lbl.setFont(new Font("Arial Rounded MT Bold", Font.PLAIN, 13));
-		updateBtn_lbl.setBorder(null);
-		updateBtn_lbl.setAlignmentY(0.0f);
-		menu_panel.add(updateBtn_lbl);
+		removeBtnDash = new JButton("Remove");
+		removeBtnDash.setToolTipText("Remove a previous issue.");
+		removeBtnDash.setBackground(new Color(0, 0, 51));
+		removeBtnDash.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+		removeBtnDash.setAlignmentX(0.2f);
+		removeBtnDash.setIcon(new ImageIcon(Dashboard.class.getResource("/img/dash/delete.png")));
+		removeBtnDash.setPreferredSize(new Dimension(99, 30));
+		removeBtnDash.setMaximumSize(new Dimension(140, 40));
+		removeBtnDash.setHorizontalTextPosition(SwingConstants.RIGHT);
+		removeBtnDash.setHorizontalAlignment(SwingConstants.LEFT);
+		removeBtnDash.setForeground(Color.WHITE);
+		removeBtnDash.setFont(new Font("Arial Rounded MT Bold", Font.PLAIN, 13));
+		removeBtnDash.setBorder(null);
+		removeBtnDash.setAlignmentY(0.0f);
+		menu_panel.add(removeBtnDash);
 		
-		removeBtn_lbl = new JLabel("Remove");
-		removeBtn_lbl.setPreferredSize(new Dimension(99, 30));
-		removeBtn_lbl.setMaximumSize(new Dimension(140, 40));
-		removeBtn_lbl.setHorizontalTextPosition(SwingConstants.LEADING);
-		removeBtn_lbl.setHorizontalAlignment(SwingConstants.LEFT);
-		removeBtn_lbl.setForeground(Color.WHITE);
-		removeBtn_lbl.setFont(new Font("Arial Rounded MT Bold", Font.PLAIN, 13));
-		removeBtn_lbl.setBorder(null);
-		removeBtn_lbl.setAlignmentY(0.0f);
-		menu_panel.add(removeBtn_lbl);
-		
-		JLabel notificationBtn_lbl = new JLabel("Notification");
-		notificationBtn_lbl.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-		notificationBtn_lbl.setAlignmentY(Component.TOP_ALIGNMENT);
-		notificationBtn_lbl.setAlignmentX(Component.CENTER_ALIGNMENT);
-		notificationBtn_lbl.setHorizontalTextPosition(SwingConstants.LEADING);
-		notificationBtn_lbl.setHorizontalAlignment(SwingConstants.LEFT);
-		notificationBtn_lbl.setMaximumSize(new Dimension(140, 55));
-		notificationBtn_lbl.setPreferredSize(new Dimension(99, 30));
-		notificationBtn_lbl.setForeground(new Color(255, 255, 255));
-		notificationBtn_lbl.setFont(new Font("Arial Rounded MT Bold", Font.PLAIN, 13));
-		menu_panel.add(notificationBtn_lbl);
+		JButton notificationBtnDash = new JButton("Notification");
+		notificationBtnDash.setToolTipText("View notifications on your inquiries.");
+		notificationBtnDash.setBorder(null);
+		notificationBtnDash.setBackground(new Color(0, 0, 51));
+		notificationBtnDash.setIcon(new ImageIcon(Dashboard.class.getResource("/img/dash/notif.png")));
+		notificationBtnDash.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+		notificationBtnDash.setAlignmentY(Component.TOP_ALIGNMENT);
+		notificationBtnDash.setAlignmentX(Component.CENTER_ALIGNMENT);
+		notificationBtnDash.setHorizontalTextPosition(SwingConstants.RIGHT);
+		notificationBtnDash.setHorizontalAlignment(SwingConstants.LEFT);
+		notificationBtnDash.setMaximumSize(new Dimension(140, 55));
+		notificationBtnDash.setPreferredSize(new Dimension(99, 30));
+		notificationBtnDash.setForeground(new Color(255, 255, 255));
+		notificationBtnDash.setFont(new Font("Arial Rounded MT Bold", Font.PLAIN, 13));
+		menu_panel.add(notificationBtnDash);
 		
 		logoutButton_panel = new JPanel();
 		logoutButton_panel.setBackground(new Color(0, 0, 51));
@@ -438,15 +442,16 @@ public class Dashboard extends JFrame {
 		gbc_studentIssue_panel.gridy = 0;
 		workspace_desktopPane.add(studentIssue_panel, gbc_studentIssue_panel);
 		
-		btnNewButton_1 = new JButton("LIVE CHAT");
-		btnNewButton_1.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-		btnNewButton_1.setBackground(new Color(0, 0, 51));
-		btnNewButton_1.setForeground(new Color(255, 255, 255));
-		btnNewButton_1.setFont(new Font("Arial Rounded MT Bold", Font.PLAIN, 13));
-		btnNewButton_1.setPreferredSize(new Dimension(100, 30));
-		btnNewButton_1.setMaximumSize(new Dimension(200, 100));
-		studentIssue_panel.add(btnNewButton_1);
-		btnNewButton_1.setBorder(null);
+		liveChatBtn = new JButton("LIVE CHAT");
+		liveChatBtn.setToolTipText("Start a Live Chat.");
+		liveChatBtn.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+		liveChatBtn.setBackground(new Color(0, 0, 51));
+		liveChatBtn.setForeground(new Color(255, 255, 255));
+		liveChatBtn.setFont(new Font("Arial Rounded MT Bold", Font.PLAIN, 13));
+		liveChatBtn.setPreferredSize(new Dimension(100, 30));
+		liveChatBtn.setMaximumSize(new Dimension(200, 100));
+		studentIssue_panel.add(liveChatBtn);
+		liveChatBtn.setBorder(null);
 		
 		userIssueStats_panel = new JPanel();
 		FlowLayout fl_userIssueStats_panel = (FlowLayout) userIssueStats_panel.getLayout();
@@ -521,6 +526,8 @@ public class Dashboard extends JFrame {
 		addIssue_panel.add(addIssueTitle_lbl);
 		
 		addIssue_comboBox = new JComboBox();
+		addIssue_comboBox.setToolTipText("Select issue type here");
+		addIssue_comboBox.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		addIssue_comboBox.setForeground(new Color(255, 255, 255));
 		addIssue_comboBox.setBorder(null);
 		addIssue_comboBox.setBackground(new Color(0, 0, 51));
@@ -533,18 +540,14 @@ public class Dashboard extends JFrame {
 		addedDate_lbl = new JLabel("dd/mm/yyyy");
 		addedDate_lbl.setForeground(new Color(0, 0, 0));
 		addedDate_lbl.setHorizontalAlignment(SwingConstants.CENTER);
-		addedDate_lbl.setMaximumSize(new Dimension(100, 35));
+		addedDate_lbl.setMaximumSize(new Dimension(100, 55));
 		addedDate_lbl.setFont(new Font("Arial Rounded MT Bold", Font.PLAIN, 13));
 		addedDate_lbl.setAlignmentX(Component.CENTER_ALIGNMENT);
 		addIssue_panel.add(addedDate_lbl);
 		
-		addBtnDetials_lbl = new JLabel("Construct Issue:");
-		addBtnDetials_lbl.setForeground(new Color(0, 0, 0));
-		addBtnDetials_lbl.setFont(new Font("Arial Rounded MT Bold", Font.PLAIN, 13));
-		addBtnDetials_lbl.setAlignmentX(Component.CENTER_ALIGNMENT);
-		addIssue_panel.add(addBtnDetials_lbl);
-		
 		addBtn = new JButton("ADD");
+		addBtn.setToolTipText("Add your issues.");
+		addBtn.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		addBtn.setForeground(new Color(255, 255, 255));
 		addBtn.setBackground(new Color(0, 204, 225));
 		addBtn.setMaximumSize(new Dimension(100, 30));
@@ -578,6 +581,8 @@ public class Dashboard extends JFrame {
 		updateIssue_panel.add(updateIssueTitle_lbl);
 		
 		upadateIssue_comboBox = new JComboBox();
+		upadateIssue_comboBox.setToolTipText("Select issue type here");
+		upadateIssue_comboBox.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		upadateIssue_comboBox.setModel(new DefaultComboBoxModel(new String[] {"Complaint", "Query"}));
 		upadateIssue_comboBox.setPreferredSize(new Dimension(25, 20));
 		upadateIssue_comboBox.setMaximumSize(new Dimension(100, 25));
@@ -597,14 +602,20 @@ public class Dashboard extends JFrame {
 		
 		date_panel = new JPanel();
 		date_panel.setBackground(new Color(255, 255, 0));
-		date_panel.setMaximumSize(new Dimension(300, 30));
+		date_panel.setMaximumSize(new Dimension(300, 33));
 		updateIssue_panel.add(date_panel);
 		
 		updateDatePicker = new DatePicker();
+		updateDatePicker.getComponentToggleCalendarButton().setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+		updateDatePicker.getComponentDateTextField().setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+		updateDatePicker.setBackground(new Color(255, 255, 0));
 		date_panel.add(updateDatePicker);
 
 		
 		updateBtn = new JButton("UPDATE");
+
+		updateBtn.setToolTipText("Update a previous issue");
+		updateBtn.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		updateBtn.setMaximumSize(new Dimension(100, 30));
 		updateBtn.setForeground(Color.WHITE);
 		updateBtn.setFont(new Font("Arial Rounded MT Bold", Font.PLAIN, 14));
@@ -631,7 +642,7 @@ public class Dashboard extends JFrame {
 		issue_panel = new JPanel();
 		issue_panel.setBackground(new Color(255, 255, 0));
 		FlowLayout fl_issue_panel = (FlowLayout) issue_panel.getLayout();
-		fl_issue_panel.setHgap(15);
+		fl_issue_panel.setHgap(13);
 		fl_issue_panel.setAlignment(FlowLayout.LEFT);
 		GridBagConstraints gbc_issue_panel = new GridBagConstraints();
 		gbc_issue_panel.fill = GridBagConstraints.BOTH;
@@ -661,6 +672,8 @@ public class Dashboard extends JFrame {
 		issue_panel.add(search_panel);
 		
 		searchIssueType_comboBox = new JComboBox();
+		searchIssueType_comboBox.setToolTipText("Select issue type here");
+		searchIssueType_comboBox.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		searchIssueType_comboBox.setModel(new DefaultComboBoxModel(new String[] {"Complaint", "Query"}));
 		searchIssueType_comboBox.setPreferredSize(new Dimension(100, 25));
 		searchIssueType_comboBox.setMaximumSize(new Dimension(100, 25));
@@ -672,21 +685,24 @@ public class Dashboard extends JFrame {
 		
 		mainTag_lbl = new JLabel("Main Tag:");
 		mainTag_lbl.setForeground(new Color(0, 0, 51));
-		mainTag_lbl.setFont(new Font("Arial Rounded MT Bold", Font.PLAIN, 12));
+		mainTag_lbl.setFont(new Font("Arial Rounded MT Bold", Font.PLAIN, 11));
 		search_panel.add(mainTag_lbl);
 		
 		mainTagSearch_textField = new JTextField();
+		mainTagSearch_textField.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		mainTagSearch_textField.setForeground(new Color(0, 0, 51));
 		mainTagSearch_textField.setMargin(new Insets(2, 0, 2, 0));
 		mainTagSearch_textField.setPreferredSize(new Dimension(10, 25));
 		mainTagSearch_textField.setFont(new Font("Times New Roman", Font.PLAIN, 12));
 		search_panel.add(mainTagSearch_textField);
-		mainTagSearch_textField.setColumns(15);
+		mainTagSearch_textField.setColumns(13);
 		
 		/*	Using external LGoodDatePicker
 		 *  Create a date picker with some custom settings. 
 		 */
 	    DatePicker searchDatePicker = new DatePicker();
+	    searchDatePicker.getComponentToggleCalendarButton().setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+	    searchDatePicker.getComponentDateTextField().setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 	    searchDatePicker.setBackground(new Color(255, 255, 0));
 		search_panel.add(searchDatePicker);
 		
@@ -695,56 +711,79 @@ public class Dashboard extends JFrame {
 				.getImage().getScaledInstance(23, 23, Image.SCALE_DEFAULT));
 		
 		searchIcon_lbl = new JButton(searchImageIcon);
+		searchIcon_lbl.setToolTipText("Search for issue");
+		searchIcon_lbl.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		searchIcon_lbl.setBorder(null);
 		searchIcon_lbl.setBackground(new Color(255, 255, 0));
 		search_panel.add(searchIcon_lbl);
 		
-		removeBtn = new JButton("");
+		removeBtn = new JButton(new ImageIcon(Dashboard.class.getResource("/img/delete.png")));
+		removeBtn.setToolTipText("Remove selected issue.");
+		removeBtn.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		removeBtn.setBackground(new Color(255, 255, 0));
-		removeBtn.setIcon(new ImageIcon(Dashboard.class.getResource("/img/delete.png")));
 		removeBtn.setBorder(null);
 		search_panel.add(removeBtn);
 		
 		
-		table = new JTable();
-		table.setModel(new DefaultTableModel(
+		issueTable = new JTable();
+		issueTable.setFont(new Font("Times New Roman", Font.PLAIN, 14));
+		
+		issueTable.setModel(new DefaultTableModel(
 			new Object[][] {
-				{null, null, null, null, null},
-				{null, null, null, null, null},
-				{null, null, null, null, null},
-				{null, null, null, null, null},
-				{null, null, null, null, null},
-				{null, null, null, null, null},
 			},
 			new String[] {
-				"Type", "Main Detials", "Dates Issued", "Status", "Agent"
+				"TYPE", "MAIN DETAILS", "DATE ISSUED", "STATUS", "AGENT"
 			}
 		));
-		table.getColumnModel().getColumn(0).setResizable(false);
-		table.getColumnModel().getColumn(0).setPreferredWidth(89);
-		table.getColumnModel().getColumn(1).setPreferredWidth(156);
-		table.getColumnModel().getColumn(2).setPreferredWidth(100);
-		table.getColumnModel().getColumn(3).setPreferredWidth(83);
-		table.getColumnModel().getColumn(4).setPreferredWidth(135);
-		table.setGridColor(new Color(255, 255, 255));
-		table.setBackground(new Color(0, 0, 51));
-		table.setEnabled(false);
+		
+		//Changes table heaver font
+		JTableHeader tableHeader = issueTable.getTableHeader();
+		tableHeader.setBackground(new Color(0, 0, 51));
+		tableHeader.setForeground(Color.white);
+		tableHeader.setFont(new Font("Times New Roman", Font.PLAIN, 15));
+		
+		issueTable.getColumnModel().getColumn(0).setResizable(false);
+		issueTable.getColumnModel().getColumn(0).setPreferredWidth(89);
+		issueTable.getColumnModel().getColumn(1).setPreferredWidth(156);
+		issueTable.getColumnModel().getColumn(2).setPreferredWidth(100);
+		issueTable.getColumnModel().getColumn(3).setPreferredWidth(83);
+		issueTable.getColumnModel().getColumn(4).setPreferredWidth(135);
+		issueTable.setGridColor(new Color(0, 0, 51));
+		issueTable.setBackground(new Color(0,204, 225));
+		issueTable.setEnabled(false);
 		
 		GridBagConstraints gbc_table = new GridBagConstraints();
 		gbc_table.fill = GridBagConstraints.BOTH;
 		gbc_table.gridx = 0;
 		gbc_table.gridy = 1;
-		IssueDisplay_panel.add(table, gbc_table);
+		IssueDisplay_panel.add(new JScrollPane(issueTable), gbc_table);
 		
 		registerListeners();
 	}
 	
 	public void registerListeners() {
-		searchIcon_lbl.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				searchIcon_lbl.setBorder(new LineBorder(new Color(0, 0, 51)));
+		addBtn.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
 			}
 		});
+		
+		updateBtn.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+			}
+		});
+		
+//		addBtnDash.addActionListener(new ActionListener() {
+//			public void actionPerformed(ActionEvent e) {
+
+//			}
+//		});
+		
+//		addBtnDash.addMouseListener(new MouseAdapter() {
+//			@Override
+//			public void mouseClicked(MouseEvent e) {
+//				workspace_desktopPane.removeAll();
+//			}
+//		});
+		
 	}
 }
