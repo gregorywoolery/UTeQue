@@ -314,7 +314,7 @@ public class SQLOperations {
 				ResultSet result = statement.executeQuery(readAll);
 				
 				while(result.next()) {
-					copyIssue.setIssueID(result.getString(1));
+					copyIssue.setIssueId(result.getString(1));
 					copyIssue.setType(result.getString(2));
 					copyIssue.setStatus(result.getString(3));
 					copyIssue.setStatus(result.getString(4));
