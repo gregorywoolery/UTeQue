@@ -1,7 +1,5 @@
 package com.view;
 
-import java.awt.EventQueue;
-
 import javax.swing.JInternalFrame;
 import javax.swing.border.LineBorder;
 import javax.swing.event.DocumentEvent;
@@ -60,30 +58,23 @@ public class AddIssue extends JInternalFrame {
 	private JLabel issueIDTitle_lbl;
 	private JLabel issueID_lbl;
 	
-	
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					AddIssue frame = new AddIssue();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
-
 	/**
 	 * Create the frame.
 	 */
 	public AddIssue() {
+		super("Add Issue", false, false, false, true);
+		initializeComponents();
+	}
+	
+	private void initializeComponents() {
+		((javax.swing.plaf.basic.BasicInternalFrameUI)this.getUI()).setNorthPane(null);
+		
+		this.setVisible(true);
+		this.setSize(730, 550);
 		getContentPane().setBackground(new Color(0, 0, 51));
 		setBorder(new LineBorder(new Color(0, 0, 51), 20));
-		setBounds(100, 100, 720, 540); //730 550
+		setBounds(100, 100, 710, 530); //730 550
+		
 		GridBagLayout gridBagLayout = new GridBagLayout();
 		gridBagLayout.columnWidths = new int[]{0, 0};
 		gridBagLayout.rowHeights = new int[] {50, 0, 280, 100, 0};
@@ -101,6 +92,7 @@ public class AddIssue extends JInternalFrame {
 		getContentPane().add(addIssue_lbl, gbc_addIssue_lbl);
 		
 		infoPanel = new JPanel();
+		infoPanel.setBorder(new LineBorder(new Color(255, 255, 0), 5));
 		infoPanel.setBackground(new Color(0, 0, 51));
 		GridBagConstraints gbc_infoPanel = new GridBagConstraints();
 		gbc_infoPanel.insets = new Insets(0, 0, 5, 0);
@@ -195,8 +187,9 @@ public class AddIssue extends JInternalFrame {
 		main_Panel.setLayout(gbl_main_Panel);
 		
 		promptIssue = new JLabel("Please state your issue...");
-		promptIssue.setPreferredSize(new Dimension(300, 20));
-		promptIssue.setHorizontalTextPosition(SwingConstants.LEFT);
+		promptIssue.setIcon(new ImageIcon(AddIssue.class.getResource("/img/write.png")));
+		promptIssue.setPreferredSize(new Dimension(300, 40));
+		promptIssue.setHorizontalTextPosition(SwingConstants.RIGHT);
 		promptIssue.setFont(new Font("Arial Rounded MT Bold", Font.PLAIN, 14));
 		GridBagConstraints gbc_promptIssue = new GridBagConstraints();
 		gbc_promptIssue.anchor = GridBagConstraints.WEST;
@@ -237,7 +230,7 @@ public class AddIssue extends JInternalFrame {
 		gbc_issueTextArea.gridy = 1;
 		main_Panel.add(issueTextArea, gbc_issueTextArea);
 		
-		remainingChar_lbl = new JLabel("");
+		remainingChar_lbl = new JLabel();
 		remainingChar_lbl.setForeground(new Color(255, 0, 0));
 		remainingChar_lbl.setFont(new Font("Times New Roman", Font.PLAIN, 14));
 		GridBagConstraints gbc_remainingChar_lbl = new GridBagConstraints();
@@ -248,6 +241,7 @@ public class AddIssue extends JInternalFrame {
 		main_Panel.add(remainingChar_lbl, gbc_remainingChar_lbl);
 		
 		addBtn = new JButton("ADD");
+		addBtn.setIcon(new ImageIcon(AddIssue.class.getResource("/img/add.png")));
 		addBtn.setPreferredSize(new Dimension(100, 35));
 		addBtn.setBackground(new Color(51, 255, 0));
 		addBtn.setForeground(new Color(255, 255, 255));
@@ -260,6 +254,7 @@ public class AddIssue extends JInternalFrame {
 		main_Panel.add(addBtn, gbc_addBtn);
 		
 		clearBtn = new JButton("CLEAR");
+		clearBtn.setIcon(new ImageIcon(AddIssue.class.getResource("/img/clear.png")));
 
 		clearBtn.setPreferredSize(new Dimension(100, 35));
 		clearBtn.setBackground(new Color(51, 255, 0));
@@ -316,15 +311,16 @@ public class AddIssue extends JInternalFrame {
 		footer_panel.add(spaceHolder);
 		
 		returnBtn = new JButton("Return");
+		returnBtn.setHorizontalAlignment(SwingConstants.LEFT);
+		returnBtn.setIcon(new ImageIcon(AddIssue.class.getResource("/img/return.png")));
 		returnBtn.setForeground(new Color(255, 255, 255));
 		returnBtn.setMaximumSize(new Dimension(65, 35));
-		returnBtn.setPreferredSize(new Dimension(90, 30));
+		returnBtn.setPreferredSize(new Dimension(95, 30));
 		returnBtn.setBackground(new Color(255, 0, 0));
 		returnBtn.setBorder(null);
 		returnBtn.setFont(new Font("Arial Rounded MT Bold", Font.PLAIN, 14));
 		returnBtn.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		footer_panel.add(returnBtn);
-
 	}
 	
     private void updateCount(){
@@ -335,7 +331,7 @@ public class AddIssue extends JInternalFrame {
     	remainingSum_lbl.setText("Rem: " + (40 -issueAreaDoc.getLength()));
     }
     
-    public void actionPerformed() {
+    private void actionPerformed() {
 		addBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				int opt = JOptionPane.showConfirmDialog(null, 
