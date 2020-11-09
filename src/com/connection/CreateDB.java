@@ -94,9 +94,13 @@ public class CreateDB {
 	public boolean createIssueTable() {
 		String useSql = "USE UTeQueDB";
 		String tableSql = "CREATE TABLE UTeQueDB.`ServicesRep` ( "
+				+ "issueId VARCHAR(13) NOT NULL , "
 				+ "type VARCHAR(11) NOT NULL , "
-				+ "id VARCHAR(9) NOT NULL  , "
+				+ "status VARCHAR(12) NOT NULL , "
+				+ "studentId VARCHAR(9) NOT NULL  , "
 				+ "message VARCHAR(100) NOT NULL , "
+				+ "scheduledDateTime DATETIME NOT NULL , "
+				+ "repId VARCHAR(10) NOT NULL , "
 				+ ") ENGINE = InnoDB";
 			
 		Statement stmt;
