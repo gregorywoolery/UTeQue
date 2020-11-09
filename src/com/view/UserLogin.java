@@ -73,6 +73,15 @@ public class UserLogin extends JFrame {
 	 * Create the frame.
 	 */
 	public UserLogin() {
+		initializeComponents();
+		registerListeners();
+	}
+	
+	/**
+	 * Initiailizes frame and its components to provide 
+	 * user login view.
+	 */
+	private void initializeComponents(){
 		setTitle("UTeQue - Student Query Environment");
 		setName("frame");
 		setSize(new Dimension(400, 590));
@@ -83,26 +92,44 @@ public class UserLogin extends JFrame {
 		ImageIcon frameIcon = new ImageIcon("./Resources/img/Utech_logo.jpg");
 		setIconImage(frameIcon.getImage());
 		
+		//Uses a main panel that every other compopent will lay
 		mainPanel = new JPanel();
 		mainPanel.setBackground(new Color(0, 0, 51));
+		
+		//Places main panel on frame content pane
 		getContentPane().add(mainPanel, BorderLayout.EAST);
 		mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));
-		
+
+		/**
+		 * Sets the top panel ontop of the main panel for user 
+		 * login icon to be displayed.
+		 */
 		bannerPanel = new JPanel();
 		bannerPanel.setBackground(new Color(0, 0, 51));
+		
 		mainPanel.add(bannerPanel);
 		
 		bannerIcon = new JLabel(new ImageIcon(UserLogin.class.getResource("/img/usericon.png")));
 		bannerIcon.setPreferredSize(new Dimension(130, 150));
 		bannerIcon.setSize(new Dimension(20, 20));
+		
 		bannerPanel.add(bannerIcon);
 		
 		systemInfo_Panel = new JPanel();
 		systemInfo_Panel.setBackground(new Color(0, 0, 51));
 		systemInfo_Panel.setPreferredSize(new Dimension(400, 20));
-		systemInfo_Panel.setSize(new Dimension(400, 50));
+		systemInfo_Panel.setSize(new Dimension(400, 50)); //CHECK
+		
 		mainPanel.add(systemInfo_Panel);
+		
+		//Uses a grid back layout to display system infomation such as title
 		GridBagLayout gbl_systemInfo_Panel = new GridBagLayout();
+		
+		/**
+		 * For the gridbag layout it will have 5 columns and 3 rows, 
+		 * the final zero represents a place holder just incase another 
+		 * row/coloumn is needed.
+		 */
 		gbl_systemInfo_Panel.columnWidths = new int[] {70, 46, 0, 46, 70, 0};
 		gbl_systemInfo_Panel.rowHeights = new int[]{14, 0, 0, 0};
 		gbl_systemInfo_Panel.columnWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
@@ -113,6 +140,11 @@ public class UserLogin extends JFrame {
 		systemTitle_Label.setAlignmentX(Component.CENTER_ALIGNMENT);
 		systemTitle_Label.setFont(new Font("Times New Roman", Font.BOLD | Font.ITALIC, 20));
 		systemTitle_Label.setForeground(new Color(255, 255, 255));
+		
+		/**
+		 * Places the systemTitle_Label in the 3rd row, 1st column of the 
+		 * gridbag layout.
+		 */
 		GridBagConstraints gbc_systemTitle_Label = new GridBagConstraints();
 		gbc_systemTitle_Label.anchor = GridBagConstraints.NORTH;
 		gbc_systemTitle_Label.insets = new Insets(0, 0, 5, 5);
@@ -146,8 +178,8 @@ public class UserLogin extends JFrame {
 		auth_panel.setBackground(new Color(0, 0, 51));
 		mainPanel.add(auth_panel);
 		GridBagLayout gbl_auth_panel = new GridBagLayout();
-		gbl_auth_panel.columnWidths = new int[]{63, 0, 267, 0};
-		gbl_auth_panel.rowHeights = new int[] {40, 40, 0, 0};
+		gbl_auth_panel.columnWidths = new int[]{63, 0, 267, 0};	//3 columns
+		gbl_auth_panel.rowHeights = new int[] {40, 40, 0, 0};	//3 rows
 		gbl_auth_panel.columnWeights = new double[]{0.0, 0.0, 0.0, Double.MIN_VALUE};
 		gbl_auth_panel.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0};
 		auth_panel.setLayout(gbl_auth_panel);
@@ -161,20 +193,20 @@ public class UserLogin extends JFrame {
 		ImageIcon passwordimageIcon = new ImageIcon(new ImageIcon(UserLogin.class.getResource(
 				"/img/lock-closed.png")).getImage().getScaledInstance(15, 15, Image.SCALE_DEFAULT));
 		
-		username_Label = new JLabel("");
+		username_Label = new JLabel(userimageIcon);
 		username_Label.setAlignmentX(Component.CENTER_ALIGNMENT);
 		username_Label.setSize(new Dimension(15, 15));
 		username_Label.setPreferredSize(new Dimension(15, 15));
-		username_Label.setIcon(userimageIcon);
 		
 				
-				GridBagConstraints gbc_username_Label = new GridBagConstraints();
-				gbc_username_Label.anchor = GridBagConstraints.EAST;
-				gbc_username_Label.insets = new Insets(0, 0, 5, 5);
-				gbc_username_Label.gridx = 1;
-				gbc_username_Label.gridy = 0;
-				auth_panel.add(username_Label, gbc_username_Label);
+		GridBagConstraints gbc_username_Label = new GridBagConstraints();
+		gbc_username_Label.anchor = GridBagConstraints.EAST;
+		gbc_username_Label.insets = new Insets(0, 0, 5, 5);
+		gbc_username_Label.gridx = 1;
+		gbc_username_Label.gridy = 0;
+		auth_panel.add(username_Label, gbc_username_Label);
 		
+		//Holds Username to be authenticated
 		txtUsername = new JTextField();
 		txtUsername.setCaretColor(Color.WHITE);
 		txtUsername.setHorizontalAlignment(SwingConstants.CENTER);
@@ -196,19 +228,20 @@ public class UserLogin extends JFrame {
 		auth_panel.add(txtUsername, gbc_txtUsername);
 		txtUsername.setColumns(23);
 		
-		password_Label = new JLabel("");
+		password_Label = new JLabel();
 		password_Label.setAlignmentX(Component.RIGHT_ALIGNMENT);
 		password_Label.setSize(new Dimension(15, 15));
 		password_Label.setPreferredSize(new Dimension(15, 15));
 		password_Label.setIcon(passwordimageIcon);		
 		
-				GridBagConstraints gbc_password_Label = new GridBagConstraints();
-				gbc_password_Label.insets = new Insets(0, 0, 5, 5);
-				gbc_password_Label.anchor = GridBagConstraints.EAST;
-				gbc_password_Label.gridx = 1;
-				gbc_password_Label.gridy = 1;
-				auth_panel.add(password_Label, gbc_password_Label);
+		GridBagConstraints gbc_password_Label = new GridBagConstraints();
+		gbc_password_Label.insets = new Insets(0, 0, 5, 5);
+		gbc_password_Label.anchor = GridBagConstraints.EAST;
+		gbc_password_Label.gridx = 1;
+		gbc_password_Label.gridy = 1;
+		auth_panel.add(password_Label, gbc_password_Label);
 		
+		//Holds password to be authenticated
 		txtPassword = new JPasswordField();
 		txtPassword.setCaretColor(Color.WHITE);
 		txtPassword.setForeground(new Color(255, 255, 255));
@@ -230,6 +263,7 @@ public class UserLogin extends JFrame {
 		gbc_txtPassword.gridy = 1;
 		auth_panel.add(txtPassword, gbc_txtPassword);
 		
+		//Authentication message to set to display if login fails
 		auth_message = new JLabel("Invalid username or password.");
 		auth_message.setVisible(false);
 		auth_message.setForeground(new Color(255, 0, 0));
@@ -243,6 +277,10 @@ public class UserLogin extends JFrame {
 		userSelect_Panel.setBackground(new Color(0, 0, 51));
 		mainPanel.add(userSelect_Panel);
 		
+		/**
+		 * Radio buttons to select user to be logged in.
+		 * Adds both to a buttonGroup for ease of selection
+		 */
 		student_rdbtn = new JRadioButton("Student");
 		student_rdbtn.setFont(new Font("Times New Roman", Font.PLAIN, 13));
 		student_rdbtn.setForeground(new Color(255, 255, 255));
@@ -264,7 +302,6 @@ public class UserLogin extends JFrame {
 		
 		login_btn = new JButton("LOGIN");
 
-
 		login_btn.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		login_btn.setAlignmentY(Component.BOTTOM_ALIGNMENT);
 		login_btn.setBorderPainted(false);
@@ -280,10 +317,12 @@ public class UserLogin extends JFrame {
 		//Centers frame on screen
 		Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
 		this.setLocation(dim.width/2-this.getSize().width/2, dim.height/2-this.getSize().height/2);
-		this.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
-		registerListeners();
-	}
-	public void disposeFrame() {
+		this.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);		
+	
+	}	
+	
+	//Removes frame from display after use
+	private void disposeFrame() {
 		this.setVisible(false);
 	}
 	
@@ -316,13 +355,14 @@ public class UserLogin extends JFrame {
 
 	//To be found in controllers when naming conventions are set up
 	private boolean authenticateUser() {
+		//txtUsername
+		//txtPassword
 		boolean auth = true;
 		return auth;
 	}
 	
 	//Displays error message with login validation has failed.
 	private void loginErrorMessage(){
-		
 		auth_message.setVisible(true);
 	}
 }
