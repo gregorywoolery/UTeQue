@@ -175,8 +175,8 @@ public class StudentDashboard extends Dashboard {
 		
 		
 //		JInternalFrame currFrame = new StudentMain();
-		JInternalFrame currFrame = new AddIssue();
-//		JInternalFrame currFrame = new UpdateIssue();
+//		JInternalFrame currFrame = new AddIssue();
+		JInternalFrame currFrame = new UpdateIssue();
 		
 
 		workspace_desktopPane.add(currFrame);
@@ -198,7 +198,13 @@ public class StudentDashboard extends Dashboard {
 		if(currFrame.getClass() == AddIssue.class){
 			currFrame.setLocation((desktopSize.width - jInternalFrameSize.width)/500,
 			    (desktopSize.height- jInternalFrameSize.height)/70);
-		}		
+		}	
+		
+		//Test if current internal frame is of class AddIssue and renders the frame with that
+		if(currFrame.getClass() == UpdateIssue.class){
+			currFrame.setLocation((desktopSize.width - jInternalFrameSize.width)/60,
+			    (desktopSize.height- jInternalFrameSize.height)/70);
+		}
 		
 		
 		GridBagConstraints gbc_workspace_desktopPane = new GridBagConstraints();

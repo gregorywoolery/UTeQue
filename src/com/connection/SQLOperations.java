@@ -38,6 +38,7 @@ public class SQLOperations {
 			System.out.println("SQL Exception Thrown: " + e.getMessage());
 		}
 	}
+	
 	//--Update Statement
 	public void updateStudent(Student student) {
 		if(checkExistingStudent(student.getID())) {
@@ -66,6 +67,7 @@ public class SQLOperations {
 		}else
 			System.out.println("---"+student.getID() +" "+student.getFname() +" "+ student.getLname() + " was not found.");
 	}
+	
 	//--Delete Statement
 	public void deleteStudent(Student student) {
 		if(checkExistingStudent(student.getID())) {
@@ -84,6 +86,7 @@ public class SQLOperations {
 		}else
 			System.out.println("---Student was not found.");
 	}
+	
 	//--Read Statement
 	public ArrayList<Student> readStudent() {
 
@@ -150,6 +153,7 @@ public class SQLOperations {
 			System.out.println("SQL Exception Thrown: " + e.getMessage());
 		}
 	}
+	
 	//--Update Statement
 	public void updateServices(Users services) {
 		if(checkExistingServices(services.getID())) {
@@ -177,6 +181,7 @@ public class SQLOperations {
 		}else
 			System.out.println("---"+services.getID() +" "+services.getFname() +" "+ services.getLname() + " was not found.");
 	}
+	
 	//--Delete Statement
 	public void deleteServices(Users services) {
 		if(checkExistingServices(services.getID())) {
@@ -259,6 +264,7 @@ public class SQLOperations {
 			System.out.println("SQL Exception Thrown: " + e.getMessage());
 		}
 	}
+	
 	//--Update Statement
 	public void updateIssue(Issue issue) {
 		if(checkExistingIssue(issue.getIssueId())) {
@@ -284,6 +290,7 @@ public class SQLOperations {
 		}else
 			System.out.println("---"+issue.getIssueId() + " was not found.");
 	}
+	
 	//--Delete Statement
 	public void deleteIssue(Issue issue) {
 		if(checkExistingIssue(issue.getIssueId())) {
@@ -302,6 +309,7 @@ public class SQLOperations {
 		}else
 			System.out.println("---Issue was not found.");
 	}
+	
 	//--Read Statement
 	public ArrayList<Issue> readIssue() {
 
@@ -365,6 +373,7 @@ public class SQLOperations {
 		System.out.println("---Student does not exist");
 		return false;
 	}
+	
 	public Boolean checkExistingServices(String id) {
 		String selectServices = "SELECT count(*) FROM UTeQueDB.Services WHERE id=?";
 		
@@ -387,6 +396,7 @@ public class SQLOperations {
 		System.out.println("---Service does not exist");
 		return false;
 	}
+	
 	public Boolean checkExistingIssue(String id) {
 		String selectIssue = "SELECT count(*) FROM UTeQueDB.Issue WHERE issueId=?";
 		

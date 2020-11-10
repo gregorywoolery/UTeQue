@@ -17,6 +17,7 @@ public class CreateDB {
 		String dbSql = "CREATE DATABASE UTeQueDB";
 			
 		Statement stmt;
+		
 		try {
 			dbConn = DBConnectorFactory.getDatabaseConnection();
 			stmt = (Statement) dbConn.createStatement();
@@ -46,6 +47,7 @@ public class CreateDB {
 				+ "PRIMARY KEY (`id`)) ENGINE = InnoDB";
 			
 		Statement stmt;
+		
 		try {
 			dbConn = DBConnectorFactory.getDatabaseConnection();
 			stmt = (Statement) dbConn.createStatement();
@@ -76,6 +78,7 @@ public class CreateDB {
 				+ "PRIMARY KEY (`id`)) ENGINE = InnoDB";
 			
 		Statement stmt;
+		
 		try {
 			dbConn = DBConnectorFactory.getDatabaseConnection();
 			stmt = (Statement) dbConn.createStatement();
@@ -101,9 +104,10 @@ public class CreateDB {
 				+ "message VARCHAR(100) NOT NULL , "
 				+ "scheduledDateTime DATETIME NOT NULL , "
 				+ "repId VARCHAR(10) NOT NULL , "
-				+ ") ENGINE = InnoDB";
+				+ "PRIMARY KEY (`issueId`)) ENGINE = InnoDB";
 			
 		Statement stmt;
+		
 		try {
 			dbConn = DBConnectorFactory.getDatabaseConnection();
 			stmt = (Statement) dbConn.createStatement();
@@ -119,9 +123,6 @@ public class CreateDB {
 		}			
 	}
 	
-	
-
-
 
 
 }
