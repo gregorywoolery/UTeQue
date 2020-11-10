@@ -172,35 +172,34 @@ public class StudentDashboard extends Dashboard {
 		logoutButton_panel.add(logout_btn);
 		
 		workspace_desktopPane = new JDesktopPane();
-		workspace_desktopPane.add(new StudentMain());		
-//		workspace_desktopPane.add(new AddIssue());
-//		workspace_desktopPane.add(new UpdateIssue());
+		
+		
+//		JInternalFrame currFrame = new StudentMain();
+		JInternalFrame currFrame = new AddIssue();
+//		JInternalFrame currFrame = new UpdateIssue();
+		
+
+		workspace_desktopPane.add(currFrame);
 		
 		workspace_desktopPane.setBorder(new LineBorder(new Color(0, 0, 51), 5));
 		workspace_desktopPane.setBackground(new Color(0, 0, 51));
-		
-		//JInternalFrame userInternalFrame = workspace_desktopPane.getSelectedFrame();
-		
-		for(JInternalFrame userInternalFrame: workspace_desktopPane.getAllFrames()) {
-			if(userInternalFrame.isSelected()) {
-				//Opens JinternalFrame centered in the JDesktopPane
-				if(userInternalFrame != null) {
-					Dimension desktopSize = workspace_desktopPane.getSize();
-					Dimension jInternalFrameSize = userInternalFrame.getSize();
-					
-					userInternalFrame.setLocation(2,10);
-					
-//					userInternalFrame.setLocation((desktopSize.width - jInternalFrameSize.width)/2,
-//					    (desktopSize.height- jInternalFrameSize.height)/2);
-					
-					System.out.println("in");
-				}
-				System.out.println("out");
-			}
-				
-		}
-	
 
+		//Opens JinternalFrame centered in the JDesktopPane
+		Dimension desktopSize = workspace_desktopPane.getSize();
+		Dimension jInternalFrameSize = currFrame.getSize();
+		
+		//Test if current internal frame is of class Student main and renders the frame with that
+		if(currFrame.getClass() == StudentMain.class){
+			currFrame.setLocation((desktopSize.width - jInternalFrameSize.width)/50,
+			    (desktopSize.height- jInternalFrameSize.height)/50);
+		}
+
+		//Test if current internal frame is of class AddIssue and renders the frame with that
+		if(currFrame.getClass() == AddIssue.class){
+			currFrame.setLocation((desktopSize.width - jInternalFrameSize.width)/500,
+			    (desktopSize.height- jInternalFrameSize.height)/70);
+		}		
+		
 		
 		GridBagConstraints gbc_workspace_desktopPane = new GridBagConstraints();
 		gbc_workspace_desktopPane.insets = new Insets(0, 0, 5, 10);
@@ -210,8 +209,5 @@ public class StudentDashboard extends Dashboard {
 		home_panel.add(workspace_desktopPane, gbc_workspace_desktopPane);
 	}
 	
-	
-	
-
 
 }

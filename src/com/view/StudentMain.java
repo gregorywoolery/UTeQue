@@ -84,7 +84,7 @@ public class StudentMain extends JInternalFrame {
 	}
 	
 	private void initializeComponents() {
-		//((javax.swing.plaf.basic.BasicInternalFrameUI)this.getUI()).setNorthPane(null);
+		((javax.swing.plaf.basic.BasicInternalFrameUI)this.getUI()).setNorthPane(null);
 		
 		this.setVisible(true);
 		this.setSize(730, 550);
