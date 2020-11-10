@@ -1,6 +1,7 @@
 package com.model;
 
 import java.io.Serializable;
+import java.util.Date;
 
 public class Users implements Serializable{
 	//Attributes
@@ -24,7 +25,7 @@ public class Users implements Serializable{
 		this.lname = "";
 		this.gender = "";
 		this.email= "";
-		this.dob = new Date(0,0,0);
+		this.dob = null;
 		this.phone = "";
 	}
 	//Primary Constructor
@@ -107,13 +108,16 @@ public class Users implements Serializable{
 	public void setPhone(String phone) {
 		this.phone = phone;
 	}
-
 	
 	//ToString
 	@Override
 	public String toString() {
 		return "Users [Type=" + type + ", ID=" + id + ", Password=" + password + ", First name=" + fname + ", Last name=" + lname
 				+ ", Gender=" + gender + ", Email=" + email + ", DOB=" + dob + ", Phone=" + phone + "]";
+	}
+	public void display() {
+		System.out.println(toString());
+		
 	}
 
 
