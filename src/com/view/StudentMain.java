@@ -15,6 +15,8 @@ import javax.swing.ImageIcon;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.font.TextAttribute;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -25,6 +27,7 @@ import javax.swing.DefaultComboBoxModel;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
+import javax.swing.JDesktopPane;
 import javax.swing.JInternalFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -38,7 +41,7 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
 
 
-public class StudentMain extends JInternalFrame {
+public class StudentMain extends JInternalFrame implements ActionListener{
 	private JPanel addIssue_panel;
 	private JPanel updateIssue_panel;
 	private JPanel IssueDisplay_panel;
@@ -73,14 +76,22 @@ public class StudentMain extends JInternalFrame {
 	private JLabel dateMadeUpdate_lbl;
 	private JPanel date_panel;
 	private DatePicker updateDatePicker;
-
+	private JDesktopPane workSpaceDesktop;
+	private String currDate;
+	
 	/**
 	 * Create the frame.
 	 */
-	public StudentMain() {
-		super("Main", false, false, false, true);
-		initializeComponents();
 
+	public StudentMain(JDesktopPane workSpaceDesktop) {
+		super("Main",
+				false, 	//resizable
+				true, 	//closable
+				false, 	//maximizable
+				true);	//iconifiable
+		initializeComponents();
+		registerListeners();
+		this.workSpaceDesktop = workSpaceDesktop;
 	}
 	
 	private void initializeComponents() {
@@ -179,6 +190,7 @@ public class StudentMain extends JInternalFrame {
 		gbc_addIssue_panel.insets = new Insets(0, 0, 5, 5);
 		gbc_addIssue_panel.gridx = 0;
 		gbc_addIssue_panel.gridy = 1;
+		
 		getContentPane().add(addIssue_panel, gbc_addIssue_panel);
 		addIssue_panel.setLayout(new BoxLayout(addIssue_panel, BoxLayout.Y_AXIS));
 		
@@ -193,6 +205,7 @@ public class StudentMain extends JInternalFrame {
 		Map<TextAttribute, Object> attributes = new HashMap<>(font.getAttributes());
 		attributes.put(TextAttribute.UNDERLINE, TextAttribute.UNDERLINE_ON);
 		addIssueTitle_lbl.setFont(font.deriveFont(attributes));
+		
 		addIssue_panel.add(addIssueTitle_lbl);
 		
 		addIssue_comboBox = new JComboBox();
@@ -204,15 +217,23 @@ public class StudentMain extends JInternalFrame {
 		addIssue_comboBox.setMaximumSize(new Dimension(100, 25));
 		addIssue_comboBox.setModel(new DefaultComboBoxModel(new String[] {"Complaint", "Query"}));
 		addIssue_comboBox.setFont(new Font("Arial Rounded MT Bold", Font.PLAIN, 14));
+		
 		addIssue_panel.add(addIssue_comboBox);
 		
-		addedDate_lbl = new JLabel("dd/mm/yyyy");
+		
+		LocalDate date = LocalDate.now(); // Gets the current date
+		DateTimeFormatter currentDateFormat = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+		currDate = date.format(currentDateFormat);
+		
+		addedDate_lbl = new JLabel(currDate);
 		addedDate_lbl.setForeground(new Color(0, 0, 0));
 		addedDate_lbl.setHorizontalAlignment(SwingConstants.CENTER);
 		addedDate_lbl.setMaximumSize(new Dimension(100, 55));
 		addedDate_lbl.setFont(new Font("Arial Rounded MT Bold", Font.PLAIN, 13));
 		addedDate_lbl.setAlignmentX(Component.CENTER_ALIGNMENT);
+		
 		addIssue_panel.add(addedDate_lbl);
+		
 		
 		addBtn = new JButton("ADD");
 		addBtn.setToolTipText("Add your issues.");
@@ -427,28 +448,36 @@ public class StudentMain extends JInternalFrame {
 		
 		
 	public void registerListeners() {
-		addBtn.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
+		addBtn.addActionListener(this);
+		updateBtn.addActionListener(this);
+		addIssue_comboBox.addActionListener(this);
+		
+	}
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		if(e.getSource() == addBtn) {
+			dispose();
+			JInternalFrame currFrame = new AddIssue(workSpaceDesktop, upadateIssue_comboBox.getSelectedIndex());
+			workSpaceDesktop.add(currFrame);
+			
+			//Opens JinternalFrame centered in the JDesktopPane
+			Dimension desktopSize = workSpaceDesktop.getSize();
+			Dimension jInternalFrameSize = currFrame.getSize();
+			
+			//Test if current internal frame is of class AddIssue and renders the frame with that
+			if(currFrame.getClass() == AddIssue.class){
+				currFrame.setLocation((desktopSize.width - jInternalFrameSize.width)/500,
+				    (desktopSize.height- jInternalFrameSize.height)/70);
 			}
-		});
+			
+		}
 	
 		updateBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				
 			}
 		});
-		
-//		addBtnDash.addActionListener(new ActionListener() {
-//			public void actionPerformed(ActionEvent e) {
-
-//			}
-//		});
-		
-//		addBtnDash.addMouseListener(new MouseAdapter() {
-//			@Override
-//			public void mouseClicked(MouseEvent e) {
-//				workspace_desktopPane.removeAll();
-//			}
-//		});
-		
 	}
+
 }

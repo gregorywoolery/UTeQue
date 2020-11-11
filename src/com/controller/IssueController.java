@@ -9,6 +9,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Scanner;
 
+import javax.swing.JComboBox;
+
 import java.io.*;
 import java.util.*;
 
@@ -146,7 +148,5 @@ public class IssueController {
 	public int viewOutstandComplaints() {
 			return 0;
 	}
-
-
 
 }

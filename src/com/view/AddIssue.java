@@ -20,6 +20,7 @@ import javax.swing.JOptionPane;
 
 import java.awt.Font;
 import javax.swing.JComboBox;
+import javax.swing.JDesktopPane;
 import javax.swing.JTextField; 
 import javax.swing.JButton;
 import javax.swing.BoxLayout;
@@ -32,11 +33,13 @@ import javax.swing.JTextArea;
 
 import com.services.DocumentSizeFilter;
 import java.awt.event.ActionListener;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.awt.event.ActionEvent;
 import javax.swing.ImageIcon;
 
-public class AddIssue extends JInternalFrame {
-	private JTextField issueSummary_txtfd;
+public class AddIssue extends JInternalFrame implements ActionListener{
+	private JTextArea issueSummary_txtfd;
 	private JTable issueTable;
 	private JTextArea issueTextArea;
 	private DefaultStyledDocument issueAreaDoc;
@@ -57,13 +60,38 @@ public class AddIssue extends JInternalFrame {
 	private JLabel remainingSum_lbl;
 	private JLabel issueIDTitle_lbl;
 	private JLabel issueID_lbl;
-	
+	private JDesktopPane workSpaceDesktop;
+	private String currDate;
+	private int issueTypeSelect = 0;
+	private JLabel issueDate_lbl;
 	/**
 	 * Create the frame.
 	 */
-	public AddIssue() {
-		super("Add Issue", false, false, false, true);
+	public AddIssue(JDesktopPane workSpaceDesktop, int issueTypeSelect) {
+		super("Add Issue", 
+				false, 	//resizable
+				true, 	//closable
+				false, 	//maximizable
+				true);	//iconifiable
 		initializeComponents();
+		registerListeners();
+		this.workSpaceDesktop =  workSpaceDesktop;
+		this.issueTypeSelect = issueTypeSelect;
+	}
+	
+	
+	/**
+	 * @wbp.parser.constructor
+	 */
+	public AddIssue(JDesktopPane workSpaceDesktop) {
+		super("Add Issue", 
+				false, 	//resizable
+				true, 	//closable
+				false, 	//maximizable
+				true);	//iconifiable
+		initializeComponents();
+		registerListeners();
+		this.workSpaceDesktop =  workSpaceDesktop;
 	}
 	
 	private void initializeComponents() {
@@ -112,7 +140,7 @@ public class AddIssue extends JInternalFrame {
 		issueIDTitle_lbl.setFont(new Font("Arial Rounded MT Bold", Font.PLAIN, 12));
 		issueID_panel.add(issueIDTitle_lbl);
 		
-		issueID_lbl = new JLabel("");
+		issueID_lbl = new JLabel();
 		issueID_lbl.setHorizontalAlignment(SwingConstants.CENTER);
 		issueID_lbl.setPreferredSize(new Dimension(115, 20));
 		issueID_lbl.setForeground(new Color(255, 255, 255));
@@ -127,19 +155,21 @@ public class AddIssue extends JInternalFrame {
 		addIssue_comboBox.setFont(new Font("Arial Rounded MT Bold", Font.PLAIN, 14));
 		addIssue_comboBox.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		addIssue_comboBox.setBackground(new Color(255, 255, 0));
+		addIssue_comboBox.setSelectedIndex(issueTypeSelect);
 		infoPanel.add(addIssue_comboBox);
 		
 		issueSummary_lbl = new JLabel("Summary:");
 		issueSummary_lbl.setForeground(new Color(255, 255, 255));
 		issueSummary_lbl.setBorder(new LineBorder(new Color(0, 0, 51), 11));
 		issueSummary_lbl.setHorizontalAlignment(SwingConstants.RIGHT);
-		issueSummary_lbl.setMaximumSize(new Dimension(150, 40));
+		issueSummary_lbl.setMaximumSize(new Dimension(120, 40));
 		issueSummary_lbl.setFont(new Font("Arial Rounded MT Bold", Font.PLAIN, 14));
 		infoPanel.add(issueSummary_lbl);
 		
-		issueSummary_txtfd = new JTextField();
+		issueSummary_txtfd = new JTextArea();
+		issueSummary_txtfd.setMargin(new Insets(4, 4, 2, 2));
 		issueSummary_lbl.setLabelFor(issueSummary_txtfd);
-		issueSummary_txtfd.setMaximumSize(new Dimension(200, 25));
+		issueSummary_txtfd.setMaximumSize(new Dimension(230, 25));
 		issueSummary_txtfd.setFont(new Font("Times New Roman", Font.PLAIN, 13));
 
 		/*
@@ -163,7 +193,7 @@ public class AddIssue extends JInternalFrame {
 		infoPanel.add(issueSummary_txtfd);
 		issueSummary_txtfd.setColumns(10);
 		
-		remainingSum_lbl = new JLabel("");
+		remainingSum_lbl = new JLabel();
 		remainingSum_lbl.setHorizontalAlignment(SwingConstants.RIGHT);
 		remainingSum_lbl.setMaximumSize(new Dimension(70, 20));
 		remainingSum_lbl.setForeground(Color.RED);
@@ -198,11 +228,16 @@ public class AddIssue extends JInternalFrame {
 		gbc_promptIssue.gridy = 0;
 		main_Panel.add(promptIssue, gbc_promptIssue);
 		
-		issueTextArea = new JTextArea(4, 20);
+		
+		
+		issueTextArea = new JTextArea();
+		issueTextArea.setMargin(new Insets(3, 3, 2, 2));
 		issueTextArea.setTabSize(6);
 		issueTextArea.setLineWrap(true);
-		issueTextArea.setFont(new Font("Times New Roman", Font.PLAIN, 13));
+		issueTextArea.setFont(new Font("Arial Rounded MT Bold", Font.PLAIN, 14));
 		issueTextArea.setPreferredSize(new Dimension(7, 100));
+		
+		
 		
 		/*
 		 * Sets a limit of 150 characters to the JTextArea by using the 
@@ -221,6 +256,21 @@ public class AddIssue extends JInternalFrame {
         });
 		
 		issueTextArea.setDocument(issueAreaDoc);
+		
+		LocalDate date = LocalDate.now(); // Gets the current date
+		DateTimeFormatter currentDateFormat = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+		currDate = date.format(currentDateFormat);
+		
+		issueDate_lbl = new JLabel(currDate);
+		issueDate_lbl.setForeground(new Color(0, 0, 51));
+		issueDate_lbl.setFont(new Font("Arial Rounded MT Bold", Font.PLAIN, 13));
+		GridBagConstraints gbc_issueDate_lbl = new GridBagConstraints();
+		gbc_issueDate_lbl.insets = new Insets(0, 0, 5, 0);
+		gbc_issueDate_lbl.gridx = 1;
+		gbc_issueDate_lbl.gridy = 0;
+		main_Panel.add(issueDate_lbl, gbc_issueDate_lbl);
+		
+		
 		
 		GridBagConstraints gbc_issueTextArea = new GridBagConstraints();
 		gbc_issueTextArea.gridwidth = 2;
@@ -328,13 +378,34 @@ public class AddIssue extends JInternalFrame {
     }
 
     private void updateSumCount() {
-    	remainingSum_lbl.setText("Rem: " + (40 -issueAreaDoc.getLength()));
+    	remainingSum_lbl.setText("Rem: " + (40 -summaryAreaDoc.getLength()));
     }
     
-    private void actionPerformed() {
+	public void addMainInternalFrame() {
+		dispose();
+		JInternalFrame currFrame = new StudentMain(workSpaceDesktop);
+		workSpaceDesktop.add(currFrame);
+		
+		//Opens JinternalFrame centered in the JDesktopPane
+		Dimension desktopSize = workSpaceDesktop.getSize();
+		Dimension jInternalFrameSize = currFrame.getSize();
+		
+		//Test if current internal frame is of class Student main and renders the frame with that
+		if(currFrame.getClass() == StudentMain.class){
+			currFrame.setLocation((desktopSize.width - jInternalFrameSize.width)/2,
+			    (desktopSize.height- jInternalFrameSize.height)/2);
+		}
+	}
+    
+	private void registerListeners() {
+		returnBtn.addActionListener(this);
+	}
+	
+	@Override
+	public void actionPerformed(ActionEvent e) {
 		addBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				int opt = JOptionPane.showConfirmDialog(null, 
+				int opt = JOptionPane.showConfirmDialog(workSpaceDesktop, 
 						"Are you sure you want to add this Issue?", 
 						"Add Issue",
 						JOptionPane.YES_NO_OPTION,
@@ -351,7 +422,7 @@ public class AddIssue extends JInternalFrame {
 		
 		clearBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				int opt = JOptionPane.showConfirmDialog(null, 
+				int opt = JOptionPane.showConfirmDialog(workSpaceDesktop, 
 						"Are you sure you want to clear the fields?", 
 						"Clear Fields...",
 						JOptionPane.YES_NO_OPTION,
@@ -363,21 +434,20 @@ public class AddIssue extends JInternalFrame {
 			}
 		});
 		
-		returnBtn.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				int opt = JOptionPane.showConfirmDialog(null, 
-						"You will now be returning to the Dashboard. Are you sure?", 
-						"Clear Fields...",
-						JOptionPane.YES_NO_CANCEL_OPTION,
-						JOptionPane.QUESTION_MESSAGE);
-				
-				switch(opt) {
-					case 0:
-					case 1:
-					case 2:
-				}
+		if(e.getSource() == returnBtn) {
+			int opt = JOptionPane.showConfirmDialog(workSpaceDesktop, 
+					"You will now be returning to the Dashboard. Are you sure?", 
+					"Return Home...",
+					JOptionPane.YES_NO_CANCEL_OPTION,
+					JOptionPane.QUESTION_MESSAGE);
+			
+			switch(opt) {
+				case 0:
+					addMainInternalFrame();
+					break;
 			}
-		});
+		}
+		
 	}
     
 }

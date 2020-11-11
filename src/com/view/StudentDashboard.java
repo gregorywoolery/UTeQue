@@ -11,6 +11,8 @@ import java.awt.GridBagConstraints;
 
 import java.awt.Image;
 import java.awt.Insets;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
 import javax.swing.ImageIcon;
@@ -18,17 +20,20 @@ import javax.swing.JButton;
 import javax.swing.JDesktopPane;
 import javax.swing.JInternalFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 import javax.swing.border.LineBorder;
+import javax.swing.event.InternalFrameListener;
 
 
-public class StudentDashboard extends Dashboard {
+public class StudentDashboard extends Dashboard implements ActionListener{
 	private JLabel issuesBtn_lbl;
 	private JButton viewBtnDash;
 	private JButton removeBtnDash;
 	private JButton updateBtnDash;
 	private JButton addBtnDash;
+	private JInternalFrame currFrame;
 	
 	/**
 	 * Launch the application.
@@ -51,7 +56,7 @@ public class StudentDashboard extends Dashboard {
 	 */
 	public StudentDashboard() {
 		initializeComponents();
-//		registerListeners();
+		registerListeners();
 	}
 	
 	private void initializeComponents(){
@@ -173,39 +178,10 @@ public class StudentDashboard extends Dashboard {
 		
 		workspace_desktopPane = new JDesktopPane();
 		
-		
-//		JInternalFrame currFrame = new StudentMain();
-//		JInternalFrame currFrame = new AddIssue();
-		JInternalFrame currFrame = new UpdateIssue();
-		
-
-		workspace_desktopPane.add(currFrame);
+		addMainInternalFrame();
 		
 		workspace_desktopPane.setBorder(new LineBorder(new Color(0, 0, 51), 5));
 		workspace_desktopPane.setBackground(new Color(0, 0, 51));
-
-		//Opens JinternalFrame centered in the JDesktopPane
-		Dimension desktopSize = workspace_desktopPane.getSize();
-		Dimension jInternalFrameSize = currFrame.getSize();
-		
-		//Test if current internal frame is of class Student main and renders the frame with that
-		if(currFrame.getClass() == StudentMain.class){
-			currFrame.setLocation((desktopSize.width - jInternalFrameSize.width)/50,
-			    (desktopSize.height- jInternalFrameSize.height)/50);
-		}
-
-		//Test if current internal frame is of class AddIssue and renders the frame with that
-		if(currFrame.getClass() == AddIssue.class){
-			currFrame.setLocation((desktopSize.width - jInternalFrameSize.width)/500,
-			    (desktopSize.height- jInternalFrameSize.height)/70);
-		}	
-		
-		//Test if current internal frame is of class AddIssue and renders the frame with that
-		if(currFrame.getClass() == UpdateIssue.class){
-			currFrame.setLocation((desktopSize.width - jInternalFrameSize.width)/60,
-			    (desktopSize.height- jInternalFrameSize.height)/70);
-		}
-		
 		
 		GridBagConstraints gbc_workspace_desktopPane = new GridBagConstraints();
 		gbc_workspace_desktopPane.insets = new Insets(0, 0, 5, 10);
@@ -215,5 +191,79 @@ public class StudentDashboard extends Dashboard {
 		home_panel.add(workspace_desktopPane, gbc_workspace_desktopPane);
 	}
 	
+	public void addMainInternalFrame() {
+		//Check if frame to remove is there(not null)
+		if(currFrame !=null) {
+			currFrame.dispose();
+		}
+		
+		currFrame = new StudentMain(workspace_desktopPane);
+		workspace_desktopPane.add(currFrame);
+		
+		//Opens JinternalFrame centered in the JDesktopPane
+		Dimension desktopSize = workspace_desktopPane.getSize();
+		Dimension jInternalFrameSize = currFrame.getSize();
+		
+		//Test if current internal frame is of class Student main and renders the frame with that
+		if(currFrame.getClass() == StudentMain.class){
+			currFrame.setLocation((desktopSize.width - jInternalFrameSize.width)/50,
+			    (desktopSize.height- jInternalFrameSize.height)/50);
+		}
+		
+	}
+	
+	
+	public void registerListeners() {
+		addBtnDash.addActionListener(this);
+		updateBtnDash.addActionListener(this);
+	}
+
+	
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		if(e.getSource().equals(addBtnDash)) {
+			//Check if frame to remove is there(not null)
+			if(currFrame !=null) {
+				workspace_desktopPane.removeAll();
+				workspace_desktopPane.updateUI();
+
+				currFrame = new AddIssue(workspace_desktopPane);
+				workspace_desktopPane.add(currFrame);
+		
+				//Opens JinternalFrame centered in the JDesktopPane
+				Dimension desktopSize = workspace_desktopPane.getSize();
+				Dimension jInternalFrameSize = currFrame.getSize();
+				
+				//Test if current internal frame is of class AddIssue and renders the frame with that
+				if(currFrame.getClass() == AddIssue.class){
+					currFrame.setLocation((desktopSize.width - jInternalFrameSize.width)/500,
+					    (desktopSize.height- jInternalFrameSize.height)/70);
+				}
+			}
+		}
+		
+		if(e.getSource().equals(updateBtnDash)) {
+			//Check if frame to remove is there(not null)
+			if(currFrame !=null) {
+				workspace_desktopPane.removeAll();
+				workspace_desktopPane.updateUI();
+				
+				currFrame = new UpdateIssue(workspace_desktopPane);
+				workspace_desktopPane.add(currFrame);
+				
+				//Opens JinternalFrame centered in the JDesktopPane
+				Dimension desktopSize = workspace_desktopPane.getSize();
+				Dimension jInternalFrameSize = currFrame.getSize();
+				
+				//Test if current internal frame is of class AddIssue and renders the frame with that
+				if(currFrame.getClass() == UpdateIssue.class){
+					currFrame.setLocation((desktopSize.width - jInternalFrameSize.width)/2,
+					    (desktopSize.height- jInternalFrameSize.height)/2);
+				}
+			}
+
+
+		}
+	}
 
 }

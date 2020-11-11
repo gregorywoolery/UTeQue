@@ -2,6 +2,7 @@ package com.view;
 
 import javax.swing.JInternalFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 
 import com.github.lgooddatepicker.components.DatePicker;
 
@@ -10,7 +11,11 @@ import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
 import javax.swing.JComboBox;
+import javax.swing.JDesktopPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
@@ -28,8 +33,7 @@ import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 
 
-
-public class UpdateIssue extends JInternalFrame {
+public class UpdateIssue extends JInternalFrame implements ActionListener{
 	private JLabel header_lbl;
 	private JPanel home_panel;
 	private JLabel issueID_lbl;
@@ -48,13 +52,20 @@ public class UpdateIssue extends JInternalFrame {
 	private JTextField issueID_textField;
 	private JTextField summary_textField;
 	private JTable viewUpdate_table;
-
+	private JDesktopPane workSpaceDesktop;
 	
 	/**
 	 * Create the frame.
 	 */
-	public UpdateIssue() {
+	public UpdateIssue(JDesktopPane workSpaceDesktop) {
+		super("Update Issue",
+				false, 	//resizable
+				true, 	//closable
+				false, 	//maximizable
+				true);	//iconifiable
 		initializeComponents();
+		registerListeners();
+		this.workSpaceDesktop =  workSpaceDesktop;
 	}
 	
 	private void initializeComponents() {
@@ -309,5 +320,44 @@ public class UpdateIssue extends JInternalFrame {
 		returnBtn.setFont(new Font("Arial Rounded MT Bold", Font.PLAIN, 13));
 		returnBtn.setBorder(null);
 	}
+
+	public void addMainInternalFrame() {
+		dispose();
+		JInternalFrame currFrame = new StudentMain(workSpaceDesktop);
+		workSpaceDesktop.add(currFrame);
+		
+		//Opens JinternalFrame centered in the JDesktopPane
+		Dimension desktopSize = workSpaceDesktop.getSize();
+		Dimension jInternalFrameSize = currFrame.getSize();
+		
+		//Test if current internal frame is of class Student main and renders the frame with that
+		if(currFrame.getClass() == StudentMain.class){
+			currFrame.setLocation((desktopSize.width - jInternalFrameSize.width)/2,
+			    (desktopSize.height- jInternalFrameSize.height)/50);
+		}
+	}
+	
+	private void registerListeners() {
+		this.returnBtn.addActionListener(this);
+	}
+	
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		if(e.getSource() == returnBtn) {
+			int opt = JOptionPane.showConfirmDialog(workSpaceDesktop, 
+					"You will now be returning to the Dashboard. Are you sure?", 
+					"Return Home...",
+					JOptionPane.YES_NO_CANCEL_OPTION,
+					JOptionPane.QUESTION_MESSAGE);
+			
+			switch(opt) {
+				case 0:
+					addMainInternalFrame();
+					break;
+			}
+		}
+	}
+	
+
 
 }
