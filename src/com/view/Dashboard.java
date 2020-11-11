@@ -36,7 +36,7 @@ public class Dashboard extends JFrame {
 	protected JLabel mainMenuTitle_lbl;
 	protected JPanel menu_panel;
 	protected JPanel logoutButton_panel;
-	protected JButton logout_btn;
+	protected JButton logoutBtn;
 	protected JPanel home_panel;
 	protected JPanel banner_panel;
 	protected JPanel username_panel;
@@ -51,23 +51,6 @@ public class Dashboard extends JFrame {
 	private JMenu mnNewMenu_1;
 	private JMenu mnNewMenu_2;
 
-
-
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					Dashboard frame = new Dashboard();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
 
 	/**
 	 * Create the frame.
@@ -240,7 +223,6 @@ public class Dashboard extends JFrame {
 		userAvatar_lbl = new JLabel("");
 		userAvatar_lbl.setIcon(new ImageIcon(Dashboard.class.getResource("/img/"+ "female" +"/student.png")));
 		userAccessories_panel.add(userAvatar_lbl);
-
 	}
 
 }

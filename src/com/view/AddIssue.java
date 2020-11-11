@@ -151,7 +151,7 @@ public class AddIssue extends JInternalFrame implements ActionListener{
 		addIssue_comboBox.setBorder(null);
 		addIssue_comboBox.setMaximumSize(new Dimension(100, 30));
 		addIssue_comboBox.setForeground(new Color(0, 0, 51));
-		addIssue_comboBox.setModel(new DefaultComboBoxModel(new String[] {"Complaint", "Queries"}));
+		addIssue_comboBox.setModel(new DefaultComboBoxModel(new String[] {"Complaint", "Query"}));
 		addIssue_comboBox.setFont(new Font("Arial Rounded MT Bold", Font.PLAIN, 14));
 		addIssue_comboBox.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		addIssue_comboBox.setBackground(new Color(255, 255, 0));
@@ -334,15 +334,15 @@ public class AddIssue extends JInternalFrame implements ActionListener{
 			new Object[][] {
 			},
 			new String[] {
-				"Issue ID", "TYPE", "MAIN DETAILS", "DATE ISSUED", "Details"
+				"Issue ID", "TYPE", "DATE ISSUED", "MAIN DETAILS", "DETAILS"
 			}
 		));
 		issueTable.getColumnModel().getColumn(0).setResizable(false);
-		issueTable.getColumnModel().getColumn(0).setPreferredWidth(90);
-		issueTable.getColumnModel().getColumn(1).setPreferredWidth(87);
+		issueTable.getColumnModel().getColumn(0).setPreferredWidth(85);
+		issueTable.getColumnModel().getColumn(1).setPreferredWidth(85);
+		issueTable.getColumnModel().getColumn(3).setPreferredWidth(85);
 		issueTable.getColumnModel().getColumn(2).setPreferredWidth(110);
-		issueTable.getColumnModel().getColumn(3).setPreferredWidth(83);
-		issueTable.getColumnModel().getColumn(4).setPreferredWidth(142);
+		issueTable.getColumnModel().getColumn(4).setPreferredWidth(140);
 		
 		//Changes table heaver font
 		JTableHeader tableHeader = issueTable.getTableHeader();

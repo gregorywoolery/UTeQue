@@ -430,10 +430,10 @@ public class StudentMain extends JInternalFrame implements ActionListener{
 		tableHeader.setFont(new Font("Times New Roman", Font.PLAIN, 15));
 		
 		issueTable.getColumnModel().getColumn(0).setResizable(false);
-		issueTable.getColumnModel().getColumn(0).setPreferredWidth(89);
+		issueTable.getColumnModel().getColumn(0).setPreferredWidth(85);
 		issueTable.getColumnModel().getColumn(1).setPreferredWidth(156);
-		issueTable.getColumnModel().getColumn(2).setPreferredWidth(100);
-		issueTable.getColumnModel().getColumn(3).setPreferredWidth(83);
+		issueTable.getColumnModel().getColumn(2).setPreferredWidth(85);
+		issueTable.getColumnModel().getColumn(3).setPreferredWidth(50);
 		issueTable.getColumnModel().getColumn(4).setPreferredWidth(135);
 		issueTable.setGridColor(new Color(0, 0, 51));
 		issueTable.setBackground(new Color(0,204, 225));

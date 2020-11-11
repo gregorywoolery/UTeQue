@@ -13,18 +13,15 @@ import java.awt.Image;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.ArrayList;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JDesktopPane;
 import javax.swing.JInternalFrame;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 import javax.swing.border.LineBorder;
-import javax.swing.event.InternalFrameListener;
 
 
 public class StudentDashboard extends Dashboard implements ActionListener{
@@ -59,7 +56,7 @@ public class StudentDashboard extends Dashboard implements ActionListener{
 		registerListeners();
 	}
 	
-	private void initializeComponents(){
+	public void initializeComponents(){
 		
 		issuesBtn_lbl = new JLabel("Issues");
 		issuesBtn_lbl.setIcon(new ImageIcon(Dashboard.class.getResource("/img/dash/search-paper.png")));
@@ -68,7 +65,6 @@ public class StudentDashboard extends Dashboard implements ActionListener{
 		issuesBtn_lbl.setAlignmentX(Component.CENTER_ALIGNMENT);
 		issuesBtn_lbl.setHorizontalTextPosition(SwingConstants.RIGHT);
 		issuesBtn_lbl.setHorizontalAlignment(SwingConstants.LEFT);
-		//issuesBtn_lbl.setMaximumSize(new Dimension(140, 40));
 		issuesBtn_lbl.setPreferredSize(new Dimension(99, 30));
 		issuesBtn_lbl.setForeground(new Color(255, 255, 255));
 		issuesBtn_lbl.setFont(new Font("Arial Rounded MT Bold", Font.PLAIN, 13));
@@ -159,22 +155,22 @@ public class StudentDashboard extends Dashboard implements ActionListener{
 		gbc_logoutButton_panel.gridy = 2;
 		sidebar_panel.add(logoutButton_panel, gbc_logoutButton_panel);
 
-		logout_btn = new JButton("Log Out");
-		logout_btn.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-		logout_btn.setFocusPainted(false);
-		logout_btn.setPreferredSize(new Dimension(95, 35));
-		logout_btn.setForeground(new Color(51, 153, 255));
-		logout_btn.setBorder(null);
-		logout_btn.setBackground(new Color(51, 255, 0));
-		logout_btn.setFont(new Font("Arial Rounded MT Bold", Font.BOLD, 15));
+		logoutBtn = new JButton("Log Out");
+		logoutBtn.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+		logoutBtn.setFocusPainted(false);
+		logoutBtn.setPreferredSize(new Dimension(95, 35));
+		logoutBtn.setForeground(new Color(51, 153, 255));
+		logoutBtn.setBorder(null);
+		logoutBtn.setBackground(new Color(51, 255, 0));
+		logoutBtn.setFont(new Font("Arial Rounded MT Bold", Font.BOLD, 15));
 		
 		// Resize icon to fit on button
 		// Resize icon to fit on label 
 		ImageIcon buttonImageIcon = new ImageIcon(new ImageIcon(Dashboard.class.getResource(
 				"/img/logout.png")).getImage().getScaledInstance(23, 23, Image.SCALE_DEFAULT));
 		
-		logout_btn.setIcon(buttonImageIcon);
-		logoutButton_panel.add(logout_btn);
+		logoutBtn.setIcon(buttonImageIcon);
+		logoutButton_panel.add(logoutBtn);
 		
 		workspace_desktopPane = new JDesktopPane();
 		
@@ -216,6 +212,7 @@ public class StudentDashboard extends Dashboard implements ActionListener{
 	public void registerListeners() {
 		addBtnDash.addActionListener(this);
 		updateBtnDash.addActionListener(this);
+		logoutBtn.addActionListener(this);
 	}
 
 	
@@ -262,7 +259,21 @@ public class StudentDashboard extends Dashboard implements ActionListener{
 				}
 			}
 
-
+		}
+		
+		
+		if(e.getSource().equals(logoutBtn)) {
+			dispose();
+			EventQueue.invokeLater(new Runnable() {
+				public void run() {
+					try {
+						UserLogin userLoginFrame = new UserLogin();
+						userLoginFrame.setVisible(true);
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+				}
+			});
 		}
 	}
 
