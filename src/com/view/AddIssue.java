@@ -97,7 +97,6 @@ public class AddIssue extends JInternalFrame implements ActionListener{
 	private void initializeComponents() {
 		((javax.swing.plaf.basic.BasicInternalFrameUI)this.getUI()).setNorthPane(null);
 		
-		this.setVisible(true);
 		this.setSize(730, 550);
 		getContentPane().setBackground(new Color(0, 0, 51));
 		setBorder(new LineBorder(new Color(0, 0, 51), 20));
@@ -371,6 +370,8 @@ public class AddIssue extends JInternalFrame implements ActionListener{
 		returnBtn.setFont(new Font("Arial Rounded MT Bold", Font.PLAIN, 14));
 		returnBtn.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		footer_panel.add(returnBtn);
+		
+		this.setVisible(true);
 	}
 	
     private void updateCount(){

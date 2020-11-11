@@ -97,7 +97,6 @@ public class StudentMain extends JInternalFrame implements ActionListener{
 	private void initializeComponents() {
 		((javax.swing.plaf.basic.BasicInternalFrameUI)this.getUI()).setNorthPane(null);
 		
-		this.setVisible(true);
 		this.setSize(730, 550);
 		getContentPane().setBackground(new Color(0, 0, 51));
 		setBorder(new LineBorder(new Color(0, 0, 51), 20));
@@ -444,6 +443,7 @@ public class StudentMain extends JInternalFrame implements ActionListener{
 		gbc_table.gridx = 0;
 		gbc_table.gridy = 1;
 		IssueDisplay_panel.add(new JScrollPane(issueTable), gbc_table);
+		this.setVisible(true);
 	}
 		
 		

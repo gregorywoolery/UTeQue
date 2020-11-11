@@ -71,7 +71,6 @@ public class UpdateIssue extends JInternalFrame implements ActionListener{
 	private void initializeComponents() {
 		((javax.swing.plaf.basic.BasicInternalFrameUI)this.getUI()).setNorthPane(null);
 		
-		this.setVisible(true);
 		setBounds(100, 100, 750, 570);
 		getContentPane().setBackground(new Color(51, 255, 51));
 		GridBagLayout gridBagLayout = new GridBagLayout();
@@ -319,6 +318,8 @@ public class UpdateIssue extends JInternalFrame implements ActionListener{
 		returnBtn.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		returnBtn.setFont(new Font("Arial Rounded MT Bold", Font.PLAIN, 13));
 		returnBtn.setBorder(null);
+		
+		this.setVisible(true);
 	}
 
 	public void addMainInternalFrame() {
