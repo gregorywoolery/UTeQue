@@ -11,12 +11,16 @@ import java.sql.Statement;
 
 public class CreateDB {
 	
+	//Attributes
 	private Connection dbConn = null;
+	private static final Logger logger = LogManager.getLogger(SQLOperations.class);
 	
+	//Method to Create Database
 	public CreateDB(Connection dbConn){
 		this.dbConn = dbConn;				
 	}
 	
+	//Method to Create Users Database
 	public boolean createUsersDataBase() {
 			
 		String dbSql = "CREATE DATABASE UTeQueDB";
@@ -24,6 +28,7 @@ public class CreateDB {
 		Statement stmt;
 		
 		try {
+			logger.warn("Attempting to C, Error May Occur");
 			dbConn = DBConnectorFactory.getDatabaseConnection();
 			stmt = (Statement) dbConn.createStatement();
 			stmt.execute(dbSql, 0);
@@ -36,7 +41,8 @@ public class CreateDB {
 			return false;
 		}			
 	}
-			
+	
+	//Method to Create Student Table
 	public boolean createStudentTable() {
 		String useSql = "USE UTeQueDB";
 		String tableSql = "CREATE TABLE UTeQueDB.`Students` ( "
@@ -67,7 +73,7 @@ public class CreateDB {
 			return false;
 		}			
 	}
-		
+	//Method to Create Services Table
 	public boolean createServicesTable() {
 		String useSql = "USE UTeQuedb";
 		String tableSql = "CREATE TABLE UTeQueDB.`Services` ( "
@@ -98,7 +104,7 @@ public class CreateDB {
 			return false;
 		}			
 	}
-		
+	//Method to Create Issue Table
 	public boolean createIssueTable() {
 		String useSql = "USE UTeQueDB";
 		String tableSql = "CREATE TABLE UTeQueDB.`ServicesRep` ( "
