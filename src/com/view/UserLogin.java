@@ -1,36 +1,40 @@
 package com.view;
 
+//Import Log4j packages
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger; 
+
+//Import AWT packages
 import java.awt.EventQueue;
-
-import javax.swing.JFrame;
-import java.awt.Dimension;
-import javax.swing.JPanel;
-import javax.swing.BoxLayout;
-import javax.swing.ImageIcon;
-
 import java.awt.Color;
 import java.awt.BorderLayout;
-import javax.swing.JLabel;
 import java.awt.Component;
 import java.awt.Font;
-import javax.swing.JTextField;
 import java.awt.Insets;
-import javax.swing.border.LineBorder;
 import java.awt.GridBagLayout;
 import java.awt.Image;
 import java.awt.GridBagConstraints;
 import java.awt.Rectangle;
 import java.awt.Toolkit;
-
-import javax.swing.SwingConstants;
-import javax.swing.JRadioButton;
-import javax.swing.ButtonGroup;
-import javax.swing.JButton;
-import javax.swing.border.TitledBorder;
-import javax.swing.JPasswordField;
 import java.awt.Cursor;
+import java.awt.Dimension;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+
+//Import SWING packages
+import javax.swing.BoxLayout;
+import javax.swing.border.TitledBorder;
+import javax.swing.border.LineBorder;
+import javax.swing.ButtonGroup;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JTextField;
+import javax.swing.JRadioButton;
+import javax.swing.JPanel;
+import javax.swing.JPasswordField;
+import javax.swing.ImageIcon;
+import javax.swing.SwingConstants;
 
 public class UserLogin extends JFrame {
 	private JPanel mainPanel;

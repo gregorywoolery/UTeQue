@@ -1,19 +1,30 @@
 package com.connection;
 
+//Import classes of Model package
 import com.model.*;
 
+//Import Log4j packages
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger; 
+
+//Import SQL packages
 import java.sql.*;
+
+//Import ArrayList packages
 import java.util.ArrayList; 
 
 public class SQLOperations {
 	//Attributes
 	private Connection dbConn;
 	boolean numRows;
+	private static final Logger logger = LogManager.getLogger(SQLOperations.class);
 	
 	//Student Table
 	//--Insert Statement
 	public void insertStudent(Student student) {
 		try {
+			logger.warn("Attempting to INSERT Data INTO SQL table Student, Error May Occur");
+			
 			String insertSql = "INSERT INTO UTeQueDB.Students (type, id, password, firstname, lastname, gender, email, dob, phone) "
 					+ "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
 			
@@ -31,10 +42,12 @@ public class SQLOperations {
 			int rowsInserted = statement.executeUpdate();
 			
 			if (rowsInserted > 0) {
-			    System.out.println("---User inserted successfully!");
+			    System.out.println("---User INSERTED successfully!");
+			    logger.info("SQL insert statement was successful");
 			}
 			
 		} catch(SQLException e) {
+			logger.error("SQL INSERT statement was NOT successful");
 			System.out.println("SQL Exception Thrown: " + e.getMessage());
 		}
 	}
@@ -43,6 +56,8 @@ public class SQLOperations {
 	public void updateStudent(Student student) {
 		if(checkExistingStudent(student.getID())) {
 			try {
+				logger.warn("Attempting to UPDATE Data FROM SQL table Student, Error May Occur");
+				
 				String updateSql = "UPDATE UTeQueDB.Students SET type=?, id=?, password=?, firstname=?, lastname=?, "
 						+ "gender=?, email=?, dob=?, phone=? WHERE id=?";
 				
@@ -58,14 +73,16 @@ public class SQLOperations {
 				statement.setString(9, student.getPhone());
 				
 				int rowsUpdated = statement.executeUpdate();
-				if(rowsUpdated > 0) 
-					System.out.println("---Existing user updated successfully !");
-				
+				if(rowsUpdated > 0) {
+					System.out.println("---Existing User UPDATED successfully !");
+					logger.info("SQL UPDATE statement was Successful");
+				}
 			} catch (SQLException e) {
-				e.printStackTrace();
+				logger.error("SQL UPDATE Statement was NOT Successful");
+				System.out.println("SQL Exception Thrown: " + e.getMessage());
 			}
 		}else
-			System.out.println("---"+student.getID() +" "+student.getFname() +" "+ student.getLname() + " was not found.");
+			System.out.println("---"+student.getID() +" "+student.getFname() +" "+ student.getLname() + " was NOT found.");
 	}
 	
 	//--Delete Statement
@@ -74,27 +91,31 @@ public class SQLOperations {
 			String deleteSql = "DELETE from UTeQueDB.Students WHERE id=?";
 			
 			try {
+				logger.warn("Attempting to DELETE data FROM SQL table Student, Error May Occur");
 				PreparedStatement statement = dbConn.prepareStatement(deleteSql);
 				statement.setString(1, student.getID());
 				int rowsDeleted = statement.executeUpdate();
 				if (rowsDeleted > 0) {
-				    System.out.println("---User was deleted successfully!");
+				    System.out.println("---User was DELETED Successfully!");
+				    logger.info("SQL DELETE statement was successful");
 				}
 			} catch (SQLException e) {
-				e.printStackTrace();
+				logger.error("SQL DELETE Statement was NOT Successful");
+				System.out.println("SQL Exception Thrown: " + e.getMessage());
 			}		
 		}else
-			System.out.println("---Student was not found.");
+			System.out.println("---Student was NOT Found.");
 	}
 	
 	//--Read Statement
 	public ArrayList<Student> readStudent() {
 
 		ArrayList<Student> student = new ArrayList<Student>();
-		
 		String readAll = "SELECT * FROM UTeQueDB.Students";
 		Student copyStudent = new Student(); // Used to set data from database
+		
 		try {
+			logger.warn("Attempting to READ Data FROM SQL table Student, Error May Occur");
 			Statement statement = dbConn.createStatement();
 			ResultSet result = statement.executeQuery(readAll);
 			
@@ -111,8 +132,10 @@ public class SQLOperations {
 
 				student.add(copyStudent);
 			}
+			logger.info("SQL READ Statement was Successful");
 		} catch (SQLException e) {
-			e.printStackTrace();
+			logger.error("SQL READ Statement was NOT Successful");
+			System.out.println("SQL Exception Thrown: " + e.getMessage());
 		}
 		
 		if(student.size() != 0) {
@@ -120,7 +143,7 @@ public class SQLOperations {
 		}
 			
 		if(student.size()==0) {
-			System.out.println("---No Student Record found..\n");
+			System.out.println("---No Student Record Found..\n");
 		}
 		
 		return student;
@@ -130,6 +153,8 @@ public class SQLOperations {
 	//--Insert Statement
 	public void insertServices(Users services) {
 		try {
+			logger.warn("Attempting to INSERT Data INTO SQL table Services, Error May Occur");
+			
 			String insertSql = "INSERT INTO UTeQueDB.Services (type, id, password, firstname, lastname, gender, email, dob, phone) "
 					+ "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
 			PreparedStatement statement = dbConn.prepareStatement(insertSql);
@@ -146,10 +171,12 @@ public class SQLOperations {
 			int rowsInserted = statement.executeUpdate();
 			
 			if (rowsInserted > 0) {
-			    System.out.println("---User inserted successfully!");
+			    System.out.println("---User INSERTED Successfully!");
+			    logger.info("SQL INSERT statement was successful");
 			}
 			
 		} catch(SQLException e) {
+			logger.error("SQL INSERT Statement was NOT Successful");
 			System.out.println("SQL Exception Thrown: " + e.getMessage());
 		}
 	}
@@ -157,6 +184,8 @@ public class SQLOperations {
 	//--Update Statement
 	public void updateServices(Users services) {
 		if(checkExistingServices(services.getID())) {
+			logger.warn("Attempting to UPDATE data FROM SQL table Services, Error May Occur");
+			
 			String updateSql = "UPDATE UTeQueDB.Services SET type=?, id=?, password=?, firstname=?, lastname=?, "
 					+ "gender=?, email=?, dob=?, phone=? WHERE id=?";
 			try {
@@ -172,19 +201,23 @@ public class SQLOperations {
 				statement.setString(9, services.getPhone());
 				
 				int rowsUpdated = statement.executeUpdate();
-				if(rowsUpdated > 0) 
-					System.out.println("---Existing user updated successfully !");
-				
+				if(rowsUpdated > 0) {
+					System.out.println("---Existing User UPDATED Successfully !");
+					logger.info("SQL UPDATE statement was successful");
+				}
 			} catch (SQLException e) {
-				e.printStackTrace();
+				logger.error("SQL UPDATE Statement was NOT Successful");
+				System.out.println("SQL Exception Thrown: " + e.getMessage());
 			}
 		}else
-			System.out.println("---"+services.getID() +" "+services.getFname() +" "+ services.getLname() + " was not found.");
+			System.out.println("---"+services.getID() +" "+services.getFname() +" "+ services.getLname() + " was NOT found.");
 	}
 	
 	//--Delete Statement
 	public void deleteServices(Users services) {
 		if(checkExistingServices(services.getID())) {
+			logger.warn("Attempting to DELETE data FROM SQL table Services, Error May Occur");
+			
 			String deleteSql = "DELETE from UTeQueDB.Services WHERE id=?";
 			
 			try {
@@ -192,13 +225,15 @@ public class SQLOperations {
 				statement.setString(1, services.getID());
 				int rowsDeleted = statement.executeUpdate();
 				if (rowsDeleted > 0) {
-				    System.out.println("---User was deleted successfully!");
+				    System.out.println("---User was DELETED Successfully!");
+				    logger.info("SQL DELETE Statement was Successful");
 				}
 			} catch (SQLException e) {
-				e.printStackTrace();
+				logger.error("SQL DELETE Statement was NOT Successful");
+				System.out.println("SQL Exception Thrown: " + e.getMessage());
 			}		
 		}else
-			System.out.println("---Student was not found.");
+			System.out.println("---Student was NOT Found.");
 	}
 	//--Read Statement
 	public ArrayList<Users> readServices() {
@@ -207,6 +242,9 @@ public class SQLOperations {
 			
 			String readAll = "SELECT * FROM UTeQueDB.Services";
 			Users copyService = new Users(); // Used to set data from database
+			
+			logger.warn("Attempting to READ Data FROM SQL table Services, Error May Occur");
+			
 			try {
 				Statement statement = dbConn.createStatement();
 				ResultSet result = statement.executeQuery(readAll);
@@ -224,8 +262,10 @@ public class SQLOperations {
 
 					service.add(copyService);
 				}
+				logger.info("SQL READ Statement was Successful");
 			} catch (SQLException e) {
-				e.printStackTrace();
+				logger.error("SQL DELETE Statement was NOT Successful");
+				System.out.println("SQL Exception Thrown: " + e.getMessage());
 			}
 			
 			if(service.size() != 0) {
@@ -243,6 +283,8 @@ public class SQLOperations {
 	//--Insert Statement
 	public void insertIssue(Issue issue) {
 		try {
+			logger.warn("Attempting to INSERT Data INTO SQL table Issue, Error May Occur");
+			
 			String insertSql = "INSERT INTO UTeQueDB.Issue (issueId, type, status, studentId, message, scheduledDateTime, repId) "
 					+ "VALUES (?, ?, ?, ?, ?, ?, ?)";
 			PreparedStatement statement = dbConn.prepareStatement(insertSql);
@@ -257,10 +299,12 @@ public class SQLOperations {
 			int rowsInserted = statement.executeUpdate();
 			
 			if (rowsInserted > 0) {
-			    System.out.println("---Issue was inserted successfully!");
+			    System.out.println("---Issue was INSERTED Successfully!");
+			    logger.info("SQL INSERT Statement was Successful");
 			}
 			
 		} catch(SQLException e) {
+			logger.error("SQL INSERT Statement was NOT Successful");
 			System.out.println("SQL Exception Thrown: " + e.getMessage());
 		}
 	}
@@ -268,6 +312,8 @@ public class SQLOperations {
 	//--Update Statement
 	public void updateIssue(Issue issue) {
 		if(checkExistingIssue(issue.getIssueId())) {
+			logger.warn("Attempting to UPDATE Data FROM SQL table Issue, Error May Occur");
+			
 			String updateSql = "UPDATE UTeQueDB.Issue SET issueId=?, type=?, status=?, studentId=?, message=?, "
 					+ "scheduledDateTime=?, repId=? WHERE id=?";
 			try {
@@ -281,19 +327,23 @@ public class SQLOperations {
 				statement.setString(7, issue.getRepId());
 				
 				int rowsUpdated = statement.executeUpdate();
-				if(rowsUpdated > 0) 
-					System.out.println("---Existing Issue was updated !");
-				
+				if(rowsUpdated > 0) {
+					System.out.println("---Existing Issue was UPDATED !");
+					logger.info("SQL UPDATE Statement was Successful");
+				}
 			} catch (SQLException e) {
-				e.printStackTrace();
+				logger.error("SQL UPDATE Statement was NOT Successful");
+				System.out.println("SQL Exception Thrown: " + e.getMessage());
 			}
 		}else
-			System.out.println("---"+issue.getIssueId() + " was not found.");
+			System.out.println("---"+issue.getIssueId() + " was NOT found.");
 	}
 	
 	//--Delete Statement
 	public void deleteIssue(Issue issue) {
 		if(checkExistingIssue(issue.getIssueId())) {
+			logger.warn("Attempting to DELETE Data FROM SQL table Issue, Error May Occur");
+			
 			String deleteSql = "DELETE from UTeQueDB.Issue WHERE issueId=?";
 			
 			try {
@@ -301,13 +351,15 @@ public class SQLOperations {
 				statement.setString(1, issue.getIssueId());
 				int rowsDeleted = statement.executeUpdate();
 				if (rowsDeleted > 0) {
-				    System.out.println("---Issue was deleted successfully!");
+				    System.out.println("---Issue was DELETED Successfully!");
+				    logger.info("SQL DELETE Statement was Successful");
 				}
 			} catch (SQLException e) {
-				e.printStackTrace();
+				logger.error("SQL DELETE Statement was NOT Successful");
+				System.out.println("SQL Exception Thrown: " + e.getMessage());
 			}		
 		}else
-			System.out.println("---Issue was not found.");
+			System.out.println("---Issue was NOT found.");
 	}
 	
 	//--Read Statement
@@ -318,6 +370,8 @@ public class SQLOperations {
 			String readAll = "SELECT * FROM UTeQueDB.Issue";
 			Issue copyIssue = new Issue(); // Used to set data from database
 			try {
+				logger.warn("Attempting to READ Data FROM SQL table Issue, Error May Occur");
+				
 				Statement statement = dbConn.createStatement();
 				ResultSet result = statement.executeQuery(readAll);
 				
@@ -330,12 +384,13 @@ public class SQLOperations {
 					copyIssue.setMessage(result.getString(6));
 					copyIssue.setScheduledDateTime(result.getDate(7));
 					copyIssue.setRepId(result.getString(9));
-					
 
 					issue.add(copyIssue);
 				}
+				logger.info("SQL READ Statement was Successful");
 			} catch (SQLException e) {
-				e.printStackTrace();
+				logger.error("SQL READ Statement was NOT Successful");
+				System.out.println("SQL Exception Thrown: " + e.getMessage());
 			}
 			
 			if(issue.size() != 0) {
@@ -343,7 +398,7 @@ public class SQLOperations {
 			}
 				
 			if(issue.size()==0) {
-				System.out.println("---No Record found..\n");
+				System.out.println("---No Record Found..\n");
 			}
 			
 			return issue;
@@ -352,9 +407,11 @@ public class SQLOperations {
 	
 	//checkExisting 
 	public Boolean checkExistingStudent(String id) {
-		String selectStudent = "SELECT count(*) FROM UTeQueDB.Students WHERE id=?";
+		String selectStudent = "SELECT COUNT(*) FROM UTeQueDB.Students WHERE id=?";
 		
 		try {
+			logger.warn("Attempting to COUNT Data FROM SQL table Student, Error May Occur");
+			
 			PreparedStatement statement = dbConn.prepareStatement(selectStudent);
 			statement.setString(1, id);
 			ResultSet result = statement.executeQuery();
@@ -362,22 +419,26 @@ public class SQLOperations {
 			while(result.next()) {
 				final int count = result.getInt(1);
 				if(count == 1) {
+					logger.info("SQL COUNT Statement was Successful");
 					System.out.println("---STUDENT EXIST");
 					return true;
 				}
 			}
 
 		}catch(SQLException e){
-			e.printStackTrace();
+			logger.error("SQL COUNT Statement was NOT successful");
+			System.out.println("SQL Exception Thrown: " + e.getMessage());
 		}
-		System.out.println("---Student does not exist");
+		System.out.println("---Student does NOT Exist");
 		return false;
 	}
 	
 	public Boolean checkExistingServices(String id) {
-		String selectServices = "SELECT count(*) FROM UTeQueDB.Services WHERE id=?";
+		String selectServices = "SELECT COUNT(*) FROM UTeQueDB.Services WHERE id=?";
 		
 		try {
+			logger.warn("Attempting to COUNT Data FROM SQL table Services, Error May Occur");
+			
 			PreparedStatement statement = dbConn.prepareStatement(selectServices);
 			statement.setString(1, id);
 			ResultSet result = statement.executeQuery();
@@ -385,22 +446,26 @@ public class SQLOperations {
 			while(result.next()) {
 				final int count = result.getInt(1);
 				if(count == 1) {
+					logger.info("SQL COUNT Statement was Successful");
 					System.out.println("---SERVICE EMPLOYEE EXIST");
 					return true;
 				}
 			}
 
 		}catch(SQLException e){
-			e.printStackTrace();
+			logger.error("SQL COUNT Statement was NOT Successful");
+			System.out.println("SQL Exception Thrown: " + e.getMessage());
 		}
-		System.out.println("---Service does not exist");
+		System.out.println("---Service Does NOT Exist");
 		return false;
 	}
 	
 	public Boolean checkExistingIssue(String id) {
-		String selectIssue = "SELECT count(*) FROM UTeQueDB.Issue WHERE issueId=?";
+		String selectIssue = "SELECT COUNT(*) FROM UTeQueDB.Issue WHERE issueId=?";
 		
 		try {
+			logger.warn("Attempting to COUNT Data FROM SQL Table: Issue, Error May Occur");
+			
 			PreparedStatement statement = dbConn.prepareStatement(selectIssue);
 			statement.setString(1, id);
 			ResultSet result = statement.executeQuery();
@@ -408,15 +473,17 @@ public class SQLOperations {
 			while(result.next()) {
 				final int count = result.getInt(1);
 				if(count == 1) {
+					logger.info("SQL COUNT Statement was Successful");
 					System.out.println("---ISSUE EXIST");
 					return true;
 				}
 			}
 
 		}catch(SQLException e){
-			e.printStackTrace();
+			logger.error("SQL COUNT Statement was NOT Successful");
+			System.out.println("SQL Exception Thrown: " + e.getMessage());
 		}
-		System.out.println("---Issue does not exist");
+		System.out.println("---Issue Does NOT Exist");
 		return false;
 	}
 

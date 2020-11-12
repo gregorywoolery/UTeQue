@@ -1,5 +1,10 @@
 package com.connection;
 
+//Import Log4j packages
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger; 
+
+//Import SQL packages
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
