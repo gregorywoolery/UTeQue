@@ -6,7 +6,14 @@
 			<attribute name="module" value="true"/>
 		</attributes>
 	</classpathentry>
+	<classpathentry kind="lib" path="properties">
+		<attributes>
+			<attribute name="module" value="true"/>
+		</attributes>
+	</classpathentry>
 	<classpathentry kind="lib" path="Resources"/>
-	<classpathentry kind="lib" path="C:/Users/admin/Documents/UTECH/Y3/SEM1/Projects/AP/UTeQue/Resources/LGoodDatePicker-11.1.0.jar"/>
+	<classpathentry kind="lib" path="/Users/matthewruddock/Documents/OOP - Object Oriented Programming Programs/UTeQue/Resources/LGoodDatePicker-11.1.0.jar"/>
+	<classpathentry kind="lib" path="/Users/matthewruddock/Documents/OOP - Object Oriented Programming Programs/UTeQue/Resources/apache-log4j-2.13.3-bin/log4j-api-2.13.3.jar"/>
+	<classpathentry kind="lib" path="/Users/matthewruddock/Documents/OOP - Object Oriented Programming Programs/UTeQue/Resources/apache-log4j-2.13.3-bin/log4j-core-2.13.3.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
