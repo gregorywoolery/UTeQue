@@ -200,7 +200,9 @@ public class SQLOperations {
 				statement.setDate(8, (Date) services.getDob());
 				statement.setString(9, services.getPhone());
 				
+				logger.warn("Attempting to EXECUTE Statement, Error May Occur");
 				int rowsUpdated = statement.executeUpdate();
+				
 				if(rowsUpdated > 0) {
 					System.out.println("---Existing User UPDATED Successfully !");
 					logger.info("SQL UPDATE statement was successful");
@@ -223,7 +225,10 @@ public class SQLOperations {
 			try {
 				PreparedStatement statement = dbConn.prepareStatement(deleteSql);
 				statement.setString(1, services.getID());
+				
+				logger.warn("Attempting to EXECUTE Statement, Error May Occur");
 				int rowsDeleted = statement.executeUpdate();
+				
 				if (rowsDeleted > 0) {
 				    System.out.println("---User was DELETED Successfully!");
 				    logger.info("SQL DELETE Statement was Successful");
@@ -247,6 +252,8 @@ public class SQLOperations {
 			
 			try {
 				Statement statement = dbConn.createStatement();
+				
+				logger.warn("Attempting to EXECUTE Statement, Error May Occur");
 				ResultSet result = statement.executeQuery(readAll);
 				
 				while(result.next()) {
@@ -263,6 +270,7 @@ public class SQLOperations {
 					service.add(copyService);
 				}
 				logger.info("SQL READ Statement was Successful");
+				
 			} catch (SQLException e) {
 				logger.error("SQL DELETE Statement was NOT Successful");
 				System.out.println("SQL Exception Thrown: " + e.getMessage());
@@ -296,6 +304,7 @@ public class SQLOperations {
 			statement.setDate(6, (Date) issue.getScheduledDateTime());
 			statement.setString(7, issue.getRepId());
 			
+			logger.warn("Attempting to EXECUTE Statement, Error May Occur");
 			int rowsInserted = statement.executeUpdate();
 			
 			if (rowsInserted > 0) {
@@ -326,7 +335,9 @@ public class SQLOperations {
 				statement.setDate(6, (Date) issue.getScheduledDateTime());
 				statement.setString(7, issue.getRepId());
 				
+				logger.warn("Attempting to EXECUTE Statement, Error May Occur");
 				int rowsUpdated = statement.executeUpdate();
+				
 				if(rowsUpdated > 0) {
 					System.out.println("---Existing Issue was UPDATED !");
 					logger.info("SQL UPDATE Statement was Successful");
@@ -349,7 +360,10 @@ public class SQLOperations {
 			try {
 				PreparedStatement statement = dbConn.prepareStatement(deleteSql);
 				statement.setString(1, issue.getIssueId());
+				
+				logger.warn("Attempting to EXECUTE Statement, Error May Occur");
 				int rowsDeleted = statement.executeUpdate();
+				
 				if (rowsDeleted > 0) {
 				    System.out.println("---Issue was DELETED Successfully!");
 				    logger.info("SQL DELETE Statement was Successful");
@@ -373,6 +387,8 @@ public class SQLOperations {
 				logger.warn("Attempting to READ Data FROM SQL table Issue, Error May Occur");
 				
 				Statement statement = dbConn.createStatement();
+				
+				logger.warn("Attempting to EXECUTE Statement, Error May Occur");
 				ResultSet result = statement.executeQuery(readAll);
 				
 				while(result.next()) {
@@ -388,6 +404,7 @@ public class SQLOperations {
 					issue.add(copyIssue);
 				}
 				logger.info("SQL READ Statement was Successful");
+				
 			} catch (SQLException e) {
 				logger.error("SQL READ Statement was NOT Successful");
 				System.out.println("SQL Exception Thrown: " + e.getMessage());
@@ -414,10 +431,13 @@ public class SQLOperations {
 			
 			PreparedStatement statement = dbConn.prepareStatement(selectStudent);
 			statement.setString(1, id);
+			
+			logger.warn("Attempting to EXECUTE Statement, Error May Occur");
 			ResultSet result = statement.executeQuery();
 
 			while(result.next()) {
 				final int count = result.getInt(1);
+				
 				if(count == 1) {
 					logger.info("SQL COUNT Statement was Successful");
 					System.out.println("---STUDENT EXIST");
@@ -441,10 +461,13 @@ public class SQLOperations {
 			
 			PreparedStatement statement = dbConn.prepareStatement(selectServices);
 			statement.setString(1, id);
+			
+			logger.warn("Attempting to EXECUTE Statement, Error May Occur");
 			ResultSet result = statement.executeQuery();
 
 			while(result.next()) {
 				final int count = result.getInt(1);
+				
 				if(count == 1) {
 					logger.info("SQL COUNT Statement was Successful");
 					System.out.println("---SERVICE EMPLOYEE EXIST");
@@ -468,9 +491,12 @@ public class SQLOperations {
 			
 			PreparedStatement statement = dbConn.prepareStatement(selectIssue);
 			statement.setString(1, id);
+			
+			logger.warn("Attempting to EXECUTE Statement, Error May Occur");
 			ResultSet result = statement.executeQuery();
 
 			while(result.next()) {
+				
 				final int count = result.getInt(1);
 				if(count == 1) {
 					logger.info("SQL COUNT Statement was Successful");

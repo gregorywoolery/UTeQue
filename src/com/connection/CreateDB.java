@@ -21,22 +21,29 @@ public class CreateDB {
 	}
 	
 	//Method to Create Users Database
-	public boolean createUsersDataBase() {
+	public boolean createUTeQueDataBase() {
 			
 		String dbSql = "CREATE DATABASE UTeQueDB";
 			
 		Statement stmt;
 		
 		try {
-			logger.warn("Attempting to C, Error May Occur");
+			logger.warn("Attempting to CONNECT to Server, Error May Occur");
 			dbConn = DBConnectorFactory.getDatabaseConnection();
+			
+			logger.warn("Attempting to CREATE Database, Error May Occur");
 			stmt = (Statement) dbConn.createStatement();
 			stmt.execute(dbSql, 0);
 			
+			logger.warn("Attempting to CLOSE Database");
 			dbConn.close();
+			
 			//If the program comes here database and table creation went well
+			logger.info("Database was CREATED Successfully");
 			return true;
-		} catch (SQLException e) {			
+			
+		} catch (SQLException e) {
+			logger.error("Database Connection was NOT Successful");
 			System.out.println("SQLException: " + e.getMessage());
 			return false;
 		}			
@@ -60,15 +67,23 @@ public class CreateDB {
 		Statement stmt;
 		
 		try {
+			logger.warn("Attempting to CONNECT to Server, Error May Occur");
 			dbConn = DBConnectorFactory.getDatabaseConnection();
 			stmt = (Statement) dbConn.createStatement();
+			
+			logger.warn("Attempting to EXECUTE Statement, Error May Occur");
 			stmt.execute(useSql, 0);
 			stmt.execute(tableSql, 0);
 			
+			logger.warn("Attempting to CLOSE Database");
 			dbConn.close();
+			
 			//If the program comes here database and table creation went well
+			logger.info("Table was CREATED Successfully");
 			return true;
-		} catch (SQLException e) {			
+			
+		} catch (SQLException e) {	
+			logger.error("Database Connection was NOT Successful");
 			System.out.println("SQLException: " + e.getMessage());
 			return false;
 		}			
@@ -91,15 +106,23 @@ public class CreateDB {
 		Statement stmt;
 		
 		try {
+			logger.warn("Attempting to CONNECT to Server, Error May Occur");
 			dbConn = DBConnectorFactory.getDatabaseConnection();
 			stmt = (Statement) dbConn.createStatement();
+			
+			logger.warn("Attempting to EXECUTE Statement, Error May Occur");
 			stmt.execute(useSql, 0);
 			stmt.execute(tableSql, 0);
 			
+			logger.warn("Attempting to CLOSE Database");
 			dbConn.close();
+			
 			//If the program comes here database and table creation went well
+			logger.info("Table was CREATED Successfully");
 			return true;
-		} catch (SQLException e) {			
+			
+		} catch (SQLException e) {	
+			logger.error("Database Connection was NOT Successful");
 			System.out.println("SQLException: " + e.getMessage());
 			return false;
 		}			
@@ -120,15 +143,23 @@ public class CreateDB {
 		Statement stmt;
 		
 		try {
+			logger.warn("Attempting to CONNECT to Server, Error May Occur");
 			dbConn = DBConnectorFactory.getDatabaseConnection();
 			stmt = (Statement) dbConn.createStatement();
+			
+			logger.warn("Attempting to EXECUTE Statement, Error May Occur");
 			stmt.execute(useSql, 0);
 			stmt.execute(tableSql, 0);
 			
+			logger.warn("Attempting to CLOSE Database");
 			dbConn.close();
+
 			//If the program comes here database and table creation went well
+			logger.info("Table was CREATED Successfully");
 			return true;
-		} catch (SQLException e) {			
+			
+		} catch (SQLException e) {		
+			logger.error("Database Connection was NOT Successful");
 			System.out.println("SQLException: " + e.getMessage());
 			return false;
 		}			
