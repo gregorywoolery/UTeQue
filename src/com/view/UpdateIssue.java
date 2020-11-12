@@ -59,7 +59,7 @@ public class UpdateIssue extends JInternalFrame implements ActionListener{
 	 */
 	public UpdateIssue(JDesktopPane workSpaceDesktop) {
 		super("Update Issue",
-				false, 	//resizable
+				false, 	//resizeable
 				true, 	//closable
 				false, 	//maximizable
 				true);	//iconifiable
@@ -72,7 +72,7 @@ public class UpdateIssue extends JInternalFrame implements ActionListener{
 		((javax.swing.plaf.basic.BasicInternalFrameUI)this.getUI()).setNorthPane(null);
 		
 		setBounds(100, 100, 750, 570);
-		getContentPane().setBackground(new Color(51, 255, 51));
+		getContentPane().setBackground(new Color(0,204, 225));
 		GridBagLayout gridBagLayout = new GridBagLayout();
 		gridBagLayout.columnWidths = new int[]{0, 0};
 		gridBagLayout.rowHeights = new int[] {0, 120, 110, 100, 0};

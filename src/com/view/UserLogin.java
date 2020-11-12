@@ -78,7 +78,7 @@ public class UserLogin extends JFrame {
 	}
 	
 	/**
-	 * Initiailizes frame and its components to provide 
+	 * Initializes frame and its components to provide 
 	 * user login view.
 	 */
 	private void initializeComponents(){
@@ -92,7 +92,7 @@ public class UserLogin extends JFrame {
 		ImageIcon frameIcon = new ImageIcon("./Resources/img/Utech_logo.jpg");
 		setIconImage(frameIcon.getImage());
 		
-		//Uses a main panel that every other compopent will lay
+		//Uses a main panel that every other component will lay
 		mainPanel = new JPanel();
 		mainPanel.setBackground(new Color(0, 0, 51));
 		
@@ -101,7 +101,7 @@ public class UserLogin extends JFrame {
 		mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));
 
 		/**
-		 * Sets the top panel ontop of the main panel for user 
+		 * Sets the top panel on top of the main panel for user 
 		 * login icon to be displayed.
 		 */
 		bannerPanel = new JPanel();
@@ -122,13 +122,13 @@ public class UserLogin extends JFrame {
 		
 		mainPanel.add(systemInfo_Panel);
 		
-		//Uses a grid back layout to display system infomation such as title
+		//Uses a grid back layout to display system information such as title
 		GridBagLayout gbl_systemInfo_Panel = new GridBagLayout();
 		
 		/**
-		 * For the gridbag layout it will have 5 columns and 3 rows, 
-		 * the final zero represents a place holder just incase another 
-		 * row/coloumn is needed.
+		 * For the GridBag layout it will have 5 columns and 3 rows, 
+		 * the final zero represents a place holder just in case another 
+		 * row/column is needed.
 		 */
 		gbl_systemInfo_Panel.columnWidths = new int[] {70, 46, 0, 46, 70, 0};
 		gbl_systemInfo_Panel.rowHeights = new int[]{14, 0, 0, 0};
@@ -143,7 +143,7 @@ public class UserLogin extends JFrame {
 		
 		/**
 		 * Places the systemTitle_Label in the 3rd row, 1st column of the 
-		 * gridbag layout.
+		 * GridBag layout.
 		 */
 		GridBagConstraints gbc_systemTitle_Label = new GridBagConstraints();
 		gbc_systemTitle_Label.anchor = GridBagConstraints.NORTH;

@@ -119,6 +119,7 @@ public class AddIssue extends JInternalFrame implements ActionListener{
 		getContentPane().add(addIssue_lbl, gbc_addIssue_lbl);
 		
 		infoPanel = new JPanel();
+		infoPanel.setForeground(Color.BLACK);
 		infoPanel.setBorder(new LineBorder(new Color(255, 255, 0), 5));
 		infoPanel.setBackground(new Color(0, 0, 51));
 		GridBagConstraints gbc_infoPanel = new GridBagConstraints();
@@ -201,7 +202,7 @@ public class AddIssue extends JInternalFrame implements ActionListener{
 		
 		
 		main_Panel = new JPanel();
-		main_Panel.setBackground(new Color(255, 255, 0));
+		main_Panel.setBackground(new Color(0, 0, 51));
 		GridBagConstraints gbc_main_Panel = new GridBagConstraints();
 		gbc_main_Panel.insets = new Insets(0, 0, 15, 0);
 		gbc_main_Panel.fill = GridBagConstraints.BOTH;
@@ -216,6 +217,7 @@ public class AddIssue extends JInternalFrame implements ActionListener{
 		main_Panel.setLayout(gbl_main_Panel);
 		
 		promptIssue = new JLabel("Please state your issue...");
+		promptIssue.setForeground(new Color(255, 255, 255));
 		promptIssue.setIcon(new ImageIcon(AddIssue.class.getResource("/img/write.png")));
 		promptIssue.setPreferredSize(new Dimension(300, 40));
 		promptIssue.setHorizontalTextPosition(SwingConstants.RIGHT);
@@ -261,7 +263,7 @@ public class AddIssue extends JInternalFrame implements ActionListener{
 		currDate = date.format(currentDateFormat);
 		
 		issueDate_lbl = new JLabel(currDate);
-		issueDate_lbl.setForeground(new Color(0, 0, 51));
+		issueDate_lbl.setForeground(new Color(255, 255, 255));
 		issueDate_lbl.setFont(new Font("Arial Rounded MT Bold", Font.PLAIN, 13));
 		GridBagConstraints gbc_issueDate_lbl = new GridBagConstraints();
 		gbc_issueDate_lbl.insets = new Insets(0, 0, 5, 0);
