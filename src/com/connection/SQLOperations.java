@@ -148,67 +148,67 @@ public class SQLOperations {
 	
 	//Services Table
 	//--Insert Statement
-	public void insertServices(User services) {
-		try {
-			logger.warn("Attempting to INSERT Data INTO SQL table Services, Error May Occur");
-			
-			String insertSql = "INSERT INTO UTeQueDB.Services (type, id, password, firstname, lastname, gender, email, dob, phone) "
-					+ "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
-			PreparedStatement statement = dbConn.prepareStatement(insertSql);
-			statement.setString(2, services.getID());
-			statement.setString(3, services.getPassword());
-			statement.setString(4, services.getFname());
-			statement.setString(5, services.getLname());
-			statement.setString(6, services.getGender());
-			statement.setString(7, services.getEmail());
-			statement.setDate(8, (Date) services.getDOB());
-			statement.setString(9, services.getPhone());
-			
-			int rowsInserted = statement.executeUpdate();
-			
-			if (rowsInserted > 0) {
-			    System.out.println("---User INSERTED Successfully!");
-			    logger.info("SQL INSERT statement was successful");
-			}
-			
-		} catch(SQLException e) {
-			logger.error("SQL INSERT Statement was NOT Successful");
-			System.out.println("SQL Exception Thrown: " + e.getMessage());
-		}
-	}
+//	public void insertServices(User services) {
+//		try {
+//			logger.warn("Attempting to INSERT Data INTO SQL table Services, Error May Occur");
+//			
+//			String insertSql = "INSERT INTO UTeQueDB.Services (type, id, password, firstname, lastname, gender, email, dob, phone) "
+//					+ "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+//			PreparedStatement statement = dbConn.prepareStatement(insertSql);
+//			statement.setString(2, services.getID());
+//			statement.setString(3, services.getPassword());
+//			statement.setString(4, services.getFname());
+//			statement.setString(5, services.getLname());
+//			statement.setString(6, services.getGender());
+//			statement.setString(7, services.getEmail());
+//			statement.setDate(8, (Date) services.getDOB());
+//			statement.setString(9, services.getPhone());
+//			
+//			int rowsInserted = statement.executeUpdate();
+//			
+//			if (rowsInserted > 0) {
+//			    System.out.println("---User INSERTED Successfully!");
+//			    logger.info("SQL INSERT statement was successful");
+//			}
+//			
+//		} catch(SQLException e) {
+//			logger.error("SQL INSERT Statement was NOT Successful");
+//			System.out.println("SQL Exception Thrown: " + e.getMessage());
+//		}
+//	}
 	
 	//--Update Statement
-	public void updateServices(User services) {
-		if(checkExistingServices(services.getID())) {
-			logger.warn("Attempting to UPDATE data FROM SQL table Services, Error May Occur");
-			
-			String updateSql = "UPDATE UTeQueDB.Services SET type=?, id=?, password=?, firstname=?, lastname=?, "
-					+ "gender=?, email=?, dob=?, phone=? WHERE id=?";
-			try {
-				PreparedStatement statement = dbConn.prepareStatement(updateSql);
-				statement.setString(2, services.getID());
-				statement.setString(3, services.getPassword());
-				statement.setString(4, services.getFname());
-				statement.setString(5, services.getLname());
-				statement.setString(6, services.getGender());
-				statement.setString(7, services.getEmail());
-				statement.setDate(8, (Date) services.getDOB());
-				statement.setString(9, services.getPhone());
-				
-				logger.warn("Attempting to EXECUTE Statement, Error May Occur");
-				int rowsUpdated = statement.executeUpdate();
-				
-				if(rowsUpdated > 0) {
-					System.out.println("---Existing User UPDATED Successfully !");
-					logger.info("SQL UPDATE statement was successful");
-				}
-			} catch (SQLException e) {
-				logger.error("SQL UPDATE Statement was NOT Successful");
-				System.out.println("SQL Exception Thrown: " + e.getMessage());
-			}
-		}else
-			System.out.println("---"+services.getID() +" "+services.getFname() +" "+ services.getLname() + " was NOT found.");
-	}
+//	public void updateServices(User services) {
+//		if(checkExistingServices(services.getID())) {
+//			logger.warn("Attempting to UPDATE data FROM SQL table Services, Error May Occur");
+//			
+//			String updateSql = "UPDATE UTeQueDB.Services SET type=?, id=?, password=?, firstname=?, lastname=?, "
+//					+ "gender=?, email=?, dob=?, phone=? WHERE id=?";
+//			try {
+//				PreparedStatement statement = dbConn.prepareStatement(updateSql);
+//				statement.setString(2, services.getID());
+//				statement.setString(3, services.getPassword());
+//				statement.setString(4, services.getFname());
+//				statement.setString(5, services.getLname());
+//				statement.setString(6, services.getGender());
+//				statement.setString(7, services.getEmail());
+//				statement.setDate(8, (Date) services.getDOB());
+//				statement.setString(9, services.getPhone());
+//				
+//				logger.warn("Attempting to EXECUTE Statement, Error May Occur");
+//				int rowsUpdated = statement.executeUpdate();
+//				
+//				if(rowsUpdated > 0) {
+//					System.out.println("---Existing User UPDATED Successfully !");
+//					logger.info("SQL UPDATE statement was successful");
+//				}
+//			} catch (SQLException e) {
+//				logger.error("SQL UPDATE Statement was NOT Successful");
+//				System.out.println("SQL Exception Thrown: " + e.getMessage());
+//			}
+//		}else
+//			System.out.println("---"+services.getID() +" "+services.getFname() +" "+ services.getLname() + " was NOT found.");
+//	}
 	
 	//--Delete Statement
 	public void deleteServices(User services) {
@@ -236,50 +236,50 @@ public class SQLOperations {
 			System.out.println("---Student was NOT Found.");
 	}
 	//--Read Statement
-	public ArrayList<User> readServices() {
-
-			ArrayList<User> service = new ArrayList<User>();
-			
-			String readAll = "SELECT * FROM UTeQueDB.Services";
-			User copyService = new User(); // Used to set data from database
-			
-			logger.warn("Attempting to READ Data FROM SQL table Services, Error May Occur");
-			
-			try {
-				Statement statement = dbConn.createStatement();
-				
-				logger.warn("Attempting to EXECUTE Statement, Error May Occur");
-				ResultSet result = statement.executeQuery(readAll);
-				
-				while(result.next()) {
-					copyService.setID(result.getString(2));
-					copyService.setPassword(result.getString(3));
-					copyService.setFname(result.getString(4));
-					copyService.setLname(result.getString(5));
-					copyService.setGender(result.getString(6));
-					copyService.setEmail(result.getString(7));
-					copyService.setDOB(result.getDate(8));
-					copyService.setPhone(result.getString(9));
-
-					service.add(copyService);
-				}
-				logger.info("SQL READ Statement was Successful");
-				
-			} catch (SQLException e) {
-				logger.error("SQL DELETE Statement was NOT Successful");
-				System.out.println("SQL Exception Thrown: " + e.getMessage());
-			}
-			
-			if(service.size() != 0) {
-				//display();
-			}
-				
-			if(service.size()==0) {
-				System.out.println("---No Record found..\n");
-			}
-			
-			return service;
-	}
+//	public ArrayList<User> readServices() {
+//
+//			ArrayList<User> service = new ArrayList<User>();
+//			
+//			String readAll = "SELECT * FROM UTeQueDB.Services";
+//			User copyService = new User(); // Used to set data from database
+//			
+//			logger.warn("Attempting to READ Data FROM SQL table Services, Error May Occur");
+//			
+//			try {
+//				Statement statement = dbConn.createStatement();
+//				
+//				logger.warn("Attempting to EXECUTE Statement, Error May Occur");
+//				ResultSet result = statement.executeQuery(readAll);
+//				
+//				while(result.next()) {
+//					copyService.setID(result.getString(2));
+//					copyService.setPassword(result.getString(3));
+//					copyService.setFname(result.getString(4));
+//					copyService.setLname(result.getString(5));
+//					copyService.setGender(result.getString(6));
+//					copyService.setEmail(result.getString(7));
+//					copyService.setDOB(result.getDate(8));
+//					copyService.setPhone(result.getString(9));
+//
+//					service.add(copyService);
+//				}
+//				logger.info("SQL READ Statement was Successful");
+//				
+//			} catch (SQLException e) {
+//				logger.error("SQL DELETE Statement was NOT Successful");
+//				System.out.println("SQL Exception Thrown: " + e.getMessage());
+//			}
+//			
+//			if(service.size() != 0) {
+//				//display();
+//			}
+//				
+//			if(service.size()==0) {
+//				System.out.println("---No Record found..\n");
+//			}
+//			
+//			return service;
+//	}
 	
 	//Issues Table
 	//--Insert Statement
