@@ -9,7 +9,7 @@
 	<classpathentry kind="lib" path="Resources/Logging/log4j-api-2.13.3.jar"/>
 	<classpathentry kind="lib" path="Resources/Logging/log4j-core-2.13.3.jar"/>
 	<classpathentry kind="lib" path="Resources/LGoodDatePicker-11.1.0.jar"/>
-	<classpathentry kind="lib" path="Resources/Logging/properties"/>
 	<classpathentry kind="lib" path="Resources/mysql/mysql-connector-java-5.1.49.jar"/>
+	<classpathentry kind="lib" path="Resources"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
