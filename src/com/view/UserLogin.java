@@ -335,7 +335,7 @@ public class UserLogin extends JFrame {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				if(authenticateUser()) {
-					Dashboard dash = new Dashboard();
+					StudentDashboard dash = new StudentDashboard();
 					dash.setVisible(true);
 					disposeFrame();
 				}

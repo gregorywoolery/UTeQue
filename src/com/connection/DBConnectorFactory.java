@@ -12,77 +12,99 @@ import javax.swing.JOptionPane;
 
 public class DBConnectorFactory {
 	private static Connection dbConn = null;
-	private static String jdbcUrl = "jdbc:mysql://localhost:8889/UTeQueDB?useSSL=false";
-	private static String username = "root"; //User name & Password for database connection
-	private static String password = "root";
+
+	private static String DATABASE_URL = "jdbc:mysql://localhost:3306/UTeQueDB?useSSL=false";
+	//User name & Password for database connection
+	private static String username = "root"; 
+	private static String password = "";
 	private static final Logger logger = LogManager.getLogger(SQLOperations.class);
+	private static boolean dbIsCreated = false;
+	private static boolean tableIsCreated = false;
 	
+	
+	/**
+	 * Returns connection link from database application.  
+	 */
 	public static Connection getDatabaseConnection() {
 		try {
 			logger.warn("Attempting to CONNECT to MySQL Server Database, Error May Occur");
-			//Try to get a connection to the MySQL server and database
-			dbConn = DriverManager.getConnection(jdbcUrl, username, password);
 			
-			if(dbConn != null) { //Check if the connection was successful
-				logger.info("MySQL Database was CONNECTED Successfully");
+			/**
+			 * Attempt to connect to the MySQL server and database through
+			 * receiving database URL, USERNAME and PASSWORD.
+			 */
+			dbConn = DriverManager.getConnection(DATABASE_URL, username, password);
+			
+			//Check if the connection was successful
+			if(dbConn != null) { 
+				logger.info("UTeQue Database was CONNECTED Successfully");
 				JOptionPane.showMessageDialog(null, 
 						"Connection to database server succesful", 
 						"DB Connection Status", JOptionPane.INFORMATION_MESSAGE);
 			}
 			
 		}catch(SQLException e) {
+			/**
+			 * If connection to database was unsuccessful try connecting to 
+			 * and creating Database through CreateDB class accepting the 
+			 * java.sql.Connection dbConn variable.
+			 */
+
+			logger.info("UTeQue Database was NOT connected Successfully");
 			
 			JOptionPane.showMessageDialog(null, 
 					"Setting up Database and table", 
 					"DB Connection Status", JOptionPane.WARNING_MESSAGE);
-			try {//Try to connect to the MySQL Server and create database
+
+			//Try to connect to the MySQL Server and create database
+			try {
+								
+				String HOST_URL = "jdbc:mysql://localhost:3306";
+				dbConn = DriverManager.getConnection(HOST_URL, username, password);
+				DBInitializer db = new DBInitializer(dbConn);
 				
-				String Url = "jdbc:mysql://localhost:8889";
-				dbConn = DriverManager.getConnection(Url, username, password);
-				CreateDB db = new CreateDB(dbConn);
+				//Call method to create database and tables
+				dbIsCreated = db.createUTeQueDataBase();
 				
-				//Call method to create database & table
-				boolean dbIsCreated;
-				logger.warn("Setting up MySQL Table Student, Error May Occur");
-				dbIsCreated = db.createStudentTable();
-				
-				if(dbIsCreated == true) { //If database and table was created successfully
-					logger.info("MySQL Table Student was CREATED Successfully");
-					JOptionPane.showMessageDialog(null, 
-							"Connected to UTeQueDB - Student", 
-							"DB Connection Status", JOptionPane.INFORMATION_MESSAGE);
+				/**
+				 * If Database creation is successful table creation is now
+				 * allowed.
+				 */
+				if(dbIsCreated) {
+					logger.warn("Setting up Student Table, Error May Occur");
+					tableIsCreated = db.createStudentTable();
+					
+					
+					//Creating Student Services Table
+					logger.warn("Setting up MySQL StudentServicesStaff Table, Error May Occur");
+					tableIsCreated = db.createStudentServicesStaffTable();
+					
+
+					//Creating Issue Table
+					logger.warn("Setting up MySQL Issue Table, Error May Occur");
+					tableIsCreated = db.createIssueTable();
+					
+					//Creating Response Table
+					logger.warn("Setting up MySQL Response Table, Error May Occur");
+					tableIsCreated = db.createResponseTable();
+					
 				}
 				
-				logger.warn("Setting up MySQL Table Services, Error May Occur");
-				dbIsCreated = db.createServicesTable();
-				
-				if(dbIsCreated == true) { //If database and table was created successfully
-					logger.info("MySQL Table Services was CREATED successfully");
-					JOptionPane.showMessageDialog(null, 
-							"Connected to UTeQueDB - Services", 
-							"DB Connection Status", JOptionPane.INFORMATION_MESSAGE);
-				}
-				
-				logger.warn("Setting up MySQL Table Issue, Error May Occur");
-				dbIsCreated = db.createIssueTable();
-				
-				if(dbIsCreated == true) { //If database and table was created successfully
-					logger.info("MySQL Table Issue was CREATED Successfully");
-					JOptionPane.showMessageDialog(null, 
-							"Connected to UTeQueDB - Issue", 
-							"DB Connection Status", JOptionPane.INFORMATION_MESSAGE);
-				}
 			}catch(SQLException e1) {
-				logger.error("SQL Table was NOT CREATED Successfully");
-				System.out.println("HELP: " + e1.getMessage());
+				logger.error("DATABASE was NOT CREATED Successfully: ERROR(" 
+						+ e1.getErrorCode() + ") " 
+						+ e1.getMessage());
 			}
 		
 		}catch(RuntimeException e) {
-			logger.error("Database Does NOT Exist");
-			System.out.println("Database doesn't exist");
+			JOptionPane.showMessageDialog(null, 
+					"ERROR CONNECTING TO DATABASE. FAILED CONNECTION", 
+					"CONTACT DEVELOPER", JOptionPane.ERROR_MESSAGE);
+			logger.error("Database Does NOT Exist: ERROR: " 
+						+ e.getMessage());
+			System.exit(0);
 		}
 		return dbConn;
 	}
-	
 
 }

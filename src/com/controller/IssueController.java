@@ -26,30 +26,7 @@ public class IssueController {
 	@SuppressWarnings("deprecation")
 	public void addIssue() {
 		try {
-			String issueId = dateString; // Assign Issue ID based on (yy-mm-dd-hh-mm-ss) format of current date and time
-			System.out.println("Enter Type: ");
-			IssueObj.setType(input.next());
-			System.out.println("Enter Status: ");
-			IssueObj.setStatus(input.next());
-			System.out.println("Enter Student ID: ");
-			IssueObj.setStudentId(input.next());
-			System.out.println("Enter Message: ");
-			IssueObj.setMessage(input.next());
 			
-			System.out.println("Enter Scheduled Date: ");
-			System.out.println("dd: ");
-			DateObj.setDate(input.nextInt());
-			System.out.println("mm: ");
-			DateObj.setMonth(input.nextInt());
-			System.out.println("yyyy: ");
-			DateObj.setYear(input.nextInt());
-			
-			System.out.println("Enter Scheduled Time: ");
-			System.out.println("HR: ");
-			DateObj.setHours(input.nextInt());
-			System.out.println("MM: ");
-			DateObj.setMinutes(input.nextInt());
-			//System.out.println("AM/PM: ");
 			
 			IssueObj.setScheduledDateTime(DateObj);
 			
@@ -62,7 +39,7 @@ public class IssueController {
 			
 	}
 	
-	public void modifyIssue(String issueId) {
+	public void updateIssue(String issueId) {
 			
 	}
 	
