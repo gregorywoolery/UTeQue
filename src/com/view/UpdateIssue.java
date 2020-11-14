@@ -5,6 +5,7 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 
 import com.github.lgooddatepicker.components.DatePicker;
+import com.services.DocumentSizeFilter;
 
 import java.awt.GridBagLayout;
 import java.awt.Color;
@@ -22,6 +23,8 @@ import javax.swing.JScrollPane;
 import java.awt.Font;
 import java.awt.Dimension;
 import javax.swing.SwingConstants;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import javax.swing.JTextField;
 import javax.swing.JButton;
 import javax.swing.JTextArea;
@@ -29,8 +32,11 @@ import javax.swing.JTable;
 import javax.swing.DefaultComboBoxModel;
 import java.awt.FlowLayout;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.text.DefaultStyledDocument;
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
+import java.awt.Component;
+import java.awt.GridLayout;
 
 
 public class UpdateIssue extends JInternalFrame implements ActionListener{
@@ -38,21 +44,25 @@ public class UpdateIssue extends JInternalFrame implements ActionListener{
 	private JPanel home_panel;
 	private JLabel issueID_lbl;
 	private JButton updateBtn;
-	private JComboBox issueType_comboBox;
+	private JComboBox<String> issueType_comboBox;
 	private JButton searchBtn;
 	private JLabel issueSummary_lbl;
 	private JButton clearBtn;
 	private JLabel issueDetails_lbl;
 	private JPanel issueDetails_panel;
 	private JTextArea issueDetails_textArea;
-	private JPanel viewUpdate_panel;
-	private JPanel return_panel;
-	private JButton returnBtn;
 	private DatePicker updateDatePicker;
 	private JTextField issueID_textField;
 	private JTextField summary_textField;
 	private JTable viewUpdate_table;
 	private JDesktopPane workSpaceDesktop;
+	private JPanel option_panel;
+	private JLabel summaryRem_lbl;
+	private JLabel issueRem_lbl;
+	private DefaultStyledDocument issueAreaDoc;
+	private DefaultStyledDocument summaryAreaDoc;
+	private JPanel return_pnl;
+	private JButton returnBtn;
 	
 	/**
 	 * Create the frame.
@@ -71,12 +81,12 @@ public class UpdateIssue extends JInternalFrame implements ActionListener{
 	private void initializeComponents() {
 		((javax.swing.plaf.basic.BasicInternalFrameUI)this.getUI()).setNorthPane(null);
 		
-		setBounds(100, 100, 750, 570);
+		setBounds(100, 100, 825, 570);
 		getContentPane().setBackground(new Color(0,204, 225));
 		GridBagLayout gridBagLayout = new GridBagLayout();
-		gridBagLayout.columnWidths = new int[]{0, 0};
+		gridBagLayout.columnWidths = new int[] {700, 0, 0};
 		gridBagLayout.rowHeights = new int[] {0, 120, 110, 100, 0};
-		gridBagLayout.columnWeights = new double[]{1.0, Double.MIN_VALUE};
+		gridBagLayout.columnWeights = new double[]{1.0, 1.0, Double.MIN_VALUE};
 		gridBagLayout.rowWeights = new double[]{0.0, 1.0, 1.0, 1.0, Double.MIN_VALUE};
 		
 		getContentPane().setLayout(gridBagLayout);
@@ -89,7 +99,7 @@ public class UpdateIssue extends JInternalFrame implements ActionListener{
 		header_lbl.setFont(new Font("Arial Rounded MT Bold", Font.PLAIN, 17));
 		
 		GridBagConstraints gbc_header_lbl = new GridBagConstraints();
-		gbc_header_lbl.insets = new Insets(10, 0, 5, 0);
+		gbc_header_lbl.insets = new Insets(10, 0, 5, 5);
 		gbc_header_lbl.gridx = 0;
 		gbc_header_lbl.gridy = 0;
 		
@@ -99,7 +109,7 @@ public class UpdateIssue extends JInternalFrame implements ActionListener{
 		home_panel.setBackground(new Color(0, 0, 51));
 		
 		GridBagConstraints gbc_home_panel = new GridBagConstraints();
-		gbc_home_panel.insets = new Insets(0, 20, 0, 20);
+		gbc_home_panel.insets = new Insets(0, 20, 5, 20);
 		gbc_home_panel.fill = GridBagConstraints.BOTH;
 		gbc_home_panel.gridx = 0;
 		gbc_home_panel.gridy = 1;
@@ -107,7 +117,7 @@ public class UpdateIssue extends JInternalFrame implements ActionListener{
 		getContentPane().add(home_panel, gbc_home_panel);
 		
 		GridBagLayout gbl_home_panel = new GridBagLayout();
-		gbl_home_panel.columnWidths = new int[] {0, 0, 0, 0};
+		gbl_home_panel.columnWidths = new int[] {0, 0, 30};
 		gbl_home_panel.rowHeights = new int[]{0, 0, 0, 0, 0, 0, 0, 0};
 		gbl_home_panel.columnWeights = new double[]{1.0, 1.0, Double.MIN_VALUE};
 		gbl_home_panel.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
@@ -140,9 +150,8 @@ public class UpdateIssue extends JInternalFrame implements ActionListener{
 		home_panel.add(issueID_textField, gbc_issueID_textField);
 		issueID_textField.setColumns(10);
 		
-		issueType_comboBox = new JComboBox();
+		issueType_comboBox = new JComboBox<>(new String[] {"Complaint", "Query"});
 		issueType_comboBox.setPreferredSize(new Dimension(125, 25));
-		issueType_comboBox.setModel(new DefaultComboBoxModel(new String[] {"Complaint", "Query"}));
 		issueType_comboBox.setForeground(new Color(0, 0, 51));
 		issueType_comboBox.setBackground(new Color(255, 255, 0));
 		issueType_comboBox.setFont(new Font("Arial Rounded MT Bold", Font.PLAIN, 14));
@@ -154,20 +163,6 @@ public class UpdateIssue extends JInternalFrame implements ActionListener{
 		gbc_issueType_comboBox.gridy = 2;
 		
 		home_panel.add(issueType_comboBox, gbc_issueType_comboBox);
-		
-		updateBtn = new JButton("UPDATE");
-		updateBtn.setBackground(new Color(51, 153, 255));
-		updateBtn.setPreferredSize(new Dimension(100, 30));
-		updateBtn.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-		updateBtn.setFont(new Font("Arial Rounded MT Bold", Font.PLAIN, 14));
-		updateBtn.setBorder(null);
-		
-		GridBagConstraints gbc_updateBtn = new GridBagConstraints();
-		gbc_updateBtn.insets = new Insets(0, 0, 5, 5);
-		gbc_updateBtn.gridx = 1;
-		gbc_updateBtn.gridy = 2;
-		
-		home_panel.add(updateBtn, gbc_updateBtn);
 		
 		updateDatePicker = new DatePicker();
 		updateDatePicker.getComponentToggleCalendarButton().setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
@@ -181,21 +176,6 @@ public class UpdateIssue extends JInternalFrame implements ActionListener{
 		gbc_textField_1.gridy = 3;
 		
 		home_panel.add(updateDatePicker, gbc_textField_1);
-		
-		
-		searchBtn = new JButton("SEARCH");
-		searchBtn.setBackground(new Color(51, 255, 51));
-		searchBtn.setPreferredSize(new Dimension(100, 30));
-		searchBtn.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-		searchBtn.setFont(new Font("Arial Rounded MT Bold", Font.PLAIN, 14));
-		searchBtn.setBorder(null);
-		
-		GridBagConstraints gbc_searchBtn = new GridBagConstraints();
-		gbc_searchBtn.insets = new Insets(0, 0, 5, 5);
-		gbc_searchBtn.gridx = 1;
-		gbc_searchBtn.gridy = 3;
-		
-		home_panel.add(searchBtn, gbc_searchBtn);
 		
 		issueSummary_lbl = new JLabel("Summary");
 		issueSummary_lbl.setForeground(new Color(255, 255, 255));
@@ -220,23 +200,34 @@ public class UpdateIssue extends JInternalFrame implements ActionListener{
 		gbc_summary_textField.gridy = 5;
 		
 		home_panel.add(summary_textField, gbc_summary_textField);
-		summary_textField.setColumns(35);
+		summary_textField.setColumns(25);
 		
-		clearBtn = new JButton("CLEAR");
-		clearBtn.setIcon(new ImageIcon(UpdateIssue.class.getResource("/img/clear.png")));
-		clearBtn.setForeground(new Color(255, 255, 255));
-		clearBtn.setBackground(new Color(204, 0, 0));
-		clearBtn.setPreferredSize(new Dimension(100, 35));
-		clearBtn.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-		clearBtn.setFont(new Font("Arial Rounded MT Bold", Font.PLAIN, 14));
-		clearBtn.setBorder(null);
+		summaryRem_lbl = new JLabel("");
+		summaryRem_lbl.setForeground(new Color(255, 0, 0));
+		summaryRem_lbl.setFont(new Font("Arial Rounded MT Bold", Font.PLAIN, 12));
+		GridBagConstraints gbc_summaryRem_lbl = new GridBagConstraints();
+		gbc_summaryRem_lbl.insets = new Insets(0, 0, 5, 0);
+		gbc_summaryRem_lbl.gridx = 1;
+		gbc_summaryRem_lbl.gridy = 5;
+		home_panel.add(summaryRem_lbl, gbc_summaryRem_lbl);
 		
-		GridBagConstraints gbc_clearBtn = new GridBagConstraints();
-		gbc_clearBtn.insets = new Insets(0, 0, 5, 5);
-		gbc_clearBtn.gridx = 1;
-		gbc_clearBtn.gridy = 5;
+		/*
+		 * Sets a limit of 150 characters to the JTextField by using the 
+		 * DocumentSizeFilter in the services package that rejects 
+		 * insertion of addition content.
+		 */
+		summaryAreaDoc = new DefaultStyledDocument();
+		summaryAreaDoc.setDocumentFilter(new DocumentSizeFilter(40));
+		summaryAreaDoc.addDocumentListener(new DocumentListener(){
+            @Override
+            public void changedUpdate(DocumentEvent e) { updateSumCount();}
+            @Override
+            public void insertUpdate(DocumentEvent e) { updateSumCount();}
+            @Override
+            public void removeUpdate(DocumentEvent e) { updateSumCount();}
+        });
 		
-		home_panel.add(clearBtn, gbc_clearBtn);
+		summary_textField.setDocument(summaryAreaDoc);
 		
 		issueDetails_lbl = new JLabel("Issue Made:");
 		issueDetails_lbl.setForeground(new Color(255, 255, 255));
@@ -249,6 +240,60 @@ public class UpdateIssue extends JInternalFrame implements ActionListener{
 		
 		home_panel.add(issueDetails_lbl, gbc_issueDetails_lbl);
 		
+		issueRem_lbl = new JLabel("");
+		issueRem_lbl.setForeground(new Color(255, 0, 0));
+		issueRem_lbl.setFont(new Font("Arial Rounded MT Bold", Font.PLAIN, 12));
+		GridBagConstraints gbc_issueRem_lbl = new GridBagConstraints();
+		gbc_issueRem_lbl.gridx = 1;
+		gbc_issueRem_lbl.gridy = 6;
+		home_panel.add(issueRem_lbl, gbc_issueRem_lbl);
+		
+		option_panel = new JPanel();
+		option_panel.setBackground(new Color(0, 204, 225));
+		GridBagConstraints gbc_option_panel = new GridBagConstraints();
+		gbc_option_panel.insets = new Insets(0, 0, 5, 0);
+		gbc_option_panel.fill = GridBagConstraints.BOTH;
+		gbc_option_panel.gridx = 1;
+		gbc_option_panel.gridy = 1;
+		getContentPane().add(option_panel, gbc_option_panel);
+		option_panel.setLayout(new FlowLayout(FlowLayout.CENTER, 30, 30));
+		
+		updateBtn = new JButton("UPDATE");
+		updateBtn.setBorder(null);
+		updateBtn.setPreferredSize(new Dimension(100, 35));
+		updateBtn.setBackground(new Color(51, 153, 255));
+		updateBtn.setMargin(new Insets(20, 14, 20, 14));
+		updateBtn.setAlignmentX(Component.CENTER_ALIGNMENT);
+		updateBtn.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+		updateBtn.setFont(new Font("Arial Rounded MT Bold", Font.PLAIN, 14));
+		
+		searchBtn = new JButton("SEARCH");
+		searchBtn.setBorder(null);
+		searchBtn.setPreferredSize(new Dimension(100, 35));
+		searchBtn.setBackground(new Color(51, 255, 51));
+		searchBtn.setMargin(new Insets(20, 14, 20, 14));
+		searchBtn.setAlignmentX(Component.CENTER_ALIGNMENT);
+		searchBtn.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+		searchBtn.setFont(new Font("Arial Rounded MT Bold", Font.PLAIN, 14));
+		
+		
+		clearBtn = new JButton("CLEAR");
+		clearBtn.setBorder(null);
+		clearBtn.setPreferredSize(new Dimension(100, 35));
+		clearBtn.setBackground(new Color(204, 0, 0));
+		clearBtn.setMargin(new Insets(20, 14, 20, 14));
+		clearBtn.setAlignmentX(Component.CENTER_ALIGNMENT);
+		clearBtn.setIcon(new ImageIcon(UpdateIssue.class.getResource("/img/clear.png")));
+		clearBtn.setForeground(new Color(255, 255, 255));
+		clearBtn.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+		clearBtn.setFont(new Font("Arial Rounded MT Bold", Font.PLAIN, 14));
+		
+		
+		option_panel.add(updateBtn);		
+		option_panel.add(searchBtn);
+		option_panel.add(clearBtn);
+		
+		
 		issueDetails_panel = new JPanel();
 		FlowLayout fl_issueDetails_panel = (FlowLayout) issueDetails_panel.getLayout();
 		fl_issueDetails_panel.setHgap(20);
@@ -256,7 +301,7 @@ public class UpdateIssue extends JInternalFrame implements ActionListener{
 		issueDetails_panel.setBackground(new Color(0, 0, 51));
 		
 		GridBagConstraints gbc_issueDetails_panel = new GridBagConstraints();
-		gbc_issueDetails_panel.insets = new Insets(0, 20, 0, 20);
+		gbc_issueDetails_panel.insets = new Insets(0, 20, 5, 20);
 		gbc_issueDetails_panel.fill = GridBagConstraints.BOTH;
 		gbc_issueDetails_panel.gridx = 0;
 		gbc_issueDetails_panel.gridy = 2;
@@ -270,16 +315,24 @@ public class UpdateIssue extends JInternalFrame implements ActionListener{
 		
 		issueDetails_panel.add(issueDetails_textArea);
 		
-		viewUpdate_panel = new JPanel();
-		viewUpdate_panel.setBackground(new Color(0, 0, 51));
 		
-		GridBagConstraints gbc_viewUpdate_panel = new GridBagConstraints();
-		gbc_viewUpdate_panel.insets = new Insets(0, 20, 15, 20);
-		gbc_viewUpdate_panel.fill = GridBagConstraints.BOTH;
-		gbc_viewUpdate_panel.gridx = 0;
-		gbc_viewUpdate_panel.gridy = 3;
+		/*
+		 * Sets a limit of 150 characters to the JTextArea by using the 
+		 * DocumentSizeFilter in the services package that rejects 
+		 * insertion of addition content.
+		 */
+		issueAreaDoc = new DefaultStyledDocument();
+		issueAreaDoc.setDocumentFilter(new DocumentSizeFilter(150));
+		issueAreaDoc.addDocumentListener(new DocumentListener(){
+            @Override
+            public void changedUpdate(DocumentEvent e) { updateCount();}
+            @Override
+            public void insertUpdate(DocumentEvent e) { updateCount();}
+            @Override
+            public void removeUpdate(DocumentEvent e) { updateCount();}
+        });
 		
-		getContentPane().add(viewUpdate_panel, gbc_viewUpdate_panel);
+		issueDetails_textArea.setDocument(issueAreaDoc);
 		
 		viewUpdate_table = new JTable();
 		viewUpdate_table.setModel(new DefaultTableModel(
@@ -290,36 +343,43 @@ public class UpdateIssue extends JInternalFrame implements ActionListener{
 				"Issue ID", "Type", "Date Made", "Summary", "Details"
 			}
 		));
+		
 		viewUpdate_table.getColumnModel().getColumn(0).setPreferredWidth(85);
 		viewUpdate_table.getColumnModel().getColumn(1).setPreferredWidth(100);
 		viewUpdate_table.getColumnModel().getColumn(2).setPreferredWidth(110);
 		viewUpdate_table.getColumnModel().getColumn(3).setPreferredWidth(125);
 		viewUpdate_table.getColumnModel().getColumn(4).setPreferredWidth(120);
-		viewUpdate_panel.setLayout(new BoxLayout(viewUpdate_panel, BoxLayout.X_AXIS));
 		
-		viewUpdate_panel.add(new JScrollPane(viewUpdate_table));
+		GridBagConstraints gbc_viewUpdate = new GridBagConstraints();
+		gbc_viewUpdate.insets = new Insets(0, 20, 10, 20);
+		gbc_viewUpdate.fill = GridBagConstraints.BOTH;
+		gbc_viewUpdate.gridx = 0;
+		gbc_viewUpdate.gridy = 3;
 		
-		return_panel = new JPanel();
-		FlowLayout fl_return_panel = (FlowLayout) return_panel.getLayout();
-		fl_return_panel.setVgap(30);
-		return_panel.setBackground(new Color(0, 0, 51));
+		getContentPane().add(new JScrollPane(viewUpdate_table), gbc_viewUpdate);
 		
-		viewUpdate_panel.add(return_panel);
+		return_pnl = new JPanel();
+		return_pnl.setToolTipText("Return home");
+		FlowLayout fl_return_pnl = (FlowLayout) return_pnl.getLayout();
+		fl_return_pnl.setVgap(30);
+		return_pnl.setBackground(new Color(0, 204, 255));
+		GridBagConstraints gbc_return_pnl = new GridBagConstraints();
+		gbc_return_pnl.fill = GridBagConstraints.BOTH;
+		gbc_return_pnl.gridx = 1;
+		gbc_return_pnl.gridy = 3;
+		getContentPane().add(return_pnl, gbc_return_pnl);
 		
 		returnBtn = new JButton("RETURN");
-		returnBtn.setHorizontalTextPosition(SwingConstants.RIGHT);
-		returnBtn.setIcon(new ImageIcon(UpdateIssue.class.getResource("/img/return.png")));
-		returnBtn.setForeground(new Color(255, 255, 255));
-		returnBtn.setBackground(new Color(204, 0, 0));
-		
-		return_panel.add(returnBtn);
-		
-		returnBtn.setPreferredSize(new Dimension(95, 40));
-		returnBtn.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-		returnBtn.setFont(new Font("Arial Rounded MT Bold", Font.PLAIN, 13));
 		returnBtn.setBorder(null);
+		returnBtn.setBackground(new Color(204, 0, 0));
+		returnBtn.setPreferredSize(new Dimension(100, 35));
+		returnBtn.setIcon(new ImageIcon(UpdateIssue.class.getResource("/img/return.png")));
+		returnBtn.setHorizontalTextPosition(SwingConstants.RIGHT);
+		returnBtn.setForeground(Color.WHITE);
+		returnBtn.setFont(new Font("Arial Rounded MT Bold", Font.PLAIN, 13));
+		return_pnl.add(returnBtn);
 		
-		this.setVisible(true);
+		setVisible(true);
 	}
 
 	public void addMainInternalFrame() {
@@ -339,7 +399,7 @@ public class UpdateIssue extends JInternalFrame implements ActionListener{
 	}
 	
 	private void registerListeners() {
-		this.returnBtn.addActionListener(this);
+		returnBtn.addActionListener(this);
 	}
 	
 	@Override
@@ -358,6 +418,14 @@ public class UpdateIssue extends JInternalFrame implements ActionListener{
 			}
 		}
 	}
+	
+    private void updateCount(){
+    	issueRem_lbl.setText((150 -issueAreaDoc.getLength()) + " characters remaining");
+    }
+
+    private void updateSumCount() {
+    	summaryRem_lbl.setText("Rem: " + (40 -summaryAreaDoc.getLength()));
+    }
 	
 
 

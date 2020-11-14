@@ -5,7 +5,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger; 
 
 //Import AWT packages
-import java.awt.EventQueue;
 import java.awt.Color;
 import java.awt.BorderLayout;
 import java.awt.Component;
@@ -291,23 +290,22 @@ public class UserLogin extends JFrame implements ActionListener{
 		mainPanel.add(login_Panel);
 		
 		login_btn = new JButton("LOGIN");
-
+		login_btn.setBorder(new LineBorder(null, 7, true));
+		login_btn.setBackground(new Color(255, 51, 204));
+		login_btn.setPreferredSize(new Dimension(70, 30));
 		login_btn.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		login_btn.setAlignmentY(Component.BOTTOM_ALIGNMENT);
 		login_btn.setBorderPainted(false);
-		login_btn.setPreferredSize(new Dimension(70, 30));
 		login_btn.setFont(new Font("Times New Roman", Font.BOLD, 14));
 		login_btn.setForeground(new Color(255, 255, 255));
-		login_btn.setBorder(new LineBorder(null, 7, true));
-		login_btn.setBackground(new Color(255, 51, 204));
 		login_btn.setBounds(new Rectangle(0, 40, 50, 50));
 				
 		login_Panel.add(login_btn);
 		
 		//Centers frame on screen
 		Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
-		this.setLocation(dim.width/2-this.getSize().width/2, dim.height/2-this.getSize().height/2);
-		this.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);		
+		setLocation(dim.width/2-this.getSize().width/2, dim.height/2-this.getSize().height/2);
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);		
 	
 		setVisible(true);
 	}	

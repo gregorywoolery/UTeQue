@@ -146,45 +146,10 @@ public class StudentDashboard extends Dashboard implements ActionListener{
 		notificationBtnDash.setFont(new Font("Arial Rounded MT Bold", Font.PLAIN, 13));
 		menu_panel.add(notificationBtnDash);
 		
-		logoutButton_panel = new JPanel();
-		logoutButton_panel.setBackground(new Color(0, 0, 51));
-		GridBagConstraints gbc_logoutButton_panel = new GridBagConstraints();
-		gbc_logoutButton_panel.insets = new Insets(30, 0, 5, 0);
-		gbc_logoutButton_panel.fill = GridBagConstraints.BOTH;
-		gbc_logoutButton_panel.gridx = 0;
-		gbc_logoutButton_panel.gridy = 2;
-		sidebar_panel.add(logoutButton_panel, gbc_logoutButton_panel);
 
-		logoutBtn = new JButton("Log Out");
-		logoutBtn.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-		logoutBtn.setFocusPainted(false);
-		logoutBtn.setPreferredSize(new Dimension(95, 35));
-		logoutBtn.setForeground(new Color(51, 153, 255));
-		logoutBtn.setBorder(null);
-		logoutBtn.setBackground(new Color(51, 255, 0));
-		logoutBtn.setFont(new Font("Arial Rounded MT Bold", Font.BOLD, 15));
-		
-		// Resize icon to fit on button
-		// Resize icon to fit on label 
-		ImageIcon buttonImageIcon = new ImageIcon(new ImageIcon(Dashboard.class.getResource(
-				"/img/logout.png")).getImage().getScaledInstance(23, 23, Image.SCALE_DEFAULT));
-		
-		logoutBtn.setIcon(buttonImageIcon);
-		logoutButton_panel.add(logoutBtn);
-		
-		workspace_desktopPane = new JDesktopPane();
-		
 		addMainInternalFrame();
 		
-		workspace_desktopPane.setBorder(new LineBorder(new Color(0, 0, 51), 5));
-		workspace_desktopPane.setBackground(new Color(0, 0, 51));
-		
-		GridBagConstraints gbc_workspace_desktopPane = new GridBagConstraints();
-		gbc_workspace_desktopPane.insets = new Insets(0, 0, 5, 10);
-		gbc_workspace_desktopPane.fill = GridBagConstraints.BOTH;
-		gbc_workspace_desktopPane.gridx = 0;
-		gbc_workspace_desktopPane.gridy = 1;
-		home_panel.add(workspace_desktopPane, gbc_workspace_desktopPane);
+		setVisible(true);
 	}
 	
 	public void addMainInternalFrame() {
@@ -202,8 +167,8 @@ public class StudentDashboard extends Dashboard implements ActionListener{
 		
 		//Test if current internal frame is of class Student main and renders the frame with that
 		if(currFrame.getClass() == StudentMain.class){
-			currFrame.setLocation((desktopSize.width - jInternalFrameSize.width)/50,
-			    (desktopSize.height- jInternalFrameSize.height)/50);
+			currFrame.setLocation((desktopSize.width - jInternalFrameSize.width)/500,
+			    (desktopSize.height- jInternalFrameSize.height)/90);
 		}
 		
 	}

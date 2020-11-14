@@ -48,7 +48,7 @@ public class StudentMain extends JInternalFrame implements ActionListener{
 	private JPanel IssueDisplay_panel;
 	private JPanel studentIssue_panel;
 	private JLabel addIssueTitle_lbl;
-	private JComboBox addIssue_comboBox;
+	private JComboBox<String> addIssue_comboBox;
 	private JLabel addedDate_lbl;
 	private JButton addBtn;
 	private JButton liveChatBtn;
@@ -97,13 +97,12 @@ public class StudentMain extends JInternalFrame implements ActionListener{
 	private void initializeComponents() {
 		((javax.swing.plaf.basic.BasicInternalFrameUI)this.getUI()).setNorthPane(null);
 		
-		this.setSize(730, 550);
 		getContentPane().setBackground(new Color(0, 0, 51));
-		setBorder(new LineBorder(new Color(0, 0, 51), 20));
-		setBounds(100, 100, 750, 570);
-		
+		setBorder(new LineBorder(new Color(0, 0, 51), 10));
+		setBounds(100, 100, 820, 570);
+
 		GridBagLayout gridBagLayout = new GridBagLayout();
-		gridBagLayout.columnWidths = new int[]{238, 238, 238, 0};
+		gridBagLayout.columnWidths = new int[] {270, 276, 265, 0};
 		gridBagLayout.rowHeights = new int[] {50, 160, 340, 0};
 		gridBagLayout.columnWeights = new double[]{1.0, 0.0, 0.0, Double.MIN_VALUE};
 		gridBagLayout.rowWeights = new double[]{1.0, 0.0, 1.0, Double.MIN_VALUE};
@@ -130,11 +129,11 @@ public class StudentMain extends JInternalFrame implements ActionListener{
 		liveChatBtn.setForeground(new Color(255, 255, 255));
 		liveChatBtn.setFont(new Font("Arial Rounded MT Bold", Font.PLAIN, 13));
 		liveChatBtn.setPreferredSize(new Dimension(100, 30));
-		studentIssue_panel.add(liveChatBtn);
 		liveChatBtn.setBorder(null);
+		studentIssue_panel.add(liveChatBtn);
+
 		
 		userIssueStats_panel = new JPanel();
-		FlowLayout fl_userIssueStats_panel = (FlowLayout) userIssueStats_panel.getLayout();
 		userIssueStats_panel.setPreferredSize(new Dimension(470, 30));
 		userIssueStats_panel.setBackground(new Color(0, 0, 51));
 		studentIssue_panel.add(userIssueStats_panel);
@@ -207,14 +206,14 @@ public class StudentMain extends JInternalFrame implements ActionListener{
 		
 		addIssue_panel.add(addIssueTitle_lbl);
 		
-		addIssue_comboBox = new JComboBox();
+
+		addIssue_comboBox = new JComboBox<>(new String[] {"Complaint", "Query"});
 		addIssue_comboBox.setToolTipText("Select issue type here");
 		addIssue_comboBox.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		addIssue_comboBox.setForeground(new Color(255, 255, 255));
 		addIssue_comboBox.setBorder(null);
 		addIssue_comboBox.setBackground(new Color(0, 0, 51));
 		addIssue_comboBox.setMaximumSize(new Dimension(100, 25));
-		addIssue_comboBox.setModel(new DefaultComboBoxModel(new String[] {"Complaint", "Query"}));
 		addIssue_comboBox.setFont(new Font("Arial Rounded MT Bold", Font.PLAIN, 14));
 		
 		addIssue_panel.add(addIssue_comboBox);
@@ -237,10 +236,10 @@ public class StudentMain extends JInternalFrame implements ActionListener{
 		addBtn = new JButton("ADD");
 		addBtn.setToolTipText("Add your issues.");
 		addBtn.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+		addBtn.setBorder(null);
 		addBtn.setForeground(new Color(255, 255, 255));
 		addBtn.setBackground(new Color(0, 153, 255));
 		addBtn.setMaximumSize(new Dimension(100, 30));
-		addBtn.setBorder(null);
 		addBtn.setFont(new Font("Arial Rounded MT Bold", Font.PLAIN, 14));
 		addBtn.setAlignmentX(Component.CENTER_ALIGNMENT);
 		addIssue_panel.add(addBtn);
@@ -269,10 +268,9 @@ public class StudentMain extends JInternalFrame implements ActionListener{
 		
 		updateIssue_panel.add(updateIssueTitle_lbl);
 		
-		upadateIssue_comboBox = new JComboBox();
+		upadateIssue_comboBox = new JComboBox<>(new String[] {"Complaint", "Query"});
 		upadateIssue_comboBox.setToolTipText("Select issue type here");
 		upadateIssue_comboBox.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-		upadateIssue_comboBox.setModel(new DefaultComboBoxModel(new String[] {"Complaint", "Query"}));
 		upadateIssue_comboBox.setMaximumSize(new Dimension(100, 25));
 		upadateIssue_comboBox.setForeground(Color.WHITE);
 		upadateIssue_comboBox.setFont(new Font("Arial Rounded MT Bold", Font.PLAIN, 14));
@@ -303,10 +301,10 @@ public class StudentMain extends JInternalFrame implements ActionListener{
 
 		updateBtn.setToolTipText("Update a previous issue");
 		updateBtn.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+		updateBtn.setBorder(null);
 		updateBtn.setMaximumSize(new Dimension(100, 30));
 		updateBtn.setForeground(Color.WHITE);
 		updateBtn.setFont(new Font("Arial Rounded MT Bold", Font.PLAIN, 14));
-		updateBtn.setBorder(null);
 		updateBtn.setBackground(new Color(0, 153, 255));
 		updateBtn.setAlignmentX(0.5f);
 		updateIssue_panel.add(updateBtn);
@@ -349,11 +347,11 @@ public class StudentMain extends JInternalFrame implements ActionListener{
 		search_panel.setBackground(new Color(255, 255, 0));
 		FlowLayout fl_search_panel = (FlowLayout) search_panel.getLayout();
 		fl_search_panel.setVgap(0);
-		fl_search_panel.setHgap(10);
-		search_panel.setPreferredSize(new Dimension(700, 40));
+		fl_search_panel.setHgap(15);
+		search_panel.setPreferredSize(new Dimension(770, 40));
 		issue_panel.add(search_panel);
 		
-		searchFor_lbl = new JTextField("1803376");
+		searchFor_lbl = new JTextField("");
 		searchFor_lbl.setBorder(new TitledBorder(
 				new LineBorder(new Color(0, 0, 51), 2), 
 								"Issue ID", 
@@ -365,10 +363,9 @@ public class StudentMain extends JInternalFrame implements ActionListener{
 		searchFor_lbl.setBackground(new Color(255, 255, 0));
 		searchFor_lbl.setFont(new Font("Arial Rounded MT Bold", Font.PLAIN, 13));
 		
-		searchIssueType_comboBox = new JComboBox();
+		searchIssueType_comboBox = new JComboBox<>(new String[] {"Complaint", "Query"});
 		searchIssueType_comboBox.setToolTipText("Select issue type here");
 		searchIssueType_comboBox.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-		searchIssueType_comboBox.setModel(new DefaultComboBoxModel(new String[] {"Complaint", "Query"}));
 		searchIssueType_comboBox.setPreferredSize(new Dimension(100, 25));
 		searchIssueType_comboBox.setForeground(new Color(0, 0, 51));
 		searchIssueType_comboBox.setFont(new Font("Arial Rounded MT Bold", Font.PLAIN, 14));

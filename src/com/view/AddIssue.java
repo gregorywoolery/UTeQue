@@ -37,6 +37,8 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.awt.event.ActionEvent;
 import javax.swing.ImageIcon;
+import java.awt.Component;
+import java.awt.FlowLayout;
 
 public class AddIssue extends JInternalFrame implements ActionListener{
 	private JTextArea issueSummary_txtfd;
@@ -47,7 +49,7 @@ public class AddIssue extends JInternalFrame implements ActionListener{
 	private JLabel addIssue_lbl;
 	private JPanel infoPanel;
 	private JPanel issueID_panel;
-	private JComboBox addIssue_comboBox;
+	private JComboBox<String> addIssue_comboBox;
 	private JLabel issueSummary_lbl;
 	private JPanel main_Panel;
 	private JLabel promptIssue;
@@ -98,16 +100,15 @@ public class AddIssue extends JInternalFrame implements ActionListener{
 		//Removes top bar from internal frame
 		((javax.swing.plaf.basic.BasicInternalFrameUI)this.getUI()).setNorthPane(null);
 		
-		this.setSize(730, 550);
 		getContentPane().setBackground(new Color(0, 0, 51));
 		setBorder(new LineBorder(new Color(0, 0, 51), 20));
-		setBounds(100, 100, 710, 530); //730 550
+		setBounds(100, 100, 820, 570);
 		
 		GridBagLayout gridBagLayout = new GridBagLayout();
 		gridBagLayout.columnWidths = new int[]{0, 0};
-		gridBagLayout.rowHeights = new int[] {50, 0, 280, 100, 0};
+		gridBagLayout.rowHeights = new int[] {50, 0, 180, 100, 0};
 		gridBagLayout.columnWeights = new double[]{1.0, Double.MIN_VALUE};
-		gridBagLayout.rowWeights = new double[]{0.0, 1.0, 1.0, 1.0, Double.MIN_VALUE};
+		gridBagLayout.rowWeights = new double[]{0.0, 1.0, 1.0, 1.0};
 		getContentPane().setLayout(gridBagLayout);
 		
 		addIssue_lbl = new JLabel("ADD ISSUE");
@@ -148,11 +149,10 @@ public class AddIssue extends JInternalFrame implements ActionListener{
 		issueID_lbl.setFont(new Font("Arial Rounded MT Bold", Font.PLAIN, 13));
 		issueID_panel.add(issueID_lbl);
 		
-		addIssue_comboBox = new JComboBox();
+		addIssue_comboBox = new JComboBox<>(new String[] {"Complaint", "Query"});
 		addIssue_comboBox.setBorder(null);
-		addIssue_comboBox.setMaximumSize(new Dimension(100, 30));
+		addIssue_comboBox.setMaximumSize(new Dimension(125, 30));
 		addIssue_comboBox.setForeground(new Color(0, 0, 51));
-		addIssue_comboBox.setModel(new DefaultComboBoxModel(new String[] {"Complaint", "Query"}));
 		addIssue_comboBox.setFont(new Font("Arial Rounded MT Bold", Font.PLAIN, 14));
 		addIssue_comboBox.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		addIssue_comboBox.setBackground(new Color(255, 255, 0));
@@ -192,7 +192,7 @@ public class AddIssue extends JInternalFrame implements ActionListener{
 		issueSummary_txtfd.setDocument(summaryAreaDoc);
 		
 		infoPanel.add(issueSummary_txtfd);
-		issueSummary_txtfd.setColumns(10);
+		issueSummary_txtfd.setColumns(15);
 		
 		remainingSum_lbl = new JLabel();
 		remainingSum_lbl.setHorizontalAlignment(SwingConstants.RIGHT);
@@ -294,11 +294,12 @@ public class AddIssue extends JInternalFrame implements ActionListener{
 		
 		addBtn = new JButton("ADD");
 		addBtn.setIcon(new ImageIcon(AddIssue.class.getResource("/img/add.png")));
+		addBtn.setBorder(null);
 		addBtn.setPreferredSize(new Dimension(100, 35));
 		addBtn.setBackground(new Color(51, 255, 0));
 		addBtn.setForeground(new Color(255, 255, 255));
 		addBtn.setFont(new Font("Arial Rounded MT Bold", Font.PLAIN, 13));
-		addBtn.setBorder(null);
+		
 		GridBagConstraints gbc_addBtn = new GridBagConstraints();
 		gbc_addBtn.insets = new Insets(0, 0, 5, 5);
 		gbc_addBtn.gridx = 0;
@@ -308,11 +309,12 @@ public class AddIssue extends JInternalFrame implements ActionListener{
 		clearBtn = new JButton("CLEAR");
 		clearBtn.setIcon(new ImageIcon(AddIssue.class.getResource("/img/clear.png")));
 
+		clearBtn.setBorder(null);
 		clearBtn.setPreferredSize(new Dimension(100, 35));
 		clearBtn.setBackground(new Color(51, 255, 0));
 		clearBtn.setForeground(new Color(255, 255, 255));
 		clearBtn.setFont(new Font("Arial Rounded MT Bold", Font.PLAIN, 13));
-		clearBtn.setBorder(null);
+		
 		GridBagConstraints gbc_clearBtn = new GridBagConstraints();
 		gbc_clearBtn.insets = new Insets(0, 0, 5, 0);
 		gbc_clearBtn.gridx = 1;
@@ -340,11 +342,11 @@ public class AddIssue extends JInternalFrame implements ActionListener{
 			}
 		));
 		issueTable.getColumnModel().getColumn(0).setResizable(false);
-		issueTable.getColumnModel().getColumn(0).setPreferredWidth(85);
-		issueTable.getColumnModel().getColumn(1).setPreferredWidth(85);
-		issueTable.getColumnModel().getColumn(3).setPreferredWidth(85);
-		issueTable.getColumnModel().getColumn(2).setPreferredWidth(110);
-		issueTable.getColumnModel().getColumn(4).setPreferredWidth(140);
+		issueTable.getColumnModel().getColumn(0).setPreferredWidth(75);
+		issueTable.getColumnModel().getColumn(1).setPreferredWidth(75);
+		issueTable.getColumnModel().getColumn(3).setPreferredWidth(75);
+		issueTable.getColumnModel().getColumn(2).setPreferredWidth(112);
+		issueTable.getColumnModel().getColumn(4).setPreferredWidth(112);
 		
 		//Changes table heaver font
 		JTableHeader tableHeader = issueTable.getTableHeader();
@@ -355,9 +357,14 @@ public class AddIssue extends JInternalFrame implements ActionListener{
 		issueTable.setBackground(new Color(0,204, 225));
 		
 		
-		footer_panel.add(new JScrollPane(issueTable));
+		JScrollPane scrollPane = new JScrollPane(issueTable);
+		scrollPane.setFont(new Font("Times New Roman", Font.PLAIN, 12));
+		scrollPane.setPreferredSize(new Dimension(460, 52));
+		footer_panel.add(scrollPane);
 		
 		spaceHolder = new JPanel();
+		FlowLayout flowLayout = (FlowLayout) spaceHolder.getLayout();
+		flowLayout.setVgap(30);
 		spaceHolder.setBackground(new Color(0, 0, 51));
 		spaceHolder.setPreferredSize(new Dimension(40, 90));
 		footer_panel.add(spaceHolder);
@@ -365,14 +372,14 @@ public class AddIssue extends JInternalFrame implements ActionListener{
 		returnBtn = new JButton("Return");
 		returnBtn.setHorizontalAlignment(SwingConstants.LEFT);
 		returnBtn.setIcon(new ImageIcon(AddIssue.class.getResource("/img/return.png")));
+		returnBtn.setBorder(null);
 		returnBtn.setForeground(new Color(255, 255, 255));
 		returnBtn.setMaximumSize(new Dimension(65, 35));
-		returnBtn.setPreferredSize(new Dimension(95, 30));
+		returnBtn.setPreferredSize(new Dimension(95, 35));
 		returnBtn.setBackground(new Color(255, 0, 0));
-		returnBtn.setBorder(null);
 		returnBtn.setFont(new Font("Arial Rounded MT Bold", Font.PLAIN, 14));
 		returnBtn.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-		footer_panel.add(returnBtn);
+		spaceHolder.add(returnBtn);
 		
 		this.setVisible(true);
 	}
