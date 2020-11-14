@@ -29,14 +29,13 @@ public class SQLOperations {
 					+ "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
 			
 			PreparedStatement statement = dbConn.prepareStatement(insertSql);
-			statement.setString(1, student.getType());
 			statement.setString(2, student.getID());
 			statement.setString(3, student.getPassword());
 			statement.setString(4, student.getFname());
 			statement.setString(5, student.getLname());
 			statement.setString(6, student.getGender());
 			statement.setString(7, student.getEmail());
-			statement.setDate(8, (Date) student.getDob());
+			statement.setDate(8, (Date) student.getDOB());
 			statement.setString(9, student.getPhone());
 			
 			int rowsInserted = statement.executeUpdate();
@@ -62,14 +61,13 @@ public class SQLOperations {
 						+ "gender=?, email=?, dob=?, phone=? WHERE id=?";
 				
 				PreparedStatement statement = dbConn.prepareStatement(updateSql);
-				statement.setString(1, student.getType());
 				statement.setString(2, student.getID());
 				statement.setString(3, student.getPassword());
 				statement.setString(4, student.getFname());
 				statement.setString(5, student.getLname());
 				statement.setString(6, student.getGender());
 				statement.setString(7, student.getEmail());
-				statement.setDate(8, (Date) student.getDob());
+				statement.setDate(8, (Date) student.getDOB());
 				statement.setString(9, student.getPhone());
 				
 				int rowsUpdated = statement.executeUpdate();
@@ -120,14 +118,13 @@ public class SQLOperations {
 			ResultSet result = statement.executeQuery(readAll);
 			
 			while(result.next()) {
-				copyStudent.setType(result.getString(1));
 				copyStudent.setID(result.getString(2));
 				copyStudent.setPassword(result.getString(3));
 				copyStudent.setFname(result.getString(4));
 				copyStudent.setLname(result.getString(5));
 				copyStudent.setGender(result.getString(6));
 				copyStudent.setEmail(result.getString(7));
-				copyStudent.setDob(result.getDate(8));
+				copyStudent.setDOB(result.getDate(8));
 				copyStudent.setPhone(result.getString(9));
 
 				student.add(copyStudent);
@@ -151,21 +148,20 @@ public class SQLOperations {
 	
 	//Services Table
 	//--Insert Statement
-	public void insertServices(Users services) {
+	public void insertServices(User services) {
 		try {
 			logger.warn("Attempting to INSERT Data INTO SQL table Services, Error May Occur");
 			
 			String insertSql = "INSERT INTO UTeQueDB.Services (type, id, password, firstname, lastname, gender, email, dob, phone) "
 					+ "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
 			PreparedStatement statement = dbConn.prepareStatement(insertSql);
-			statement.setString(1, services.getType());
 			statement.setString(2, services.getID());
 			statement.setString(3, services.getPassword());
 			statement.setString(4, services.getFname());
 			statement.setString(5, services.getLname());
 			statement.setString(6, services.getGender());
 			statement.setString(7, services.getEmail());
-			statement.setDate(8, (Date) services.getDob());
+			statement.setDate(8, (Date) services.getDOB());
 			statement.setString(9, services.getPhone());
 			
 			int rowsInserted = statement.executeUpdate();
@@ -182,7 +178,7 @@ public class SQLOperations {
 	}
 	
 	//--Update Statement
-	public void updateServices(Users services) {
+	public void updateServices(User services) {
 		if(checkExistingServices(services.getID())) {
 			logger.warn("Attempting to UPDATE data FROM SQL table Services, Error May Occur");
 			
@@ -190,14 +186,13 @@ public class SQLOperations {
 					+ "gender=?, email=?, dob=?, phone=? WHERE id=?";
 			try {
 				PreparedStatement statement = dbConn.prepareStatement(updateSql);
-				statement.setString(1, services.getType());
 				statement.setString(2, services.getID());
 				statement.setString(3, services.getPassword());
 				statement.setString(4, services.getFname());
 				statement.setString(5, services.getLname());
 				statement.setString(6, services.getGender());
 				statement.setString(7, services.getEmail());
-				statement.setDate(8, (Date) services.getDob());
+				statement.setDate(8, (Date) services.getDOB());
 				statement.setString(9, services.getPhone());
 				
 				logger.warn("Attempting to EXECUTE Statement, Error May Occur");
@@ -216,7 +211,7 @@ public class SQLOperations {
 	}
 	
 	//--Delete Statement
-	public void deleteServices(Users services) {
+	public void deleteServices(User services) {
 		if(checkExistingServices(services.getID())) {
 			logger.warn("Attempting to DELETE data FROM SQL table Services, Error May Occur");
 			
@@ -241,12 +236,12 @@ public class SQLOperations {
 			System.out.println("---Student was NOT Found.");
 	}
 	//--Read Statement
-	public ArrayList<Users> readServices() {
+	public ArrayList<User> readServices() {
 
-			ArrayList<Users> service = new ArrayList<Users>();
+			ArrayList<User> service = new ArrayList<User>();
 			
 			String readAll = "SELECT * FROM UTeQueDB.Services";
-			Users copyService = new Users(); // Used to set data from database
+			User copyService = new User(); // Used to set data from database
 			
 			logger.warn("Attempting to READ Data FROM SQL table Services, Error May Occur");
 			
@@ -257,14 +252,13 @@ public class SQLOperations {
 				ResultSet result = statement.executeQuery(readAll);
 				
 				while(result.next()) {
-					copyService.setType(result.getString(1));
 					copyService.setID(result.getString(2));
 					copyService.setPassword(result.getString(3));
 					copyService.setFname(result.getString(4));
 					copyService.setLname(result.getString(5));
 					copyService.setGender(result.getString(6));
 					copyService.setEmail(result.getString(7));
-					copyService.setDob(result.getDate(8));
+					copyService.setDOB(result.getDate(8));
 					copyService.setPhone(result.getString(9));
 
 					service.add(copyService);

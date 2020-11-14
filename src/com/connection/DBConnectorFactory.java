@@ -74,19 +74,29 @@ public class DBConnectorFactory {
 					logger.warn("Setting up Student Table, Error May Occur");
 					tableIsCreated = db.createStudentTable();
 					
+					if(!tableIsCreated)
+						throw new SQLException();
 					
 					//Creating Student Services Table
 					logger.warn("Setting up MySQL StudentServicesStaff Table, Error May Occur");
 					tableIsCreated = db.createStudentServicesStaffTable();
-					
+
+					if(!tableIsCreated)
+						throw new SQLException();
 
 					//Creating Issue Table
 					logger.warn("Setting up MySQL Issue Table, Error May Occur");
 					tableIsCreated = db.createIssueTable();
+
+					if(!tableIsCreated)
+						throw new SQLException();
 					
 					//Creating Response Table
 					logger.warn("Setting up MySQL Response Table, Error May Occur");
 					tableIsCreated = db.createResponseTable();
+					
+					if(!tableIsCreated)
+						throw new SQLException();
 					
 				}
 				

@@ -18,6 +18,8 @@ import java.awt.Rectangle;
 import java.awt.Toolkit;
 import java.awt.Cursor;
 import java.awt.Dimension;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
@@ -36,7 +38,7 @@ import javax.swing.JPasswordField;
 import javax.swing.ImageIcon;
 import javax.swing.SwingConstants;
 
-public class UserLogin extends JFrame {
+public class UserLogin extends JFrame implements ActionListener{
 	private JPanel mainPanel;
 	private JPanel bannerPanel;
 	private JLabel bannerIcon;
@@ -56,22 +58,6 @@ public class UserLogin extends JFrame {
 	private JPanel login_Panel;
 	private JButton login_btn;
 	private JLabel auth_message;
-
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					UserLogin frame = new UserLogin();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
 
 	/**
 	 * Create the frame.
@@ -323,39 +309,19 @@ public class UserLogin extends JFrame {
 		this.setLocation(dim.width/2-this.getSize().width/2, dim.height/2-this.getSize().height/2);
 		this.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);		
 	
+		setVisible(true);
 	}	
+	
+	private void registerListeners() {
+		this.login_btn.addActionListener(this);
+	}
 	
 	//Removes frame from display after use
 	private void disposeFrame() {
 		this.setVisible(false);
 	}
 	
-	private void registerListeners() {
-		login_btn.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				if(authenticateUser()) {
-					StudentDashboard dash = new StudentDashboard();
-					dash.setVisible(true);
-					disposeFrame();
-				}
-				else
-					loginErrorMessage();
-			}
-			
-			//Changes button color when hovered over
-			@Override
-			public void mouseEntered(MouseEvent e) {
-				login_btn.setBackground(new Color(250, 120, 217));
-			}
-			
-			//Changes button color when exited from hover over
-			@Override
-			public void mouseExited(MouseEvent e) {
-				login_btn.setBackground(new Color(255, 51, 204));		
-			}
-		});
-	}
+
 
 	//To be found in controllers when naming conventions are set up
 	private boolean authenticateUser() {
@@ -368,5 +334,33 @@ public class UserLogin extends JFrame {
 	//Displays error message with login validation has failed.
 	private void loginErrorMessage(){
 		auth_message.setVisible(true);
+	}
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		login_btn.addMouseListener(new MouseAdapter() {
+			//Changes button color when hovered over
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				login_btn.setBackground(new Color(250, 120, 217));
+			}
+			
+			//Changes button color when exited from hover over
+			@Override
+			public void mouseExited(MouseEvent e) {
+				login_btn.setBackground(new Color(255, 51, 204));		
+			}
+		});
+		
+		if(e.getSource() == login_btn) {
+			if(authenticateUser()) {
+				StudentDashboard dash = new StudentDashboard();
+				dash.setVisible(true);
+				disposeFrame();
+			}
+			else
+				loginErrorMessage();
+		}
+		
 	}
 }

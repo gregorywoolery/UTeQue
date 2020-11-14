@@ -95,6 +95,7 @@ public class AddIssue extends JInternalFrame implements ActionListener{
 	}
 	
 	private void initializeComponents() {
+		//Removes top bar from internal frame
 		((javax.swing.plaf.basic.BasicInternalFrameUI)this.getUI()).setNorthPane(null);
 		
 		this.setSize(730, 550);

@@ -46,13 +46,12 @@ public class DBInitializer {
 		String tableSql = "CREATE TABLE UTeQueDB.`Student` ( "
 				+ "studentID VARCHAR(10) NOT NULL , "
 				+ "password VARCHAR(20) NOT NULL , "
-				+ "type VARCHAR(10) NOT NULL , "
 				+ "firstname VARCHAR(20) NOT NULL , "
 				+ "lastname VARCHAR(25) NOT NULL , "
 				+ "gender CHAR(2) NOT NULL , "
 				+ "email VARCHAR(100) NOT NULL , "
-				+ "dob DATE NOT NULL , "
 				+ "phone VARCHAR(15) NOT NULL DEFAULT \'0(876) 000-0000\' , "
+				+ "dob DATE NOT NULL , "
 				+ "PRIMARY KEY (`studentID`)) ENGINE = InnoDB";
 			
 		Statement stmt;
@@ -82,7 +81,6 @@ public class DBInitializer {
 		String tableSql = "CREATE TABLE UTeQueDB.`StudentServicesStaff` ( "
 				+ "staffID VARCHAR(10) NOT NULL  , "
 				+ "password VARCHAR(20) NOT NULL , "
-				+ "role VARCHAR(15) NOT NULL , "
 				+ "firstname VARCHAR(20) NOT NULL , "
 				+ "lastname VARCHAR(25) NOT NULL , "
 				+ "gender CHAR(2) NOT NULL , "

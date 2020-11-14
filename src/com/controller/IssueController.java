@@ -2,7 +2,7 @@ package com.controller;
 
 //import com.model.Date;
 import com.model.Issue;
-import com.model.Users;
+import com.model.User;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;

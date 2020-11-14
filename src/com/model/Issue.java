@@ -11,6 +11,7 @@ public class Issue implements Serializable{
 	private String status;
 	private String studentId;
 	private String message;
+	private Date issuedAt;
 	private Date scheduledDateTime;
 	private String repId;
 	
@@ -20,12 +21,15 @@ public class Issue implements Serializable{
 		this.status = "";
 		this.studentId = "";
 		this.message = "";
+		this.issuedAt = null;
 		this.scheduledDateTime = null;
 		this.repId = "";	
 	}
 	
-	public Issue(String issueId, String type, String status, String studentId, String message, 
+	public Issue(String issueId, String type, String status, 
+			String studentId, String message, Date issuedAt,
 			Date scheduledDateTime, String repId) {
+		
 		this.issueId = issueId;
 		this.type = type;
 		this.status = status;
