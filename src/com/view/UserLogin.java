@@ -2,7 +2,9 @@ package com.view;
 
 //Import Log4j packages
 import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger; 
+import org.apache.logging.log4j.Logger;
+
+import com.controller.LoginController;
 
 //Import AWT packages
 import java.awt.Color;
@@ -195,7 +197,7 @@ public class UserLogin extends JFrame implements ActionListener{
 		gbc_username_Label.gridy = 0;
 		auth_panel.add(username_Label, gbc_username_Label);
 		
-		//Holds Username to be authenticated
+		//Holds USERNAME to be authenticated
 		txtUsername = new JTextField();
 		txtUsername.setCaretColor(Color.WHITE);
 		txtUsername.setHorizontalAlignment(SwingConstants.CENTER);
@@ -281,6 +283,7 @@ public class UserLogin extends JFrame implements ActionListener{
 		staff_rdbtn.setForeground(new Color(255, 255, 255));
 		staff_rdbtn.setBackground(new Color(0, 0, 51));
 		staff_rdbtn.setFont(new Font("Times New Roman", Font.PLAIN, 13));
+		
 		buttonGroup.add(staff_rdbtn);
 		userSelect_Panel.add(staff_rdbtn);
 		
@@ -311,22 +314,14 @@ public class UserLogin extends JFrame implements ActionListener{
 	}	
 	
 	private void registerListeners() {
+		staff_rdbtn.addActionListener(this);
+		student_rdbtn.addActionListener(this);
 		this.login_btn.addActionListener(this);
 	}
 	
 	//Removes frame from display after use
 	private void disposeFrame() {
 		this.setVisible(false);
-	}
-	
-
-
-	//To be found in controllers when naming conventions are set up
-	private boolean authenticateUser() {
-		//txtUsername
-		//txtPassword
-		boolean auth = true;
-		return auth;
 	}
 	
 	//Displays error message with login validation has failed.
@@ -350,8 +345,19 @@ public class UserLogin extends JFrame implements ActionListener{
 			}
 		});
 		
-		if(e.getSource() == login_btn) {
-			if(authenticateUser()) {
+		
+		/**
+		 * If the login button was used and either the staff or student radio 
+		 * button is selected then execute authentication method.
+		 */
+		if(e.getSource() == login_btn && (staff_rdbtn.isSelected() || student_rdbtn.isSelected())) {
+			String userType = "";
+			if(staff_rdbtn.isSelected())
+				userType = "Staff";
+			else if (student_rdbtn.isSelected())
+				userType = "Student";
+				
+			if(LoginController.authenticate(txtUsername.getText(), txtPassword.getPassword(), userType)) {				
 				StudentDashboard dash = new StudentDashboard();
 				dash.setVisible(true);
 				disposeFrame();

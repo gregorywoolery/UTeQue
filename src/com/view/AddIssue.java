@@ -31,6 +31,7 @@ import java.awt.Dimension;
 import javax.swing.SwingConstants;
 import javax.swing.JTextArea;
 
+import com.controller.IssueController;
 import com.services.DocumentSizeFilter;
 import java.awt.event.ActionListener;
 import java.time.LocalDate;
@@ -409,6 +410,8 @@ public class AddIssue extends JInternalFrame implements ActionListener{
 	}
     
 	private void registerListeners() {
+		addBtn.addActionListener(this);
+		clearBtn.addActionListener(this);
 		returnBtn.addActionListener(this);
 	}
 	
@@ -422,7 +425,16 @@ public class AddIssue extends JInternalFrame implements ActionListener{
 						JOptionPane.YES_NO_OPTION,
 						JOptionPane.WARNING_MESSAGE);
 				if (opt == 0) {
-					//ADD ISSUE
+//					IssueController.addIssue(new Issue(
+//							issueID_lbl
+//							addIssue_comboBox
+//							false
+//							issueSummary_txtfd
+//							issueTextArea
+//							currDate
+//							null
+//							null
+//							));
 				}else 
 					if(opt == 1) {
 						//RETURN

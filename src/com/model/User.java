@@ -23,8 +23,12 @@ public class User implements Serializable{
 		this.email= "";
 		this.phone = "";
 	}
+	
 	//Primary Constructor
-	public User(String id, String password, String fname, String lname, String gender,String email, String phone) {
+	public User(String id, String password, String fname, 
+			String lname, String gender, String email, 
+			String phone) 
+	{
 		this.id = id;
 		this.password = password;
 		this.fname = fname;
@@ -33,6 +37,7 @@ public class User implements Serializable{
 		this.email = email;
 		this.phone = phone;
 	}
+	
 	//Copy Constructor
 	public User(User user) {
 		this.id = user.id;
@@ -88,7 +93,6 @@ public class User implements Serializable{
 		this.phone = phone;
 	}
 	
-	//ToString
 	@Override
 	public String toString() {
 		return "User [ID=" + id + ", Password=" + password + ", First name=" + fname + ", Last name=" + lname

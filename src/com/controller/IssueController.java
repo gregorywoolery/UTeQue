@@ -23,18 +23,11 @@ public class IssueController {
 	String dateString = issueFormat.format(new Date()).toString();	
 	
 	
-	@SuppressWarnings("deprecation")
-	public void addIssue() {
+	public static void addIssue(Issue issue) {
 		try {
 			
-			
-			IssueObj.setScheduledDateTime(DateObj);
-			
-			System.out.println("Enter Student Services Representative: ");
-			IssueObj.setRepId(input.next());
-
 		}catch(InputMismatchException e){
-			System.err.println("Wrong Input Type Entered");
+
 		}
 			
 	}

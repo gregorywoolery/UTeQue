@@ -44,11 +44,11 @@ public class DBInitializer {
 	//Method to Create Student Table
 	public boolean createStudentTable() {
 		String tableSql = "CREATE TABLE UTeQueDB.`Student` ( "
-				+ "studentID VARCHAR(10) NOT NULL , "
+				+ "studentID VARCHAR(12) NOT NULL , "
 				+ "password VARCHAR(20) NOT NULL , "
 				+ "firstname VARCHAR(20) NOT NULL , "
-				+ "lastname VARCHAR(25) NOT NULL , "
-				+ "gender CHAR(2) NOT NULL , "
+				+ "lastname VARCHAR(20) NOT NULL , "
+				+ "gender CHAR(1) NOT NULL , "
 				+ "email VARCHAR(100) NOT NULL , "
 				+ "phone VARCHAR(15) NOT NULL DEFAULT \'0(876) 000-0000\' , "
 				+ "dob DATE NOT NULL , "
@@ -61,15 +61,15 @@ public class DBInitializer {
 			stmt = (Statement) dbConn.createStatement();
 			
 			logger.warn("Attempting to EXECUTE Statement, Error May Occur");
-			logger.warn("Creating table UTeQueDB.`Students`, Error May Occur");
+			logger.warn("Creating table UTeQueDB.`Student`, Error May Occur");
 			stmt.execute(tableSql, 0);
 						
 			//If the program comes here database and table creation went well
-			logger.info("UTeQueDB.`Students` was CREATED Successfully");
+			logger.info("UTeQueDB.`Student` was CREATED Successfully");
 			return true;
 			
 		} catch (SQLException e) {	
-			logger.error("UTeQueDB.`Students` CREATION NOT Successful. ERROR(" 
+			logger.error("UTeQueDB.`Student` CREATION NOT Successful. ERROR(" 
 						+ e.getErrorCode() +") " 
 						+ e.getMessage());
 			return false;
@@ -77,16 +77,17 @@ public class DBInitializer {
 	}
 	
 	//Method to Create Services Table
-	public boolean createStudentServicesStaffTable() {
-		String tableSql = "CREATE TABLE UTeQueDB.`StudentServicesStaff` ( "
-				+ "staffID VARCHAR(10) NOT NULL  , "
+	public boolean createStudentServicesRepsTable() {
+		String tableSql = "CREATE TABLE UTeQueDB.`StudentServicesRep` ( "
+				+ "repID VARCHAR(12) NOT NULL  , "
 				+ "password VARCHAR(20) NOT NULL , "
 				+ "firstname VARCHAR(20) NOT NULL , "
-				+ "lastname VARCHAR(25) NOT NULL , "
-				+ "gender CHAR(2) NOT NULL , "
+				+ "lastname VARCHAR(20) NOT NULL , "
+				+ "gender CHAR(1) NOT NULL , "
 				+ "email VARCHAR(100) NOT NULL , "
 				+ "phone VARCHAR(15) NOT NULL DEFAULT \'0(876) 000-0000\' , "
-				+ "PRIMARY KEY (`staffID`)) ENGINE = InnoDB";
+				+ "canRespond BOOLEAN DEFAULT TRUE , "
+				+ "PRIMARY KEY (`repID`)) ENGINE = InnoDB";
 			
 		Statement stmt;
 		
@@ -110,18 +111,89 @@ public class DBInitializer {
 		}			
 	}
 	
+	
+	//Method to Create Services Table
+	public boolean createStudentServicesAgentsTable() {
+		String tableSql = "CREATE TABLE UTeQueDB.`StudentServicesAgent` ( "
+				+ "agentID VARCHAR(12) NOT NULL  , "
+				+ "password VARCHAR(20) NOT NULL , "
+				+ "firstname VARCHAR(20) NOT NULL , "
+				+ "lastname VARCHAR(20) NOT NULL , "
+				+ "gender CHAR(1) NOT NULL , "
+				+ "email VARCHAR(100) NOT NULL , "
+				+ "phone VARCHAR(15) NOT NULL DEFAULT \'0(876) 000-0000\' , "
+				+ "canRespond BOOLEAN DEFAULT FALSE , "
+				+ "PRIMARY KEY (`agentID`)) ENGINE = InnoDB";
+			
+		Statement stmt;
+		
+		try {
+			logger.warn("Attempting to CREATE SQL STATEMENT to execute Create command");
+			stmt = (Statement) dbConn.createStatement();
+			
+			logger.warn("Attempting to EXECUTE Statement, Error May Occur");
+			logger.warn("Creating table UTeQueDB.`StudentServicesAgent`, Error May Occur");
+			stmt.execute(tableSql, 0);
+						
+			//If the program comes here database and table creation went well
+			logger.info("UTeQueDB.`StudentServicesAgent`, was CREATED Successfully");
+			return true;
+			
+		} catch (SQLException e) {	
+			logger.error("UTeQueDB.`StudentServicesAgent` CREATION NOT Successfully. ERROR(" 
+					+ e.getErrorCode() +") " 
+					+ e.getMessage());
+			return false;
+		}			
+	}
+	
+	//Method to Create Service Table
+	public boolean createServiceTable() {
+		String tableSql = "CREATE TABLE UTeQueDB.`Service` ( "
+				+ "serviceID INT(10) NOT NULL AUTOINCREMENT , "
+				+ "type VARCHAR(15) NOT NULL , "
+				+ "PRIMARY KEY (`serviceID`)) ENGINE = InnoDB";
+			
+		Statement stmt;
+		
+		try {
+			logger.warn("Attempting to CREATE SQL STATEMENT to execute Create command");
+			stmt = (Statement) dbConn.createStatement();
+			
+			logger.warn("Attempting to EXECUTE Statement, Error May Occur");
+			logger.warn("Creating table UTeQueDB.`Service`, Error May Occur");
+			stmt.execute(tableSql, 0);
+
+			//If the program comes here database and table creation went well
+			logger.info("UTeQueDB.`Service` was CREATED Successfully");
+			return true;
+			
+		} catch (SQLException e) {		
+			logger.error("UTeQueDB.`Service` CREATION NOT Successful. ERROR(" 
+					+ e.getErrorCode() +") " 
+					+ e.getMessage());
+			return false;
+		}			
+	}
+	
+	
 	//Method to Create Issue Table
 	public boolean createIssueTable() {
 		String tableSql = "CREATE TABLE UTeQueDB.`Issue` ( "
-				+ "issueID VARCHAR(13) NOT NULL , "
+				+ "issueID VARCHAR(12) NOT NULL , "
 				+ "type VARCHAR(11) NOT NULL , "
 				+ "status VARCHAR(12) NOT NULL , "
-				+ "studentId VARCHAR(9) NOT NULL  , "
+				+ "studentID VARCHAR(12) NOT NULL  , "
 				+ "message VARCHAR(140) NOT NULL , "
+				+ "serviceID INT(10) NOT NULL , "
 				+ "issuedAt DATE NOT NULL , "
 				+ "scheduledDateTime DATETIME , "
-				+ "repId VARCHAR(10) , "
-				+ "PRIMARY KEY (`issueId`)) ENGINE = InnoDB";
+				+ "repID VARCHAR(10) , "
+				+ "PRIMARY KEY (`issueID`) , "
+				+ "FOREIGN KEY(studentID) REFERENCES UTeQueDB.`Student`(studentId) , "
+				+ "FOREIGN KEY(serviceID) REFERENCES UTeQueDB.`Service`(serviceID) , "
+				+ "FOREIGN KEY(repID) REFERENCES UTeQueDB.`StudentServicesRep`(repID)"
+				+ ") ENGINE = InnoDB";
 			
 		Statement stmt;
 		
@@ -147,13 +219,15 @@ public class DBInitializer {
 	
 	public boolean createResponseTable() {
 		String tableSql = "CREATE TABLE UTeQueDB.`Response` ( "
-				+ "responseID VARCHAR(13) NOT NULL , "
-				+ "issueID VARCHAR(11) NOT NULL , "
+				+ "responseID VARCHAR(12) NOT NULL , "
+				+ "issueID VARCHAR(12) NOT NULL , "
 				+ "userID VARCHAR(12) NOT NULL , "
 				+ "message VARCHAR(140) NOT NULL , "
 				+ "responseAt DATE NOT NULL , "
-				+ "isAnswer BOOLEAN DEFAULT false, "
-				+ "PRIMARY KEY (`responseID`)) ENGINE = InnoDB";
+				+ "isAnswer BOOLEAN DEFAULT FALSE , "
+				+ "PRIMARY KEY (`responseID`)"
+				+ "FOREIGN KEY(issueID) REFERENCES UTeQueDB.`Issue`(issueID) , "
+				+ ") ENGINE = InnoDB";
 			
 		Statement stmt;
 		
