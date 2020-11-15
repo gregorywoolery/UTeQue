@@ -7,8 +7,8 @@ public class User implements Serializable{
 	protected static final long serialVersionUID = 1L;
 	protected String id;
 	protected String password ;
-	protected String fname ;
-	protected String lname ;
+	protected String firstname ;
+	protected String lastname ;
 	protected String gender;
 	protected String email;
 	protected String phone;
@@ -17,8 +17,8 @@ public class User implements Serializable{
 	public User() {
 		this.id= "";
 		this.password = "";
-		this.fname = "";
-		this.lname = "";
+		this.firstname = "";
+		this.lastname = "";
 		this.gender = "";
 		this.email= "";
 		this.phone = "";
@@ -31,8 +31,8 @@ public class User implements Serializable{
 	{
 		this.id = id;
 		this.password = password;
-		this.fname = fname;
-		this.lname = lname;
+		this.firstname = fname;
+		this.lastname = lname;
 		this.gender = gender;
 		this.email = email;
 		this.phone = phone;
@@ -42,8 +42,8 @@ public class User implements Serializable{
 	public User(User user) {
 		this.id = user.id;
 		this.password = user.password;
-		this.fname = user.fname;
-		this.lname = user.lname;
+		this.firstname = user.firstname;
+		this.lastname = user.lastname;
 		this.gender = user.gender;
 		this.email= user.email;
 		this.phone = user.phone;
@@ -62,17 +62,17 @@ public class User implements Serializable{
 	public void setPassword(String password) {
 		this.password = password;
 	}
-	public String getFname() {
-		return fname;
+	public String getFirstname() {
+		return firstname;
 	}
-	public void setFname(String fname) {
-		this.fname = fname;
+	public void setFirstname(String fname) {
+		firstname = fname;
 	}
-	public String getLname() {
-		return lname;
+	public String getLastname() {
+		return lastname;
 	}
-	public void setLname(String lname) {
-		this.lname = lname;
+	public void setLastname(String lname) {
+		lastname = lname;
 	}
 	public String getGender() {
 		return gender;
@@ -95,7 +95,7 @@ public class User implements Serializable{
 	
 	@Override
 	public String toString() {
-		return "User [ID=" + id + ", Password=" + password + ", First name=" + fname + ", Last name=" + lname
+		return "User [ID=" + id + ", Password=" + password + ", First name=" + firstname + ", Last name=" + lastname
 				+ ", Gender=" + gender + ", Email=" + email + ", Phone=" + phone + "]";
 	}
 

@@ -6,46 +6,46 @@ import java.util.Date;
 public class Issue implements Serializable{
 	//Attributes
 	protected static final long serialVersionUID = 1L;
-	private String issueId;
+	private String issueID;
 	private String type;
 	private String status;
-	private String studentId;
+	private String studentID;
 	private String message;
-	private String summary;
+	private int serviceID;
 	private Date issuedAt;
 	private Date scheduledDateTime;
-	private String repId;
+	private String repID;
 	
 	public Issue() {
-		this.issueId = "";
+		this.issueID = "";
 		this.type = "";
 		this.status = "";
-		this.studentId = "";
+		this.studentID = "";
 		this.message = "";
-		this.summary = "";
+		this.serviceID = -1;
 		this.issuedAt = null;
 		this.scheduledDateTime = null;
-		this.repId = "";	
+		this.repID = "";	
 	}
 	
-	public Issue(String issueId, String type, String status, 
-			String studentId, String message, String summary,
-			Date issuedAt, Date scheduledDateTime, String repId) {
+	public Issue(String issueID, String type, String status, 
+			String studentID, String message, int serviceID,
+			Date issuedAt, Date scheduledDateTime, String repID) {
 		
-		this.issueId = issueId;
+		this.issueID = issueID;
 		this.type = type;
 		this.status = status;
-		this.studentId = studentId;
+		this.studentID = studentID;
 		this.message = message;
-		this.summary = summary;
+		this.serviceID = serviceID;
 		this.issuedAt = issuedAt;
 		this.scheduledDateTime = scheduledDateTime;
-		this.repId = repId;	
+		this.repID = repID;	
 		
 	}
 
-	public String getIssueId() {
-		return issueId;
+	public String getIssueID() {
+		return issueID;
 	}
 
 	public String getType() {
@@ -56,16 +56,16 @@ public class Issue implements Serializable{
 		return status;
 	}
 
-	public String getStudentId() {
-		return studentId;
+	public String getStudentID() {
+		return studentID;
 	}
 
 	public String getMessage() {
 		return message;
 	}
 
-	public String getSummary() {
-		return summary;
+	public int getServiceID() {
+		return serviceID;
 	}
 
 	public Date getIssuedAt() {
@@ -76,12 +76,12 @@ public class Issue implements Serializable{
 		return scheduledDateTime;
 	}
 
-	public String getRepId() {
-		return repId;
+	public String getRepID() {
+		return repID;
 	}
 
-	public void setIssueId(String issueId) {
-		this.issueId = issueId;
+	public void setIssueID(String issueID) {
+		this.issueID = issueID;
 	}
 
 	public void setType(String type) {
@@ -92,16 +92,16 @@ public class Issue implements Serializable{
 		this.status = status;
 	}
 
-	public void setStudentId(String studentId) {
-		this.studentId = studentId;
+	public void setStudentID(String studentID) {
+		this.studentID = studentID;
 	}
 
 	public void setMessage(String message) {
 		this.message = message;
 	}
 
-	public void setSummary(String summary) {
-		this.summary = summary;
+	public void setServiceID(int serviceID) {
+		this.serviceID = serviceID;
 	}
 
 	public void setIssuedAt(Date issuedAt) {
@@ -112,16 +112,17 @@ public class Issue implements Serializable{
 		this.scheduledDateTime = scheduledDateTime;
 	}
 
-	public void setRepId(String repId) {
-		this.repId = repId;
+	public void setRepId(String repID) {
+		this.repID = repID;
 	}
 
 	@Override
 	public String toString() {
-		return "Issue [issueId=" + issueId + ", type=" + type + ", status=" + status + ", studentId=" + studentId
-				+ ", message=" + message + ", summary=" + summary + ", issuedAt=" + issuedAt + ", scheduledDateTime="
-				+ scheduledDateTime + ", repId=" + repId + "]";
+		return "Issue [issueID=" + issueID + ", type=" + type + ", status=" + status + ", studentID=" + studentID
+				+ ", message=" + message + ", serviceID=" + serviceID + ", issuedAt=" + issuedAt
+				+ ", scheduledDateTime=" + scheduledDateTime + ", repID=" + repID + "]";
 	}
+	
 	
 	
 	
