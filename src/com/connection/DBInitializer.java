@@ -77,7 +77,7 @@ public class DBInitializer {
 	}
 	
 	//Method to Create Services Table
-	public boolean createStudentServicesRepsTable() {
+	public boolean createStudentServicesRepTable() {
 		String tableSql = "CREATE TABLE UTeQueDB.`StudentServicesRep` ( "
 				+ "repID VARCHAR(12) NOT NULL  , "
 				+ "password VARCHAR(20) NOT NULL , "
@@ -113,7 +113,7 @@ public class DBInitializer {
 	
 	
 	//Method to Create Services Table
-	public boolean createStudentServicesAgentsTable() {
+	public boolean createStudentServicesAgentTable() {
 		String tableSql = "CREATE TABLE UTeQueDB.`StudentServicesAgent` ( "
 				+ "agentID VARCHAR(12) NOT NULL  , "
 				+ "password VARCHAR(20) NOT NULL , "
