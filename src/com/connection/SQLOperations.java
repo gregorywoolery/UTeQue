@@ -15,7 +15,7 @@ import java.util.ArrayList;
 
 public class SQLOperations {
 	//Attributes
-	private Connection dbConn;
+	private Connection dbConn = DBConnectorFactory.getDatabaseConnection();
 	boolean numRows;
 	private static final Logger logger = LogManager.getLogger(SQLOperations.class);
 	

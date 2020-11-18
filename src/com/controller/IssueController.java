@@ -1,6 +1,6 @@
 package com.controller;
 
-//import com.model.Date;
+import com.connection.SQLOperations;
 import com.model.Issue;
 import com.model.User;
 import java.text.DateFormat;
@@ -9,22 +9,20 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Scanner;
 
-import javax.swing.JComboBox;
-
 import java.io.*;
 import java.util.*;
 
 
 public class IssueController {
 	Issue IssueObj = new Issue();
-	Date DateObj = new Date();
+	static SQLOperations sql = new SQLOperations();
 	private static Scanner input = new Scanner(System.in);
-	DateFormat issueFormat = new SimpleDateFormat("yymmddhhmmss");
-	String dateString = issueFormat.format(new Date()).toString();	
 	
 	
 	public static void addIssue(Issue issue) {
+		
 		try {
+			sql.insertIssue(issue);
 			
 		}catch(InputMismatchException e){
 

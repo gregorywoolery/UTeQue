@@ -32,17 +32,22 @@ import javax.swing.SwingConstants;
 import javax.swing.JTextArea;
 
 import com.controller.IssueController;
+import com.model.Issue;
 import com.services.DocumentSizeFilter;
+import com.services.identification;
+
 import java.awt.event.ActionListener;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.Date;
 import java.awt.event.ActionEvent;
 import javax.swing.ImageIcon;
 import java.awt.Component;
 import java.awt.FlowLayout;
 
 public class AddIssue extends JInternalFrame implements ActionListener{
-	private JTextArea issueSummary_txtfd;
 	private JTable issueTable;
 	private JTextArea issueTextArea;
 	private DefaultStyledDocument issueAreaDoc;
@@ -51,7 +56,7 @@ public class AddIssue extends JInternalFrame implements ActionListener{
 	private JPanel infoPanel;
 	private JPanel issueID_panel;
 	private JComboBox<String> addIssue_comboBox;
-	private JLabel issueSummary_lbl;
+	private JLabel issueListOfServices_lbl;
 	private JPanel main_Panel;
 	private JLabel promptIssue;
 	private JLabel remainingChar_lbl;
@@ -66,11 +71,17 @@ public class AddIssue extends JInternalFrame implements ActionListener{
 	private JDesktopPane workSpaceDesktop;
 	private String currDate;
 	private int issueTypeSelect = 0;
+	private int serviceTypeSelect = 0;
 	private JLabel issueDate_lbl;
+	private Date currentDate = new Date();
+	
+	private Issue issueObj = new Issue();
+	private JComboBox addListOfServicescomboBox;
 	/**
 	 * Create the frame.
+	 * @throws ParseException 
 	 */
-	public AddIssue(JDesktopPane workSpaceDesktop, int issueTypeSelect) {
+	public AddIssue(JDesktopPane workSpaceDesktop, int issueTypeSelect, int serviceTypeSelect) throws ParseException {
 		super("Add Issue", 
 				false, 	//resizable
 				true, 	//closable
@@ -80,13 +91,15 @@ public class AddIssue extends JInternalFrame implements ActionListener{
 		registerListeners();
 		this.workSpaceDesktop =  workSpaceDesktop;
 		this.issueTypeSelect = issueTypeSelect;
+		this.serviceTypeSelect = serviceTypeSelect;
 	}
 	
 	
 	/**
+	 * @throws ParseException 
 	 * @wbp.parser.constructor
 	 */
-	public AddIssue(JDesktopPane workSpaceDesktop) {
+	public AddIssue(JDesktopPane workSpaceDesktop) throws ParseException {
 		super("Add Issue", 
 				false, 	//resizable
 				true, 	//closable
@@ -97,7 +110,7 @@ public class AddIssue extends JInternalFrame implements ActionListener{
 		this.workSpaceDesktop =  workSpaceDesktop;
 	}
 	
-	private void initializeComponents() {
+	private void initializeComponents() throws ParseException {
 		//Removes top bar from internal frame
 		((javax.swing.plaf.basic.BasicInternalFrameUI)this.getUI()).setNorthPane(null);
 		
@@ -150,7 +163,9 @@ public class AddIssue extends JInternalFrame implements ActionListener{
 		issueID_lbl.setFont(new Font("Arial Rounded MT Bold", Font.PLAIN, 13));
 		issueID_panel.add(issueID_lbl);
 		
-		addIssue_comboBox = new JComboBox<>(new String[] {"Complaint", "Query"});
+		String issueType []={"Complaint", "Query"};  
+		//addIssue_comboBox = new JComboBox<>(new String[] {"Complaint", "Query"});
+		addIssue_comboBox = new JComboBox(issueType);
 		addIssue_comboBox.setBorder(null);
 		addIssue_comboBox.setMaximumSize(new Dimension(125, 30));
 		addIssue_comboBox.setForeground(new Color(0, 0, 51));
@@ -160,19 +175,19 @@ public class AddIssue extends JInternalFrame implements ActionListener{
 		addIssue_comboBox.setSelectedIndex(issueTypeSelect);
 		infoPanel.add(addIssue_comboBox);
 		
-		issueSummary_lbl = new JLabel("Summary:");
-		issueSummary_lbl.setForeground(new Color(255, 255, 255));
-		issueSummary_lbl.setBorder(new LineBorder(new Color(0, 0, 51), 11));
-		issueSummary_lbl.setHorizontalAlignment(SwingConstants.RIGHT);
-		issueSummary_lbl.setMaximumSize(new Dimension(120, 40));
-		issueSummary_lbl.setFont(new Font("Arial Rounded MT Bold", Font.PLAIN, 14));
-		infoPanel.add(issueSummary_lbl);
+		issueListOfServices_lbl = new JLabel("List of Services:");
+		issueListOfServices_lbl.setForeground(new Color(255, 255, 255));
+		issueListOfServices_lbl.setBorder(new LineBorder(new Color(0, 0, 51), 11));
+		issueListOfServices_lbl.setHorizontalAlignment(SwingConstants.RIGHT);
+		issueListOfServices_lbl.setMaximumSize(new Dimension(120, 40));
+		issueListOfServices_lbl.setFont(new Font("Arial Rounded MT Bold", Font.PLAIN, 14));
+		infoPanel.add(issueListOfServices_lbl);
 		
-		issueSummary_txtfd = new JTextArea();
-		issueSummary_txtfd.setMargin(new Insets(4, 4, 2, 2));
-		issueSummary_lbl.setLabelFor(issueSummary_txtfd);
-		issueSummary_txtfd.setMaximumSize(new Dimension(230, 25));
-		issueSummary_txtfd.setFont(new Font("Times New Roman", Font.PLAIN, 13));
+		//List of Services JComboBox
+		String serviceType []={"Accounting Enquiry","Reset Password", "Moodule Not Working"}; 
+		addListOfServicescomboBox = new JComboBox(serviceType);
+		addIssue_comboBox.setSelectedIndex(serviceTypeSelect);
+		infoPanel.add(addListOfServicescomboBox);
 
 		/*
 		 * Sets a limit of 150 characters to the JTextField by using the 
@@ -190,17 +205,14 @@ public class AddIssue extends JInternalFrame implements ActionListener{
             public void removeUpdate(DocumentEvent e) { updateSumCount();}
         });
 		
-		issueSummary_txtfd.setDocument(summaryAreaDoc);
-		
-		infoPanel.add(issueSummary_txtfd);
-		issueSummary_txtfd.setColumns(15);
-		
 		remainingSum_lbl = new JLabel();
 		remainingSum_lbl.setHorizontalAlignment(SwingConstants.RIGHT);
 		remainingSum_lbl.setMaximumSize(new Dimension(70, 20));
 		remainingSum_lbl.setForeground(Color.RED);
 		remainingSum_lbl.setFont(new Font("Times New Roman", Font.BOLD, 13));
 		infoPanel.add(remainingSum_lbl);
+		
+
 		
 		
 		main_Panel = new JPanel();
@@ -263,6 +275,8 @@ public class AddIssue extends JInternalFrame implements ActionListener{
 		LocalDate date = LocalDate.now(); // Gets the current date
 		DateTimeFormatter currentDateFormat = DateTimeFormatter.ofPattern("dd-MM-yyyy");
 		currDate = date.format(currentDateFormat);
+		 
+		
 		
 		issueDate_lbl = new JLabel(currDate);
 		issueDate_lbl.setForeground(new Color(255, 255, 255));
@@ -415,6 +429,7 @@ public class AddIssue extends JInternalFrame implements ActionListener{
 		returnBtn.addActionListener(this);
 	}
 	
+	//Add Issue Button
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		addBtn.addActionListener(new ActionListener() {
@@ -425,11 +440,24 @@ public class AddIssue extends JInternalFrame implements ActionListener{
 						JOptionPane.YES_NO_OPTION,
 						JOptionPane.WARNING_MESSAGE);
 				if (opt == 0) {
+					issueObj.setIssueID(identification.getIssueIdString());
+					issueObj.setType(addIssue_comboBox.getItemAt(addIssue_comboBox.getSelectedIndex()));
+					issueObj.setStatus("Unresolved");
+					issueObj.setStudentID("1700241");
+					issueObj.setMessage(issueTextArea.getText());
+					issueObj.setServiceID(addListOfServicescomboBox.getSelectedIndex());
+					issueObj.setIssuedAt(currentDate);
+					issueObj.setScheduledDateTime(null);
+					issueObj.setRepId(null);
+					
+					
+					
+					IssueController.addIssue(issueObj);
 //					IssueController.addIssue(new Issue(
 //							issueID_lbl
 //							addIssue_comboBox
 //							false
-//							issueSummary_txtfd
+//							issueListOfServices_txtfd
 //							issueTextArea
 //							currDate
 //							null
@@ -451,7 +479,7 @@ public class AddIssue extends JInternalFrame implements ActionListener{
 						JOptionPane.YES_NO_OPTION,
 						JOptionPane.QUESTION_MESSAGE);
 				if (opt == 0) {
-					issueSummary_txtfd.setText("");
+					
 					issueTextArea.setText("");
 				}
 			}

@@ -15,6 +15,7 @@ import javax.swing.ImageIcon;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.font.TextAttribute;
+import java.text.ParseException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
@@ -71,7 +72,8 @@ public class StudentMain extends JInternalFrame implements ActionListener{
 	private JComboBox searchIssueType_comboBox;
 	private JButton searchIcon_lbl;
 	private JButton removeBtn;
-	private JComboBox upadateIssue_comboBox;
+	private JComboBox updateIssue_comboBox;
+	private JComboBox updateService_comboBox;
 	private JButton updateBtn;
 	private JLabel dateMadeUpdate_lbl;
 	private JPanel date_panel;
@@ -206,8 +208,8 @@ public class StudentMain extends JInternalFrame implements ActionListener{
 		
 		addIssue_panel.add(addIssueTitle_lbl);
 		
-
-		addIssue_comboBox = new JComboBox<>(new String[] {"Complaint", "Query"});
+		String issueType []={"Complaint", "Query"};  
+		addIssue_comboBox = new JComboBox(issueType);
 		addIssue_comboBox.setToolTipText("Select issue type here");
 		addIssue_comboBox.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		addIssue_comboBox.setForeground(new Color(255, 255, 255));
@@ -268,15 +270,21 @@ public class StudentMain extends JInternalFrame implements ActionListener{
 		
 		updateIssue_panel.add(updateIssueTitle_lbl);
 		
-		upadateIssue_comboBox = new JComboBox<>(new String[] {"Complaint", "Query"});
-		upadateIssue_comboBox.setToolTipText("Select issue type here");
-		upadateIssue_comboBox.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-		upadateIssue_comboBox.setMaximumSize(new Dimension(100, 25));
-		upadateIssue_comboBox.setForeground(Color.WHITE);
-		upadateIssue_comboBox.setFont(new Font("Arial Rounded MT Bold", Font.PLAIN, 14));
-		upadateIssue_comboBox.setBorder(null);
-		upadateIssue_comboBox.setBackground(new Color(0, 0, 51));
-		updateIssue_panel.add(upadateIssue_comboBox);
+		 
+		updateIssue_comboBox  = new JComboBox(issueType);
+		updateIssue_comboBox.setToolTipText("Select issue type here");
+		updateIssue_comboBox.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+		updateIssue_comboBox.setMaximumSize(new Dimension(100, 25));
+		updateIssue_comboBox.setForeground(Color.WHITE);
+		updateIssue_comboBox.setFont(new Font("Arial Rounded MT Bold", Font.PLAIN, 14));
+		updateIssue_comboBox.setBorder(null);
+		updateIssue_comboBox.setBackground(new Color(0, 0, 51));
+		updateIssue_panel.add(updateIssue_comboBox);
+		
+		String serviceType []={"Accounting Enquiry","Reset Password", "Moodule Not Working"}; 
+		updateService_comboBox = new JComboBox(serviceType);
+		
+		//infoPanel.add(addListOfServicescomboBox);
 		
 		dateMadeUpdate_lbl = new JLabel("Date Made:");
 		dateMadeUpdate_lbl.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -363,7 +371,7 @@ public class StudentMain extends JInternalFrame implements ActionListener{
 		searchFor_lbl.setBackground(new Color(255, 255, 0));
 		searchFor_lbl.setFont(new Font("Arial Rounded MT Bold", Font.PLAIN, 13));
 		
-		searchIssueType_comboBox = new JComboBox<>(new String[] {"Complaint", "Query"});
+		searchIssueType_comboBox = new JComboBox(issueType);
 		searchIssueType_comboBox.setToolTipText("Select issue type here");
 		searchIssueType_comboBox.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		searchIssueType_comboBox.setPreferredSize(new Dimension(100, 25));
@@ -463,7 +471,13 @@ public class StudentMain extends JInternalFrame implements ActionListener{
 	public void actionPerformed(ActionEvent e) {
 		if(e.getSource() == addBtn) {
 			dispose();
-			JInternalFrame currFrame = new AddIssue(workSpaceDesktop, upadateIssue_comboBox.getSelectedIndex());
+			JInternalFrame currFrame = null;
+			try {
+				currFrame = new AddIssue(workSpaceDesktop, updateIssue_comboBox.getSelectedIndex(),updateService_comboBox.getSelectedIndex());
+			} catch (ParseException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
 			workSpaceDesktop.add(currFrame);
 			
 			//Opens JinternalFrame centered in the JDesktopPane

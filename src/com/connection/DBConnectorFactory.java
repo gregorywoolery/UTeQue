@@ -13,10 +13,10 @@ import javax.swing.JOptionPane;
 public class DBConnectorFactory {
 	private static Connection dbConn = null;
 
-	private static String DATABASE_URL = "jdbc:mysql://localhost:3306/UTeQueDB?useSSL=false";
+	private static String DATABASE_URL = "jdbc:mysql:8889//localhost/UTeQueDB?useSSL=false";
 	//User name & Password for database connection
 	private static String username = "root"; 
-	private static String password = "";
+	private static String password = "root";
 	private static final Logger logger = LogManager.getLogger(SQLOperations.class);
 	private static boolean dbIsCreated = false;
 	private static boolean tableIsCreated = false;

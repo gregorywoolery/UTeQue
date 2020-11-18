@@ -12,7 +12,7 @@ import org.apache.logging.log4j.Logger;
 public class DBInitializer {
 	
 	//Attributes
-	private Connection dbConn = null;
+	private Connection dbConn =  DBConnectorFactory.getDatabaseConnection();
 	private static final Logger logger = LogManager.getLogger(SQLOperations.class);
 	
 	//Method to Create Database
@@ -150,7 +150,7 @@ public class DBInitializer {
 	//Method to Create Service Table
 	public boolean createServiceTable() {
 		String tableSql = "CREATE TABLE UTeQueDB.`Service` ( "
-				+ "serviceID INT(10) NOT NULL AUTOINCREMENT , "
+				+ "serviceID INT(10) NOT NULL AUTO_INCREMENT , "
 				+ "type VARCHAR(15) NOT NULL , "
 				+ "PRIMARY KEY (`serviceID`)) ENGINE = InnoDB";
 			
@@ -225,8 +225,8 @@ public class DBInitializer {
 				+ "message VARCHAR(140) NOT NULL , "
 				+ "responseAt DATE NOT NULL , "
 				+ "isAnswer BOOLEAN DEFAULT FALSE , "
-				+ "PRIMARY KEY (`responseID`)"
-				+ "FOREIGN KEY(issueID) REFERENCES UTeQueDB.`Issue`(issueID) , "
+				+ "PRIMARY KEY (`responseID`),"
+				+ "FOREIGN KEY(issueID) REFERENCES UTeQueDB.`Issue`(issueID)"
 				+ ") ENGINE = InnoDB";
 			
 		Statement stmt;

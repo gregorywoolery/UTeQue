@@ -13,6 +13,7 @@ import java.awt.Image;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.text.ParseException;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -189,7 +190,12 @@ public class StudentDashboard extends Dashboard implements ActionListener{
 				workspace_desktopPane.removeAll();
 				workspace_desktopPane.updateUI();
 
-				currFrame = new AddIssue(workspace_desktopPane);
+				try {
+					currFrame = new AddIssue(workspace_desktopPane);
+				} catch (ParseException e1) {
+					
+					e1.printStackTrace();
+				}
 				workspace_desktopPane.add(currFrame);
 		
 				//Opens JinternalFrame centered in the JDesktopPane
