@@ -12,7 +12,7 @@ import org.apache.logging.log4j.Logger;
 public class DBInitializer {
 	
 	//Attributes
-	private Connection dbConn =  DBConnectorFactory.getDatabaseConnection();
+	private Connection dbConn =  null;
 	private static final Logger logger = LogManager.getLogger(SQLOperations.class);
 	
 	//Method to Create Database

@@ -449,20 +449,9 @@ public class AddIssue extends JInternalFrame implements ActionListener{
 					issueObj.setIssuedAt(currentDate);
 					issueObj.setScheduledDateTime(null);
 					issueObj.setRepId(null);
-					
-					
-					
+										
 					IssueController.addIssue(issueObj);
-//					IssueController.addIssue(new Issue(
-//							issueID_lbl
-//							addIssue_comboBox
-//							false
-//							issueListOfServices_txtfd
-//							issueTextArea
-//							currDate
-//							null
-//							null
-//							));
+
 				}else 
 					if(opt == 1) {
 						//RETURN

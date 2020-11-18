@@ -5,11 +5,15 @@ import com.model.*;
 
 //Import Log4j packages
 import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger; 
+import org.apache.logging.log4j.Logger;
 
+import java.sql.Connection;
 //Import SQL packages
-import java.sql.*;
-
+import java.sql.Date;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 //Import ArrayList packages
 import java.util.ArrayList; 
 
@@ -42,7 +46,7 @@ public class SQLOperations {
 			statement.setString(5, student.getGender());
 			statement.setString(6, student.getEmail());
 			statement.setString(7, student.getPhone());
-			statement.setDate(8, (Date) student.getDOB());
+			statement.setDate(8, (Date)student.getDOB());
 			
 			int rowsInserted = statement.executeUpdate();
 			
@@ -169,7 +173,7 @@ public class SQLOperations {
 			
 			String insertSql = "INSERT INTO UTeQueDB.Issue (issueID, type, status, "
 					+ "studentID, message, serviceID, issuedAt, scheduledDateTime, repId) "
-					+ "VALUES (?, ?, ?, ?, ?, ?, ?)";
+					+ "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
 			PreparedStatement statement = dbConn.prepareStatement(insertSql);
 			
 			statement.setString(1, issue.getIssueID());
@@ -178,9 +182,10 @@ public class SQLOperations {
 			statement.setString(4, issue.getStudentID());
 			statement.setString(5, issue.getMessage());
 			statement.setInt(6, issue.getServiceID());
-			statement.setString(7, issue.getMessage());			
-			statement.setDate(6, (Date) issue.getScheduledDateTime());
-			statement.setString(7, issue.getRepID());
+			statement.setString(7, issue.getMessage());
+			statement.setDate(7, new Date(issue.getIssuedAt().getTime()));
+			statement.setDate(8, (Date)issue.getScheduledDateTime());
+			statement.setString(9, issue.getRepID());
 			
 			logger.warn("Attempting to EXECUTE Statement, Error May Occur");
 			int rowsInserted = statement.executeUpdate();
@@ -190,7 +195,9 @@ public class SQLOperations {
 			}
 			
 		} catch(SQLException e) {
-			logger.error("SQL INSERT Statement was NOT Successful");
+			logger.error("SQL INSERT Statement was NOT Successful" 
+					+ "Error(" + e.getErrorCode() 
+					+") " + e.getMessage());
 		}
 	}
 	
