@@ -15,10 +15,11 @@ public class DocumentSizeFilter extends DocumentFilter {
         if (DEBUG)
             System.out.println("in DocumentSizeFilter's insertString method");
         
-        //This rejects the entire insertion if it would make
-        //the contents too long. Another option would be
-        //to truncate the inserted string so the contents
-        //would be exactly maxCharacters in length.
+        /**
+         * This rejects the entire insertion if it would make the contents too long. 
+         * Another option would be to truncate the inserted string so the contents
+         * would be exactly maxCharacters in length.
+         */
         if ((fb.getDocument().getLength() + str.length()) <= maxCharacters)
             super.insertString(fb, offs, str, a);
         else

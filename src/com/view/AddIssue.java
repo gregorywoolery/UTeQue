@@ -32,26 +32,25 @@ import javax.swing.SwingConstants;
 import javax.swing.JTextArea;
 
 import com.controller.IssueController;
+import com.controller.ServiceController;
 import com.model.Issue;
 import com.services.DocumentSizeFilter;
-import com.services.identification;
+import com.services.Identification;
 
 import java.awt.event.ActionListener;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Date;
 import java.awt.event.ActionEvent;
 import javax.swing.ImageIcon;
-import java.awt.Component;
 import java.awt.FlowLayout;
 
 public class AddIssue extends JInternalFrame implements ActionListener{
 	private JTable issueTable;
 	private JTextArea issueTextArea;
 	private DefaultStyledDocument issueAreaDoc;
-	private DefaultStyledDocument summaryAreaDoc;
 	private JLabel addIssue_lbl;
 	private JPanel infoPanel;
 	private JPanel issueID_panel;
@@ -65,7 +64,6 @@ public class AddIssue extends JInternalFrame implements ActionListener{
 	private JPanel footer_panel;
 	private JPanel spaceHolder;
 	private JButton returnBtn;
-	private JLabel remainingSum_lbl;
 	private JLabel issueIDTitle_lbl;
 	private JLabel issueID_lbl;
 	private JDesktopPane workSpaceDesktop;
@@ -74,9 +72,8 @@ public class AddIssue extends JInternalFrame implements ActionListener{
 	private int serviceTypeSelect = 0;
 	private JLabel issueDate_lbl;
 	private Date currentDate = new Date();
+	private JComboBox addListOfServices_comboBox;
 	
-	private Issue issueObj = new Issue();
-	private JComboBox addListOfServicescomboBox;
 	/**
 	 * Create the frame.
 	 * @throws ParseException 
@@ -135,7 +132,7 @@ public class AddIssue extends JInternalFrame implements ActionListener{
 		getContentPane().add(addIssue_lbl, gbc_addIssue_lbl);
 		
 		infoPanel = new JPanel();
-		infoPanel.setForeground(Color.BLACK);
+		infoPanel.setForeground(new Color(0, 0, 51));
 		infoPanel.setBorder(new LineBorder(new Color(255, 255, 0), 5));
 		infoPanel.setBackground(new Color(0, 0, 51));
 		GridBagConstraints gbc_infoPanel = new GridBagConstraints();
@@ -148,7 +145,7 @@ public class AddIssue extends JInternalFrame implements ActionListener{
 		
 		issueID_panel = new JPanel();
 		issueID_panel.setBackground(new Color(0, 0, 51));
-		issueID_panel.setMaximumSize(new Dimension(130, 32767));
+		issueID_panel.setMaximumSize(new Dimension(170, 32767));
 		infoPanel.add(issueID_panel);
 		
 		issueIDTitle_lbl = new JLabel("Issue ID");
@@ -156,7 +153,7 @@ public class AddIssue extends JInternalFrame implements ActionListener{
 		issueIDTitle_lbl.setFont(new Font("Arial Rounded MT Bold", Font.PLAIN, 12));
 		issueID_panel.add(issueIDTitle_lbl);
 		
-		issueID_lbl = new JLabel();
+		issueID_lbl = new JLabel(Identification.getIssueId());
 		issueID_lbl.setHorizontalAlignment(SwingConstants.CENTER);
 		issueID_lbl.setPreferredSize(new Dimension(115, 20));
 		issueID_lbl.setForeground(new Color(255, 255, 255));
@@ -164,7 +161,6 @@ public class AddIssue extends JInternalFrame implements ActionListener{
 		issueID_panel.add(issueID_lbl);
 		
 		String issueType []={"Complaint", "Query"};  
-		//addIssue_comboBox = new JComboBox<>(new String[] {"Complaint", "Query"});
 		addIssue_comboBox = new JComboBox(issueType);
 		addIssue_comboBox.setBorder(null);
 		addIssue_comboBox.setMaximumSize(new Dimension(125, 30));
@@ -175,45 +171,24 @@ public class AddIssue extends JInternalFrame implements ActionListener{
 		addIssue_comboBox.setSelectedIndex(issueTypeSelect);
 		infoPanel.add(addIssue_comboBox);
 		
-		issueListOfServices_lbl = new JLabel("List of Services:");
+		issueListOfServices_lbl = new JLabel("Services:");
 		issueListOfServices_lbl.setForeground(new Color(255, 255, 255));
 		issueListOfServices_lbl.setBorder(new LineBorder(new Color(0, 0, 51), 11));
 		issueListOfServices_lbl.setHorizontalAlignment(SwingConstants.RIGHT);
 		issueListOfServices_lbl.setMaximumSize(new Dimension(120, 40));
-		issueListOfServices_lbl.setFont(new Font("Arial Rounded MT Bold", Font.PLAIN, 14));
+		issueListOfServices_lbl.setFont(new Font("Arial Rounded MT Bold", Font.PLAIN, 13));
 		infoPanel.add(issueListOfServices_lbl);
 		
 		//List of Services JComboBox
-		String serviceType []={"Accounting Enquiry","Reset Password", "Moodule Not Working"}; 
-		addListOfServicescomboBox = new JComboBox(serviceType);
+		ArrayList<String> serviceTypes = ServiceController.getAllServies();
+
+		addListOfServices_comboBox = new JComboBox(serviceTypes.toArray());
+		addListOfServices_comboBox.setForeground(new Color(0, 0, 51));
+		addListOfServices_comboBox.setMaximumSize(new Dimension(190, 35));
+		addListOfServices_comboBox.setFont(new Font("Arial Rounded MT Bold", Font.PLAIN, 12));
+		addListOfServices_comboBox.setBackground(new Color(255, 255, 0));
 		addIssue_comboBox.setSelectedIndex(serviceTypeSelect);
-		infoPanel.add(addListOfServicescomboBox);
-
-		/*
-		 * Sets a limit of 150 characters to the JTextField by using the 
-		 * DocumentSizeFilter in the services package that rejects 
-		 * insertion of addition content.
-		 */
-		summaryAreaDoc = new DefaultStyledDocument();
-		summaryAreaDoc.setDocumentFilter(new DocumentSizeFilter(40));
-		summaryAreaDoc.addDocumentListener(new DocumentListener(){
-            @Override
-            public void changedUpdate(DocumentEvent e) { updateSumCount();}
-            @Override
-            public void insertUpdate(DocumentEvent e) { updateSumCount();}
-            @Override
-            public void removeUpdate(DocumentEvent e) { updateSumCount();}
-        });
-		
-		remainingSum_lbl = new JLabel();
-		remainingSum_lbl.setHorizontalAlignment(SwingConstants.RIGHT);
-		remainingSum_lbl.setMaximumSize(new Dimension(70, 20));
-		remainingSum_lbl.setForeground(Color.RED);
-		remainingSum_lbl.setFont(new Font("Times New Roman", Font.BOLD, 13));
-		infoPanel.add(remainingSum_lbl);
-		
-
-		
+		infoPanel.add(addListOfServices_comboBox);
 		
 		main_Panel = new JPanel();
 		main_Panel.setBackground(new Color(0, 0, 51));
@@ -402,10 +377,6 @@ public class AddIssue extends JInternalFrame implements ActionListener{
     private void updateCount(){
         remainingChar_lbl.setText((150 -issueAreaDoc.getLength()) + " characters remaining");
     }
-
-    private void updateSumCount() {
-    	remainingSum_lbl.setText("Rem: " + (40 -summaryAreaDoc.getLength()));
-    }
     
 	public void addMainInternalFrame() {
 		dispose();
@@ -429,50 +400,57 @@ public class AddIssue extends JInternalFrame implements ActionListener{
 		returnBtn.addActionListener(this);
 	}
 	
-	//Add Issue Button
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		addBtn.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				int opt = JOptionPane.showConfirmDialog(workSpaceDesktop, 
-						"Are you sure you want to add this Issue?", 
-						"Add Issue",
-						JOptionPane.YES_NO_OPTION,
-						JOptionPane.WARNING_MESSAGE);
-				if (opt == 0) {
-					issueObj.setIssueID(identification.getIssueIdString());
-					issueObj.setType(addIssue_comboBox.getItemAt(addIssue_comboBox.getSelectedIndex()));
-					issueObj.setStatus("Unresolved");
-					issueObj.setStudentID("1700241");
-					issueObj.setMessage(issueTextArea.getText());
-					issueObj.setServiceID(addListOfServicescomboBox.getSelectedIndex());
-					issueObj.setIssuedAt(currentDate);
-					issueObj.setScheduledDateTime(null);
-					issueObj.setRepId(null);
-										
-					IssueController.addIssue(issueObj);
+		if(e.getSource() == addBtn) {
+			int opt = JOptionPane.showConfirmDialog(workSpaceDesktop, 
+					"Are you sure you want to add this Issue?", 
+					"Add Issue",
+					JOptionPane.YES_NO_OPTION,
+					JOptionPane.WARNING_MESSAGE);
 
-				}else 
-					if(opt == 1) {
-						//RETURN
-					}
-			}
-		});
-		
-		
-		clearBtn.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				int opt = JOptionPane.showConfirmDialog(workSpaceDesktop, 
-						"Are you sure you want to clear the fields?", 
-						"Clear Fields...",
-						JOptionPane.YES_NO_OPTION,
-						JOptionPane.QUESTION_MESSAGE);
-				if (opt == 0) {
-					
-					issueTextArea.setText("");
+			if (opt == 0) {
+				Issue issue = new Issue();
+				issue.setIssueID(issueID_lbl.getText());
+				issue.setType(addIssue_comboBox.getItemAt(addIssue_comboBox.getSelectedIndex()));
+				issue.setStatus("Unresolved");
+				issue.setStudentID("1800000");
+				issue.setMessage(issueTextArea.getText());
+				issue.setServiceID(addListOfServices_comboBox.getSelectedIndex()+1);
+				issue.setIssuedAt(currentDate);
+				issue.setScheduledDateTime(null);
+				issue.setRepId(null);
+				
+				boolean issueAdded = IssueController.addIssue(issue);
+				if(issueAdded)
+					JOptionPane.showConfirmDialog(workSpaceDesktop, 
+							"ISSUE ADDED SUCCESSFULLY", 
+							"SUCCESS",
+							JOptionPane.OK_OPTION,
+							JOptionPane.INFORMATION_MESSAGE);
+				else
+					JOptionPane.showConfirmDialog(workSpaceDesktop, 
+							"Oops.. Problem occured adding your issue.", 
+							"ERROR",
+							JOptionPane.OK_OPTION,
+							JOptionPane.ERROR_MESSAGE);
+
+			}else 
+				if(opt == 1) {
+					//RETURN
 				}
-			}
-		});
+		}
+		
+		if(e.getSource() == clearBtn) {
+			int opt = JOptionPane.showConfirmDialog(workSpaceDesktop, 
+					"Are you sure you want to clear the fields?", 
+					"Clear Fields...",
+					JOptionPane.YES_NO_OPTION,
+					JOptionPane.QUESTION_MESSAGE);
+			if (opt == 0)
+				issueTextArea.setText("");
+			
+		}
 		
 		if(e.getSource() == returnBtn) {
 			int opt = JOptionPane.showConfirmDialog(workSpaceDesktop, 
@@ -487,7 +465,6 @@ public class AddIssue extends JInternalFrame implements ActionListener{
 					break;
 			}
 		}
-		
 	}
     
 }

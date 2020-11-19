@@ -151,7 +151,7 @@ public class DBInitializer {
 	public boolean createServiceTable() {
 		String tableSql = "CREATE TABLE UTeQueDB.`Service` ( "
 				+ "serviceID INT(10) NOT NULL AUTO_INCREMENT , "
-				+ "type VARCHAR(15) NOT NULL , "
+				+ "type VARCHAR(85) NOT NULL , "
 				+ "PRIMARY KEY (`serviceID`)) ENGINE = InnoDB";
 			
 		Statement stmt;

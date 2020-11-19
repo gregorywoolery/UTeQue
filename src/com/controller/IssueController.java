@@ -1,33 +1,15 @@
 package com.controller;
 
-import com.connection.SQLOperations;
 import com.model.Issue;
-import com.model.User;
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Scanner;
+import com.services.UTeQueDBOperations;
 
-import java.io.*;
-import java.util.*;
 
 
 public class IssueController {
-	Issue IssueObj = new Issue();
-	static SQLOperations sql = new SQLOperations();
-	private static Scanner input = new Scanner(System.in);
 	
-	
-	public static void addIssue(Issue issue) {
-		
-		try {
-			sql.insertIssue(issue);
-			
-		}catch(InputMismatchException e){
-
-		}
-			
+	public static boolean addIssue(Issue issue) {
+		boolean added = UTeQueDBOperations.insertIssue(issue);
+		return added;	
 	}
 	
 	public void updateIssue(String issueId) {
@@ -37,54 +19,7 @@ public class IssueController {
 	public void removeIssue(String issueId) {
 		
 	}
-	
-	public static void writeFunct(ArrayList<Issue> IssueList) {
-		try {
-			//Open File
-			FileOutputStream fos = new FileOutputStream("Issue.ser");
-			ObjectOutputStream oos = new ObjectOutputStream(fos);
-			
-			//Write to File
-			oos.writeObject(IssueList);
-			
-			//Close File
-			oos.close();
-			fos.close();
-			
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
-	
-	public static ArrayList<Issue> Issue(){
-		ArrayList<Issue> IssueList = new ArrayList<Issue>();
-
-        try {
-        	//Open File
-        	FileInputStream fis = new FileInputStream("Issue.ser");
-            ObjectInputStream ois = new ObjectInputStream(fis);
-			
-            // Read File
-            IssueList = (ArrayList<Issue>) ois.readObject();
-			
-			if(IssueList==null)
-				System.out.println("****No Record Found****"+"\n");
-			
-			for (Issue i : IssueList) {
-	            System.out.println(i);
-	        }
-			//Close File
-			ois.close();
-			fis.close();
-			
-		} catch (IOException e) {
-			e.printStackTrace();
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		}
-       return IssueList;
 		
-	}
 	//Methods
 	public void viewAll(String type){
 			/*

@@ -15,6 +15,9 @@ public class Service implements Serializable{
 		this.serviceID = serviceID;
 		this.type = type;
 	}
+	public Service(String type) {
+		this.type = type;
+	}	
 	
 	public Service(Service service) {
 		setServiceID(service.getServiceID());

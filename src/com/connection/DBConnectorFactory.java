@@ -13,7 +13,7 @@ import javax.swing.JOptionPane;
 public class DBConnectorFactory {
 	private static Connection dbConn = null;
 
-	private static String DATABASE_URL = "jdbc:mysql:3306//localhost/UTeQueDB?useSSL=false";
+	private static String DATABASE_URL = "jdbc:mysql://localhost:3306/UTeQueDB?useSSL=false";
 	//User name & Password for database connection
 	private static String username = "root"; 
 	private static String password = "root";
@@ -97,6 +97,8 @@ public class DBConnectorFactory {
 
 					if(!tableIsCreated)
 						throw new SQLException();
+					else
+						InitialVauesOperation.insertServices();
 					
 					//Creating Issue Table
 					logger.warn("Setting up MySQL Issue Table, Error May Occur");
