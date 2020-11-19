@@ -5,6 +5,11 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.controller.LoginController;
+import com.model.Student;
+import com.model.StudentServicesAgent;
+import com.model.StudentServicesRep;
+import com.model.User;
+import com.services.UTeQueDBOperations;
 
 //Import AWT packages
 import java.awt.Color;
@@ -60,7 +65,8 @@ public class UserLogin extends JFrame implements ActionListener{
 	private JPanel login_Panel;
 	private JButton login_btn;
 	private JLabel auth_message;
-
+	
+	public static User currentUser = new User();
 
 	/**
 	 * Create the frame.
@@ -361,14 +367,19 @@ public class UserLogin extends JFrame implements ActionListener{
 		if(e.getSource() == login_btn && (agent_rdbtn.isSelected() || student_rdbtn.isSelected()|| rep_rdbtn.isSelected() )) {
 			String userType = "";
 			
-			if(agent_rdbtn.isSelected())
+			if(agent_rdbtn.isSelected()) {
 				userType = "Agent";
-			else if (student_rdbtn.isSelected())
+			}
+				
+			else if (student_rdbtn.isSelected()) {
 				userType = "Student";
-			else if (rep_rdbtn.isSelected())
+				}
+			else if (rep_rdbtn.isSelected()) {
 				userType = "Rep";
+				}
 				
 			if(LoginController.authenticate(txtUsername.getText(), txtPassword.getPassword(), userType)) {				
+				currentUser = UTeQueDBOperations.getUser(txtUsername.getText(),userType);
 				StudentDashboard dash = new StudentDashboard();
 				dash.setVisible(true);
 				disposeFrame();

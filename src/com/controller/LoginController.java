@@ -22,6 +22,7 @@ public class LoginController {
 		else
 			return false;
 	}
+	
 	/*
 	private static boolean testPassword(char[] password) {
 		String testPassword = "";
