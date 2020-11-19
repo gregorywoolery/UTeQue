@@ -74,6 +74,7 @@ public class AddIssue extends JInternalFrame implements ActionListener{
 	private Date currentDate = new Date();
 	private JComboBox addListOfServices_comboBox;
 	
+	
 	/**
 	 * Create the frame.
 	 * @throws ParseException 
@@ -89,6 +90,7 @@ public class AddIssue extends JInternalFrame implements ActionListener{
 		this.workSpaceDesktop =  workSpaceDesktop;
 		this.issueTypeSelect = issueTypeSelect;
 		this.serviceTypeSelect = serviceTypeSelect;
+
 	}
 	
 	
@@ -153,7 +155,8 @@ public class AddIssue extends JInternalFrame implements ActionListener{
 		issueIDTitle_lbl.setFont(new Font("Arial Rounded MT Bold", Font.PLAIN, 12));
 		issueID_panel.add(issueIDTitle_lbl);
 		
-		issueID_lbl = new JLabel(Identification.getIssueId());
+		issueID_lbl = new JLabel();
+		issueID_lbl.setText(Identification.getIssueId());
 		issueID_lbl.setHorizontalAlignment(SwingConstants.CENTER);
 		issueID_lbl.setPreferredSize(new Dimension(115, 20));
 		issueID_lbl.setForeground(new Color(255, 255, 255));
@@ -402,6 +405,7 @@ public class AddIssue extends JInternalFrame implements ActionListener{
 	
 	@Override
 	public void actionPerformed(ActionEvent e) {
+		
 		if(e.getSource() == addBtn) {
 			int opt = JOptionPane.showConfirmDialog(workSpaceDesktop, 
 					"Are you sure you want to add this Issue?", 
@@ -422,6 +426,9 @@ public class AddIssue extends JInternalFrame implements ActionListener{
 				issue.setRepId(null);
 				
 				boolean issueAdded = IssueController.addIssue(issue);
+				
+				issueID_lbl.setText(Identification.getIssueId());
+				
 				if(issueAdded)
 					JOptionPane.showConfirmDialog(workSpaceDesktop, 
 							"ISSUE ADDED SUCCESSFULLY", 
