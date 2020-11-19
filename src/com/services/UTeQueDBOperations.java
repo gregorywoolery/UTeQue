@@ -15,6 +15,7 @@ import com.connection.DBConnectorFactory;
 import com.model.Issue;
 import com.model.Response;
 import com.model.Service;
+import com.model.Student;
 
 
 public class UTeQueDBOperations {
@@ -144,5 +145,96 @@ public class UTeQueDBOperations {
 		
 		return services;
 	}
+
+	public static boolean loginAgent(String username, String password) {
+		
+		String studentID, pass = "";
+		
+		String loginSql = "SELECT agentID, password FROM UTeQueDB.`StudentServicesAgent` WHERE agentID = ? AND password =?";
+		
+		try (Connection dbConn = DBConnectorFactory.getDatabaseConnection()){
+			PreparedStatement statement = dbConn.prepareStatement(loginSql);
+			statement.setString(1, username);
+			statement.setString(2, password);
+			
+			logger.warn("Receiving results from executed Prepared Statement, Error May Occur");
+			ResultSet result = statement.executeQuery();
+			
+			while(result.next()) {
+				studentID = result.getString(1);
+				pass = result.getString(2);
+				
+				if(studentID.equals(username) && pass.equals(password))
+					return true;
+			}
+			
+		} catch (SQLException e) {
+			System.out.println("Error(" + e.getErrorCode() 
+					+ ") " + e.getMessage());
+		}
+		
+		return false;
+	}
+	
+	public static boolean loginRep(String username, String password) {
+		
+		String studentID, pass = "";
+		
+		String loginSql = "SELECT repID, password FROM UTeQueDB.`StudentServicesRep` WHERE repID = ? AND password =?";
+		
+		try (Connection dbConn = DBConnectorFactory.getDatabaseConnection()){
+			PreparedStatement statement = dbConn.prepareStatement(loginSql);
+			statement.setString(1, username);
+			statement.setString(2, password);
+			
+			logger.warn("Receiving results from executed Prepared Statement, Error May Occur");
+			ResultSet result = statement.executeQuery();
+			
+			while(result.next()) {
+				studentID = result.getString(1);
+				pass = result.getString(2);
+				
+				if(studentID.equals(username) && pass.equals(password))
+					return true;
+			}
+			
+		} catch (SQLException e) {
+			System.out.println("Error(" + e.getErrorCode() 
+					+ ") " + e.getMessage());
+		}
+		
+		return false;
+	}
+	
+	public static boolean loginStudent(String username, String password) {
+		
+		String studentID, pass = "";
+		
+		String loginSql = "SELECT studentID, password FROM UTeQueDB.`Student` WHERE studentID = ? AND password =?";
+		
+		try (Connection dbConn = DBConnectorFactory.getDatabaseConnection()){
+			PreparedStatement statement = dbConn.prepareStatement(loginSql);
+			statement.setString(1, username);
+			statement.setString(2, password);
+			
+			logger.warn("Receiving results from executed Prepared Statement, Error May Occur");
+			ResultSet result = statement.executeQuery();
+			
+			while(result.next()) {
+				studentID = result.getString(1);
+				pass = result.getString(2);
+				
+				if(studentID.equals(username) && pass.equals(password))
+					return true;
+			}
+			
+		} catch (SQLException e) {
+			System.out.println("Error(" + e.getErrorCode() 
+					+ ") " + e.getMessage());
+		}
+		
+		return false;
+	}
+
 
 }

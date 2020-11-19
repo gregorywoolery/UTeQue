@@ -1,17 +1,28 @@
 package com.controller;
 
 import java.util.Arrays;
+import com.services.UTeQueDBOperations;
 
 public class LoginController {
 	
 	public static boolean authenticate(String username, char[] password, String userType) {
-		
-		if(username.equals("hello") && testPassword(password))
-			return true;
+		boolean result = false;
+		if(userType.equals("Student")) {
+			result = UTeQueDBOperations.loginStudent(username, String.valueOf(password));
+			return result;
+		}else if(userType.equals("Rep")) {
+			result = UTeQueDBOperations.loginRep(username, String.valueOf(password));
+			return result;
+			
+		}else if(userType.equals("Agent")) {
+			result = UTeQueDBOperations.loginAgent(username, String.valueOf(password));
+			return result;
+			
+		}
 		else
 			return false;
 	}
-	
+	/*
 	private static boolean testPassword(char[] password) {
 		String testPassword = "";
 		
@@ -25,6 +36,6 @@ public class LoginController {
 			return true;
 		return false;
 	}
-	
+	*/
 	
 }

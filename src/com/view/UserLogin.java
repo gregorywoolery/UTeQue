@@ -54,11 +54,13 @@ public class UserLogin extends JFrame implements ActionListener{
 	private JPasswordField txtPassword;
 	private JPanel userSelect_Panel;
 	private JRadioButton student_rdbtn;
-	private JRadioButton staff_rdbtn;
+	private JRadioButton agent_rdbtn;
+	private JRadioButton rep_rdbtn;
 	private final ButtonGroup buttonGroup = new ButtonGroup();
 	private JPanel login_Panel;
 	private JButton login_btn;
 	private JLabel auth_message;
+
 
 	/**
 	 * Create the frame.
@@ -279,13 +281,19 @@ public class UserLogin extends JFrame implements ActionListener{
 		buttonGroup.add(student_rdbtn);
 		userSelect_Panel.add(student_rdbtn);
 		
-		staff_rdbtn = new JRadioButton("Staff");
-		staff_rdbtn.setForeground(new Color(255, 255, 255));
-		staff_rdbtn.setBackground(new Color(0, 0, 51));
-		staff_rdbtn.setFont(new Font("Times New Roman", Font.PLAIN, 13));
+		agent_rdbtn = new JRadioButton("Agent");
+		agent_rdbtn.setForeground(new Color(255, 255, 255));
+		agent_rdbtn.setBackground(new Color(0, 0, 51));
+		agent_rdbtn.setFont(new Font("Times New Roman", Font.PLAIN, 13));
 		
-		buttonGroup.add(staff_rdbtn);
-		userSelect_Panel.add(staff_rdbtn);
+		buttonGroup.add(agent_rdbtn);
+		userSelect_Panel.add(agent_rdbtn);
+		
+		rep_rdbtn = new JRadioButton("Rep");
+		rep_rdbtn.setForeground(Color.WHITE);
+		rep_rdbtn.setFont(new Font("Times New Roman", Font.PLAIN, 13));
+		rep_rdbtn.setBackground(new Color(0, 0, 51));
+		userSelect_Panel.add(rep_rdbtn);
 		
 		login_Panel = new JPanel();
 		login_Panel.setPreferredSize(new Dimension(10, 100));
@@ -314,7 +322,7 @@ public class UserLogin extends JFrame implements ActionListener{
 	}	
 	
 	private void registerListeners() {
-		staff_rdbtn.addActionListener(this);
+		agent_rdbtn.addActionListener(this);
 		student_rdbtn.addActionListener(this);
 		this.login_btn.addActionListener(this);
 	}
@@ -350,12 +358,15 @@ public class UserLogin extends JFrame implements ActionListener{
 		 * If the login button was used and either the staff or student radio 
 		 * button is selected then execute authentication method.
 		 */
-		if(e.getSource() == login_btn && (staff_rdbtn.isSelected() || student_rdbtn.isSelected())) {
+		if(e.getSource() == login_btn && (agent_rdbtn.isSelected() || student_rdbtn.isSelected()|| rep_rdbtn.isSelected() )) {
 			String userType = "";
-			if(staff_rdbtn.isSelected())
-				userType = "Staff";
+			
+			if(agent_rdbtn.isSelected())
+				userType = "Agent";
 			else if (student_rdbtn.isSelected())
 				userType = "Student";
+			else if (rep_rdbtn.isSelected())
+				userType = "Rep";
 				
 			if(LoginController.authenticate(txtUsername.getText(), txtPassword.getPassword(), userType)) {				
 				StudentDashboard dash = new StudentDashboard();
