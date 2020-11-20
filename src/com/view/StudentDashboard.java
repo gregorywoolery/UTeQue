@@ -193,7 +193,6 @@ public class StudentDashboard extends Dashboard implements ActionListener{
 				try {
 					currFrame = new AddIssue(workspace_desktopPane);
 				} catch (ParseException e1) {
-					
 					e1.printStackTrace();
 				}
 				workspace_desktopPane.add(currFrame);
@@ -229,7 +228,6 @@ public class StudentDashboard extends Dashboard implements ActionListener{
 					    (desktopSize.height- jInternalFrameSize.height)/2);
 				}
 			}
-
 		}
 		
 		

@@ -18,6 +18,7 @@ import java.awt.font.TextAttribute;
 import java.text.ParseException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -37,7 +38,11 @@ import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.JScrollPane;
 
+import com.controller.IssueController;
+import com.controller.ServiceController;
 import com.github.lgooddatepicker.components.DatePicker;
+import com.model.Issue;
+
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
 import javax.swing.border.TitledBorder;
@@ -68,9 +73,9 @@ public class StudentMain extends JInternalFrame implements ActionListener{
 	private JLabel tableTitle_lbl;
 	private JPanel search_panel;
 	private JTextField searchFor_lbl;
-	private JTextField mainTagSearch_textField;
+	private JComboBox service_combobox;
 	private JComboBox searchIssueType_comboBox;
-	private JButton searchIcon_lbl;
+	private JButton searchBtn;
 	private JButton removeBtn;
 	private JComboBox updateIssue_comboBox;
 	private JComboBox updateService_comboBox;
@@ -80,6 +85,7 @@ public class StudentMain extends JInternalFrame implements ActionListener{
 	private DatePicker updateDatePicker;
 	private JDesktopPane workSpaceDesktop;
 	private String currDate;
+	ArrayList<String> serviceTypes;
 	
 	/**
 	 * Create the frame.
@@ -97,6 +103,7 @@ public class StudentMain extends JInternalFrame implements ActionListener{
 	}
 	
 	private void initializeComponents() {
+		//Removes top bar from internal frame
 		((javax.swing.plaf.basic.BasicInternalFrameUI)this.getUI()).setNorthPane(null);
 		
 		getContentPane().setBackground(new Color(0, 0, 51));
@@ -281,10 +288,8 @@ public class StudentMain extends JInternalFrame implements ActionListener{
 		updateIssue_comboBox.setBackground(new Color(0, 0, 51));
 		updateIssue_panel.add(updateIssue_comboBox);
 		
-		String serviceType []={"Accounting Enquiry","Reset Password", "Moodule Not Working"}; 
-		updateService_comboBox = new JComboBox(serviceType);
-		
-		//infoPanel.add(addListOfServicescomboBox);
+		serviceTypes = ServiceController.getAllServies();
+		updateService_comboBox = new JComboBox(serviceTypes.toArray());
 		
 		dateMadeUpdate_lbl = new JLabel("Date Made:");
 		dateMadeUpdate_lbl.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -354,8 +359,9 @@ public class StudentMain extends JInternalFrame implements ActionListener{
 		search_panel = new JPanel();
 		search_panel.setBackground(new Color(255, 255, 0));
 		FlowLayout fl_search_panel = (FlowLayout) search_panel.getLayout();
+		fl_search_panel.setAlignment(FlowLayout.LEFT);
 		fl_search_panel.setVgap(0);
-		fl_search_panel.setHgap(15);
+		fl_search_panel.setHgap(25);
 		search_panel.setPreferredSize(new Dimension(770, 40));
 		issue_panel.add(search_panel);
 		
@@ -381,20 +387,16 @@ public class StudentMain extends JInternalFrame implements ActionListener{
 		searchIssueType_comboBox.setBackground(new Color(255, 255, 0));
 		search_panel.add(searchIssueType_comboBox);
 		
-		mainTagSearch_textField = new JTextField();
-		mainTagSearch_textField.setBackground(new Color(255, 255, 0));
-		mainTagSearch_textField.setBorder(new TitledBorder(
-				new LineBorder(new Color(0, 0, 51), 2), 
-								"Summary", 
-								TitledBorder.LEADING, 
-								TitledBorder.TOP, null, null));
-		mainTagSearch_textField.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-		mainTagSearch_textField.setForeground(new Color(0, 0, 51));
-		mainTagSearch_textField.setMargin(new Insets(2, 0, 2, 0));
-		mainTagSearch_textField.setPreferredSize(new Dimension(100, 40));
-		mainTagSearch_textField.setFont(new Font("Times New Roman", Font.PLAIN, 12));
-		search_panel.add(mainTagSearch_textField);
-		mainTagSearch_textField.setColumns(20);
+		
+		serviceTypes = ServiceController.getAllServies();
+		service_combobox = new JComboBox(serviceTypes.toArray());
+		service_combobox.setBackground(new Color(0, 0, 51));
+		service_combobox.setBorder(null);
+		service_combobox.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+		service_combobox.setForeground(new Color(255, 255, 255));
+		service_combobox.setPreferredSize(new Dimension(160, 30));
+		service_combobox.setFont(new Font("Times New Roman", Font.PLAIN, 12));
+		search_panel.add(service_combobox);
 		
 		/*	Using external LGoodDatePicker
 		 *  Create a date picker with some custom settings. 
@@ -409,12 +411,12 @@ public class StudentMain extends JInternalFrame implements ActionListener{
 		ImageIcon searchImageIcon = new ImageIcon(new ImageIcon(Dashboard.class.getResource("/img/search.png"))
 				.getImage().getScaledInstance(23, 23, Image.SCALE_DEFAULT));
 		
-		searchIcon_lbl = new JButton(searchImageIcon);
-		searchIcon_lbl.setToolTipText("Search for issue");
-		searchIcon_lbl.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-		searchIcon_lbl.setBorder(null);
-		searchIcon_lbl.setBackground(new Color(255, 255, 0));
-		search_panel.add(searchIcon_lbl);
+		searchBtn = new JButton(searchImageIcon);
+		searchBtn.setToolTipText("Search for issue");
+		searchBtn.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+		searchBtn.setBorder(null);
+		searchBtn.setBackground(new Color(255, 255, 0));
+		search_panel.add(searchBtn);
 		
 		removeBtn = new JButton(new ImageIcon(Dashboard.class.getResource("/img/delete.png")));
 		removeBtn.setToolTipText("Remove selected issue.");
@@ -425,28 +427,31 @@ public class StudentMain extends JInternalFrame implements ActionListener{
 		
 		
 		issueTable = new JTable();
+		issueTable.setSelectionBackground(Color.WHITE);
 		issueTable.setFont(new Font("Times New Roman", Font.PLAIN, 14));
 		
 		issueTable.setModel(new DefaultTableModel(
 			new Object[][] {
 			},
 			new String[] {
-				"TYPE", "MAIN DETAILS", "DATE ISSUED", "STATUS", "AGENT"
+				"ISSUE ID", "TYPE", "SERVICE", "DATE ISSUED", "STATUS", "AGENT"
 			}
 		));
+		issueTable.getColumnModel().getColumn(0).setPreferredWidth(85);
+		issueTable.getColumnModel().getColumn(1).setResizable(false);
+		issueTable.getColumnModel().getColumn(1).setPreferredWidth(85);
+		issueTable.getColumnModel().getColumn(2).setPreferredWidth(100);
+		issueTable.getColumnModel().getColumn(3).setPreferredWidth(85);
+		issueTable.getColumnModel().getColumn(4).setPreferredWidth(92);
+		issueTable.getColumnModel().getColumn(5).setPreferredWidth(122);
+		
+		updateIssueTable();
 		
 		//Changes table heaver font
 		JTableHeader tableHeader = issueTable.getTableHeader();
 		tableHeader.setBackground(new Color(0, 0, 51));
 		tableHeader.setForeground(Color.white);
 		tableHeader.setFont(new Font("Times New Roman", Font.PLAIN, 15));
-		
-		issueTable.getColumnModel().getColumn(0).setResizable(false);
-		issueTable.getColumnModel().getColumn(0).setPreferredWidth(85);
-		issueTable.getColumnModel().getColumn(1).setPreferredWidth(156);
-		issueTable.getColumnModel().getColumn(2).setPreferredWidth(85);
-		issueTable.getColumnModel().getColumn(3).setPreferredWidth(50);
-		issueTable.getColumnModel().getColumn(4).setPreferredWidth(135);
 		issueTable.setGridColor(new Color(0, 0, 51));
 		issueTable.setBackground(new Color(0,204, 225));
 		issueTable.setEnabled(false);
@@ -464,18 +469,19 @@ public class StudentMain extends JInternalFrame implements ActionListener{
 		addBtn.addActionListener(this);
 		updateBtn.addActionListener(this);
 		addIssue_comboBox.addActionListener(this);
+		searchBtn.addActionListener(this);
+		removeBtn.addActionListener(this);
 		
 	}
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		if(e.getSource() == addBtn) {
+		if(e.getSource().equals(addBtn)) {
 			dispose();
 			JInternalFrame currFrame = null;
 			try {
-				currFrame = new AddIssue(workSpaceDesktop, updateIssue_comboBox.getSelectedIndex(),updateService_comboBox.getSelectedIndex());
+				currFrame = new AddIssue(workSpaceDesktop, addIssue_comboBox.getSelectedIndex());
 			} catch (ParseException e1) {
-				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
 			workSpaceDesktop.add(currFrame);
@@ -492,11 +498,66 @@ public class StudentMain extends JInternalFrame implements ActionListener{
 			
 		}
 	
-		updateBtn.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				
-			}
-		});
-	}
+		if(e.getSource().equals(updateBtn)) {
+			dispose();
+			JInternalFrame currFrame = new UpdateIssue(workSpaceDesktop);
 
+			workSpaceDesktop.add(currFrame);
+			
+			//Opens JinternalFrame centered in the JDesktopPane
+			Dimension desktopSize = workSpaceDesktop.getSize();
+			Dimension jInternalFrameSize = currFrame.getSize();
+			
+			//Test if current internal frame is of class AddIssue and renders the frame with that
+			if(currFrame.getClass() == UpdateIssue.class){
+				currFrame.setLocation((desktopSize.width - jInternalFrameSize.width),
+				    (desktopSize.height- jInternalFrameSize.height)/2);
+			}
+		}
+	}
+	
+	public void updateIssueTable() {
+		ArrayList<Issue> studentIssues = IssueController.getAllIssuesForStudent("1800000");
+		DefaultTableModel model = (DefaultTableModel) issueTable.getModel();
+		int serviceInd;
+		String repAssigned;
+		
+		/**
+		 * Iterates through List of Issues relating to a specified student and displays
+		 * values in the issue table.
+		 */
+		for(Issue issue: studentIssues) {
+			
+			/**
+			 * Finds STRING from SERVICETYPES that related specified SERVICEID returned
+			 * from the DATABASE.
+			 */
+			for(serviceInd = 0; serviceInd<serviceTypes.size(); serviceInd++)
+				if(serviceInd == issue.getServiceID()-1)
+					break;
+			
+			/**
+			 * Finds whether a student services representative was assigned to specified 
+			 * issue. If no representative was assigned then the string "Not assigned"
+			 * is shown.
+			 */
+			if(issue.getRepID() == null)
+				repAssigned = "NOT Assigned";
+			else
+				repAssigned = issue.getRepID();
+					
+				
+			/**
+			 * Adds row to table with details relating to current student's issue.
+			 */
+			model.addRow(new Object[]{
+					issue.getIssueID(), 
+					issue.getType(),
+					serviceTypes.get(serviceInd),
+					issue.getIssuedAt(),
+					issue.getStatus(),
+					repAssigned
+			});
+		}
+	}
 }

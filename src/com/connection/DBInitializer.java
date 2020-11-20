@@ -180,7 +180,7 @@ public class DBInitializer {
 	//Method to Create Issue Table
 	public boolean createIssueTable() {
 		String tableSql = "CREATE TABLE UTeQueDB.`Issue` ( "
-				+ "issueID VARCHAR(12) NOT NULL , "
+				+ "issueID VARCHAR(13) NOT NULL , "
 				+ "type VARCHAR(11) NOT NULL , "
 				+ "status VARCHAR(12) NOT NULL , "
 				+ "studentID VARCHAR(12) NOT NULL  , "
@@ -220,7 +220,7 @@ public class DBInitializer {
 	public boolean createResponseTable() {
 		String tableSql = "CREATE TABLE UTeQueDB.`Response` ( "
 				+ "responseID VARCHAR(12) NOT NULL , "
-				+ "issueID VARCHAR(12) NOT NULL , "
+				+ "issueID VARCHAR(13) NOT NULL , "
 				+ "userID VARCHAR(12) NOT NULL , "
 				+ "message VARCHAR(140) NOT NULL , "
 				+ "responseAt DATE NOT NULL , "

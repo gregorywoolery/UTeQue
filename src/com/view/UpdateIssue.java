@@ -4,6 +4,7 @@ import javax.swing.JInternalFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 
+import com.controller.ServiceController;
 import com.github.lgooddatepicker.components.DatePicker;
 import com.services.DocumentSizeFilter;
 
@@ -14,6 +15,7 @@ import java.awt.GridBagConstraints;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 
 import javax.swing.JComboBox;
 import javax.swing.JDesktopPane;
@@ -34,9 +36,11 @@ import java.awt.FlowLayout;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.text.DefaultStyledDocument;
 import javax.swing.BoxLayout;
+import javax.swing.ButtonGroup;
 import javax.swing.ImageIcon;
 import java.awt.Component;
 import java.awt.GridLayout;
+import javax.swing.JRadioButton;
 
 
 public class UpdateIssue extends JInternalFrame implements ActionListener{
@@ -44,25 +48,31 @@ public class UpdateIssue extends JInternalFrame implements ActionListener{
 	private JPanel home_panel;
 	private JLabel issueID_lbl;
 	private JButton updateBtn;
-	private JComboBox<String> issueType_comboBox;
+	private JComboBox issueType_comboBox;
 	private JButton searchBtn;
-	private JLabel issueSummary_lbl;
+	private JLabel service_lbl;
 	private JButton clearBtn;
 	private JLabel issueDetails_lbl;
 	private JPanel issueDetails_panel;
 	private JTextArea issueDetails_textArea;
 	private DatePicker updateDatePicker;
 	private JTextField issueID_textField;
-	private JTextField summary_textField;
+	private JComboBox service_combobox;
 	private JTable viewUpdate_table;
 	private JDesktopPane workSpaceDesktop;
 	private JPanel option_panel;
-	private JLabel summaryRem_lbl;
 	private JLabel issueRem_lbl;
 	private DefaultStyledDocument issueAreaDoc;
-	private DefaultStyledDocument summaryAreaDoc;
 	private JPanel return_pnl;
 	private JButton returnBtn;
+	private JPanel paramType_panel;
+	private JRadioButton paraTypeIn_rdbtn;
+	private JRadioButton paraTypeEx_rdbtn;
+	private JPanel paramService_panel;
+	private JRadioButton paraServiceIn_rdbtn;
+	private JRadioButton paraSeriveEx_rdbtn;
+	private final ButtonGroup type_buttonGroup = new ButtonGroup();
+	private final ButtonGroup service_buttonGroup = new ButtonGroup();
 	
 	/**
 	 * Create the frame.
@@ -79,9 +89,10 @@ public class UpdateIssue extends JInternalFrame implements ActionListener{
 	}
 	
 	private void initializeComponents() {
+		//Removes top bar from internal frame
 		((javax.swing.plaf.basic.BasicInternalFrameUI)this.getUI()).setNorthPane(null);
 		
-		setBounds(100, 100, 825, 570);
+		setBounds(100, 100, 840, 570);
 		getContentPane().setBackground(new Color(0,204, 225));
 		GridBagLayout gridBagLayout = new GridBagLayout();
 		gridBagLayout.columnWidths = new int[] {700, 0, 0};
@@ -99,7 +110,7 @@ public class UpdateIssue extends JInternalFrame implements ActionListener{
 		header_lbl.setFont(new Font("Arial Rounded MT Bold", Font.PLAIN, 17));
 		
 		GridBagConstraints gbc_header_lbl = new GridBagConstraints();
-		gbc_header_lbl.insets = new Insets(10, 0, 5, 5);
+		gbc_header_lbl.insets = new Insets(10, 0, 0, 5);
 		gbc_header_lbl.gridx = 0;
 		gbc_header_lbl.gridy = 0;
 		
@@ -109,7 +120,7 @@ public class UpdateIssue extends JInternalFrame implements ActionListener{
 		home_panel.setBackground(new Color(0, 0, 51));
 		
 		GridBagConstraints gbc_home_panel = new GridBagConstraints();
-		gbc_home_panel.insets = new Insets(0, 20, 5, 20);
+		gbc_home_panel.insets = new Insets(0, 20, 0, 20);
 		gbc_home_panel.fill = GridBagConstraints.BOTH;
 		gbc_home_panel.gridx = 0;
 		gbc_home_panel.gridy = 1;
@@ -120,7 +131,7 @@ public class UpdateIssue extends JInternalFrame implements ActionListener{
 		gbl_home_panel.columnWidths = new int[] {0, 0, 30};
 		gbl_home_panel.rowHeights = new int[]{0, 0, 0, 0, 0, 0, 0, 0};
 		gbl_home_panel.columnWeights = new double[]{1.0, 1.0, Double.MIN_VALUE};
-		gbl_home_panel.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
+		gbl_home_panel.rowWeights = new double[]{0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, Double.MIN_VALUE};
 		
 		home_panel.setLayout(gbl_home_panel);
 		
@@ -138,7 +149,7 @@ public class UpdateIssue extends JInternalFrame implements ActionListener{
 		
 		issueID_textField = new JTextField();
 		issueID_textField.setFont(new Font("Arial Rounded MT Bold", Font.PLAIN, 14));
-		issueID_textField.setEnabled(false);
+		issueID_textField.setEnabled(true);
 		issueID_textField.setDisabledTextColor(new Color(0, 0, 51));
 		
 		GridBagConstraints gbc_issueID_textField = new GridBagConstraints();
@@ -148,9 +159,9 @@ public class UpdateIssue extends JInternalFrame implements ActionListener{
 		gbc_issueID_textField.gridy = 1;
 		
 		home_panel.add(issueID_textField, gbc_issueID_textField);
-		issueID_textField.setColumns(10);
+		issueID_textField.setColumns(14);
 		
-		issueType_comboBox = new JComboBox<>(new String[] {"Complaint", "Query"});
+		issueType_comboBox = new JComboBox(new String[] {"Complaint", "Query"});
 		issueType_comboBox.setPreferredSize(new Dimension(125, 25));
 		issueType_comboBox.setForeground(new Color(0, 0, 51));
 		issueType_comboBox.setBackground(new Color(255, 255, 0));
@@ -163,6 +174,38 @@ public class UpdateIssue extends JInternalFrame implements ActionListener{
 		gbc_issueType_comboBox.gridy = 2;
 		
 		home_panel.add(issueType_comboBox, gbc_issueType_comboBox);
+		
+		paramType_panel = new JPanel();
+		FlowLayout flowLayout = (FlowLayout) paramType_panel.getLayout();
+		flowLayout.setHgap(10);
+		paramType_panel.setPreferredSize(new Dimension(170, 25));
+		paramType_panel.setBackground(new Color(0, 0, 51));
+		GridBagConstraints gbc_paramType_panel = new GridBagConstraints();
+		gbc_paramType_panel.insets = new Insets(0, 0, 5, 0);
+		gbc_paramType_panel.fill = GridBagConstraints.HORIZONTAL;
+		gbc_paramType_panel.gridx = 1;
+		gbc_paramType_panel.gridy = 2;
+		home_panel.add(paramType_panel, gbc_paramType_panel);
+		
+		paraTypeIn_rdbtn = new JRadioButton("Include");
+		paraTypeIn_rdbtn.setBorder(null);
+		paraTypeIn_rdbtn.setHorizontalAlignment(SwingConstants.LEFT);
+		paraTypeIn_rdbtn.setHorizontalTextPosition(SwingConstants.RIGHT);
+		paraTypeIn_rdbtn.setFont(new Font("Arial Rounded MT Bold", Font.PLAIN, 13));
+		paraTypeIn_rdbtn.setForeground(new Color(255, 255, 255));
+		paraTypeIn_rdbtn.setBackground(new Color(0, 0, 51));
+		type_buttonGroup.add(paraTypeIn_rdbtn);
+		paramType_panel.add(paraTypeIn_rdbtn);
+		
+		paraTypeEx_rdbtn = new JRadioButton("Exclude");
+		paraTypeEx_rdbtn.setBorder(null);
+		paraTypeEx_rdbtn.setHorizontalAlignment(SwingConstants.LEFT);
+		paraTypeEx_rdbtn.setHorizontalTextPosition(SwingConstants.RIGHT);
+		paraTypeEx_rdbtn.setFont(new Font("Arial Rounded MT Bold", Font.PLAIN, 13));
+		paraTypeEx_rdbtn.setForeground(new Color(255, 255, 255));
+		paraTypeEx_rdbtn.setBackground(new Color(0, 0, 51));
+		type_buttonGroup.add(paraTypeEx_rdbtn);
+		paramType_panel.add(paraTypeEx_rdbtn);
 		
 		updateDatePicker = new DatePicker();
 		updateDatePicker.getComponentToggleCalendarButton().setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
@@ -177,57 +220,62 @@ public class UpdateIssue extends JInternalFrame implements ActionListener{
 		
 		home_panel.add(updateDatePicker, gbc_textField_1);
 		
-		issueSummary_lbl = new JLabel("Summary");
-		issueSummary_lbl.setForeground(new Color(255, 255, 255));
-		issueSummary_lbl.setFont(new Font("Arial Rounded MT Bold", Font.PLAIN, 13));
+		service_lbl = new JLabel("Service");
+		service_lbl.setForeground(new Color(255, 255, 255));
+		service_lbl.setFont(new Font("Arial Rounded MT Bold", Font.PLAIN, 13));
 
-		GridBagConstraints gbc_issueSummary_lbl = new GridBagConstraints();
-		gbc_issueSummary_lbl.anchor = GridBagConstraints.WEST;
-		gbc_issueSummary_lbl.insets = new Insets(0, 20, 5, 5);
-		gbc_issueSummary_lbl.gridx = 0;
-		gbc_issueSummary_lbl.gridy = 4;
+		GridBagConstraints gbc_service_lbl = new GridBagConstraints();
+		gbc_service_lbl.anchor = GridBagConstraints.WEST;
+		gbc_service_lbl.insets = new Insets(0, 20, 5, 5);
+		gbc_service_lbl.gridx = 0;
+		gbc_service_lbl.gridy = 4;
 		
-		home_panel.add(issueSummary_lbl, gbc_issueSummary_lbl);
+		home_panel.add(service_lbl, gbc_service_lbl);
 		
-		summary_textField = new JTextField();
-		summary_textField.setFont(new Font("Arial Rounded MT Bold", Font.PLAIN, 13));
-		summary_textField.setPreferredSize(new Dimension(200, 25));
 		
-		GridBagConstraints gbc_summary_textField = new GridBagConstraints();
-		gbc_summary_textField.anchor = GridBagConstraints.WEST;
-		gbc_summary_textField.insets = new Insets(0, 20, 5, 5);
-		gbc_summary_textField.gridx = 0;
-		gbc_summary_textField.gridy = 5;
+		ArrayList<String> serviceTypes = ServiceController.getAllServies();
+
+		service_combobox = new JComboBox(serviceTypes.toArray());
+		service_combobox.setForeground(new Color(0, 0, 51));
+		service_combobox.setBackground(new Color(255, 255, 0));
+		service_combobox.setFont(new Font("Arial Rounded MT Bold", Font.PLAIN, 13));
+		service_combobox.setPreferredSize(new Dimension(200, 25));
 		
-		home_panel.add(summary_textField, gbc_summary_textField);
-		summary_textField.setColumns(25);
+		GridBagConstraints gbc_service_combobox = new GridBagConstraints();
+		gbc_service_combobox.anchor = GridBagConstraints.WEST;
+		gbc_service_combobox.insets = new Insets(0, 20, 5, 5);
+		gbc_service_combobox.gridx = 0;
+		gbc_service_combobox.gridy = 5;
 		
-		summaryRem_lbl = new JLabel("");
-		summaryRem_lbl.setForeground(new Color(255, 0, 0));
-		summaryRem_lbl.setFont(new Font("Arial Rounded MT Bold", Font.PLAIN, 12));
-		GridBagConstraints gbc_summaryRem_lbl = new GridBagConstraints();
-		gbc_summaryRem_lbl.insets = new Insets(0, 0, 5, 0);
-		gbc_summaryRem_lbl.gridx = 1;
-		gbc_summaryRem_lbl.gridy = 5;
-		home_panel.add(summaryRem_lbl, gbc_summaryRem_lbl);
+		home_panel.add(service_combobox, gbc_service_combobox);
 		
-		/*
-		 * Sets a limit of 150 characters to the JTextField by using the 
-		 * DocumentSizeFilter in the services package that rejects 
-		 * insertion of addition content.
-		 */
-		summaryAreaDoc = new DefaultStyledDocument();
-		summaryAreaDoc.setDocumentFilter(new DocumentSizeFilter(40));
-		summaryAreaDoc.addDocumentListener(new DocumentListener(){
-            @Override
-            public void changedUpdate(DocumentEvent e) { updateSumCount();}
-            @Override
-            public void insertUpdate(DocumentEvent e) { updateSumCount();}
-            @Override
-            public void removeUpdate(DocumentEvent e) { updateSumCount();}
-        });
+		paramService_panel = new JPanel();
+		FlowLayout flowLayout_1 = (FlowLayout) paramService_panel.getLayout();
+		flowLayout_1.setHgap(10);
+		paramService_panel.setBackground(new Color(0, 0, 51));
+		GridBagConstraints gbc_paramService_panel = new GridBagConstraints();
+		gbc_paramService_panel.insets = new Insets(0, 0, 5, 0);
+		gbc_paramService_panel.fill = GridBagConstraints.BOTH;
+		gbc_paramService_panel.gridx = 1;
+		gbc_paramService_panel.gridy = 5;
+		home_panel.add(paramService_panel, gbc_paramService_panel);
 		
-		summary_textField.setDocument(summaryAreaDoc);
+		paraServiceIn_rdbtn = new JRadioButton("Include");
+		paraServiceIn_rdbtn.setBorder(null);
+		paraServiceIn_rdbtn.setHorizontalTextPosition(SwingConstants.RIGHT);
+		paraServiceIn_rdbtn.setForeground(new Color(255, 255, 255));
+		paraServiceIn_rdbtn.setFont(new Font("Arial Rounded MT Bold", Font.PLAIN, 13));
+		paraServiceIn_rdbtn.setBackground(new Color(0, 0, 51));
+		service_buttonGroup.add(paraServiceIn_rdbtn);
+		paramService_panel.add(paraServiceIn_rdbtn);
+		
+		paraSeriveEx_rdbtn = new JRadioButton("Exclude");
+		paraSeriveEx_rdbtn.setBorder(null);
+		paraSeriveEx_rdbtn.setForeground(new Color(255, 255, 255));
+		paraSeriveEx_rdbtn.setFont(new Font("Arial Rounded MT Bold", Font.PLAIN, 13));
+		paraSeriveEx_rdbtn.setBackground(new Color(0, 0, 51));
+		service_buttonGroup.add(paraSeriveEx_rdbtn);
+		paramService_panel.add(paraSeriveEx_rdbtn);
 		
 		issueDetails_lbl = new JLabel("Issue Made:");
 		issueDetails_lbl.setForeground(new Color(255, 255, 255));
@@ -309,6 +357,7 @@ public class UpdateIssue extends JInternalFrame implements ActionListener{
 		getContentPane().add(issueDetails_panel, gbc_issueDetails_panel);
 		
 		issueDetails_textArea = new JTextArea();
+		issueDetails_textArea.setTabSize(4);
 		issueDetails_textArea.setLineWrap(true);
 		issueDetails_textArea.setPreferredSize(new Dimension(500, 100));
 		issueDetails_textArea.setFont(new Font("Times New Roman", Font.PLAIN, 14));
@@ -335,20 +384,22 @@ public class UpdateIssue extends JInternalFrame implements ActionListener{
 		issueDetails_textArea.setDocument(issueAreaDoc);
 		
 		viewUpdate_table = new JTable();
+		viewUpdate_table.setFont(new Font("Times New Roman", Font.PLAIN, 13));
 		viewUpdate_table.setModel(new DefaultTableModel(
 			new Object[][] {
-				{null, null, null, null, null},
 			},
 			new String[] {
-				"Issue ID", "Type", "Date Made", "Summary", "Details"
+				"Issue ID", "Type", "Date Made", "Service", "Details"
 			}
 		));
-		
-		viewUpdate_table.getColumnModel().getColumn(0).setPreferredWidth(85);
+		viewUpdate_table.getColumnModel().getColumn(0).setResizable(false);
+		viewUpdate_table.getColumnModel().getColumn(0).setPreferredWidth(100);
+		viewUpdate_table.getColumnModel().getColumn(1).setResizable(false);
 		viewUpdate_table.getColumnModel().getColumn(1).setPreferredWidth(100);
-		viewUpdate_table.getColumnModel().getColumn(2).setPreferredWidth(110);
-		viewUpdate_table.getColumnModel().getColumn(3).setPreferredWidth(125);
-		viewUpdate_table.getColumnModel().getColumn(4).setPreferredWidth(120);
+		viewUpdate_table.getColumnModel().getColumn(2).setResizable(false);
+		viewUpdate_table.getColumnModel().getColumn(2).setPreferredWidth(98);
+		viewUpdate_table.getColumnModel().getColumn(3).setPreferredWidth(100);
+		viewUpdate_table.getColumnModel().getColumn(4).setPreferredWidth(186);
 		
 		GridBagConstraints gbc_viewUpdate = new GridBagConstraints();
 		gbc_viewUpdate.insets = new Insets(0, 20, 10, 20);
@@ -362,7 +413,7 @@ public class UpdateIssue extends JInternalFrame implements ActionListener{
 		return_pnl.setToolTipText("Return home");
 		FlowLayout fl_return_pnl = (FlowLayout) return_pnl.getLayout();
 		fl_return_pnl.setVgap(30);
-		return_pnl.setBackground(new Color(0, 204, 255));
+		return_pnl.setBackground(new Color(0,204, 225));
 		GridBagConstraints gbc_return_pnl = new GridBagConstraints();
 		gbc_return_pnl.fill = GridBagConstraints.BOTH;
 		gbc_return_pnl.gridx = 1;
@@ -399,11 +450,21 @@ public class UpdateIssue extends JInternalFrame implements ActionListener{
 	}
 	
 	private void registerListeners() {
+		searchBtn.addActionListener(this);
+		updateBtn.addActionListener(this);
+		clearBtn.addActionListener(this);
 		returnBtn.addActionListener(this);
 	}
 	
 	@Override
 	public void actionPerformed(ActionEvent e) {
+		if(e.getSource().equals(searchBtn)) {
+			
+		}
+		if(e.getSource().equals(updateBtn)) {}
+		if(e.getSource().equals(returnBtn)) {}
+		
+		
 		if(e.getSource() == returnBtn) {
 			int opt = JOptionPane.showConfirmDialog(workSpaceDesktop, 
 					"You will now be returning to the Dashboard. Are you sure?", 
@@ -417,14 +478,11 @@ public class UpdateIssue extends JInternalFrame implements ActionListener{
 					break;
 			}
 		}
+		
 	}
 	
     private void updateCount(){
     	issueRem_lbl.setText((150 -issueAreaDoc.getLength()) + " characters remaining");
-    }
-
-    private void updateSumCount() {
-    	summaryRem_lbl.setText("Rem: " + (40 -summaryAreaDoc.getLength()));
     }
 	
 

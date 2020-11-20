@@ -1,5 +1,7 @@
 package com.controller;
 
+import java.util.ArrayList;
+
 import com.model.Issue;
 import com.services.UTeQueDBOperations;
 
@@ -28,12 +30,19 @@ public class IssueController {
 			 	  should be shown.
 			 */	
 	}
+	
+	public static ArrayList<Issue> getAllIssuesForStudent(String studentID) {
+		ArrayList<Issue> foundStudentIssues =  UTeQueDBOperations.getAllIssuesForStudent(studentID);
+		return foundStudentIssues;
+	}
+	
 	public void viewSpecific(String type, String id) {
 			/*
 			 * - Students should also be able to view a specific complaint or query and all its associated responses.
 			 */
 			
 	}
+	
 		
 		/*
 		 * - Employees should be able to view a list of services on the dashboard 

@@ -69,7 +69,6 @@ public class AddIssue extends JInternalFrame implements ActionListener{
 	private JDesktopPane workSpaceDesktop;
 	private String currDate;
 	private int issueTypeSelect = 0;
-	private int serviceTypeSelect = 0;
 	private JLabel issueDate_lbl;
 	private Date currentDate = new Date();
 	private JComboBox addListOfServices_comboBox;
@@ -78,7 +77,7 @@ public class AddIssue extends JInternalFrame implements ActionListener{
 	 * Create the frame.
 	 * @throws ParseException 
 	 */
-	public AddIssue(JDesktopPane workSpaceDesktop, int issueTypeSelect, int serviceTypeSelect) throws ParseException {
+	public AddIssue(JDesktopPane workSpaceDesktop, int issueTypeSelect) throws ParseException {
 		super("Add Issue", 
 				false, 	//resizable
 				true, 	//closable
@@ -88,7 +87,6 @@ public class AddIssue extends JInternalFrame implements ActionListener{
 		registerListeners();
 		this.workSpaceDesktop =  workSpaceDesktop;
 		this.issueTypeSelect = issueTypeSelect;
-		this.serviceTypeSelect = serviceTypeSelect;
 	}
 	
 	
@@ -187,7 +185,6 @@ public class AddIssue extends JInternalFrame implements ActionListener{
 		addListOfServices_comboBox.setMaximumSize(new Dimension(190, 35));
 		addListOfServices_comboBox.setFont(new Font("Arial Rounded MT Bold", Font.PLAIN, 12));
 		addListOfServices_comboBox.setBackground(new Color(255, 255, 0));
-		addIssue_comboBox.setSelectedIndex(serviceTypeSelect);
 		infoPanel.add(addListOfServices_comboBox);
 		
 		main_Panel = new JPanel();
@@ -328,7 +325,7 @@ public class AddIssue extends JInternalFrame implements ActionListener{
 			new Object[][] {
 			},
 			new String[] {
-				"Issue ID", "TYPE", "DATE ISSUED", "MAIN DETAILS", "DETAILS"
+				"Issue ID", "TYPE", "DATE ISSUED", "SERVICE", "DETAILS"
 			}
 		));
 		issueTable.getColumnModel().getColumn(0).setResizable(false);
@@ -403,42 +400,57 @@ public class AddIssue extends JInternalFrame implements ActionListener{
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if(e.getSource() == addBtn) {
-			int opt = JOptionPane.showConfirmDialog(workSpaceDesktop, 
-					"Are you sure you want to add this Issue?", 
-					"Add Issue",
-					JOptionPane.YES_NO_OPTION,
-					JOptionPane.WARNING_MESSAGE);
+			if(!issueTextArea.getText().isBlank()) {
+				int opt = JOptionPane.showConfirmDialog(workSpaceDesktop, 
+						"Are you sure you want to add this Issue?", 
+						"Add Issue",
+						JOptionPane.YES_NO_OPTION,
+						JOptionPane.WARNING_MESSAGE);
 
-			if (opt == 0) {
-				Issue issue = new Issue();
-				issue.setIssueID(issueID_lbl.getText());
-				issue.setType(addIssue_comboBox.getItemAt(addIssue_comboBox.getSelectedIndex()));
-				issue.setStatus("Unresolved");
-				issue.setStudentID("1800000");
-				issue.setMessage(issueTextArea.getText());
-				issue.setServiceID(addListOfServices_comboBox.getSelectedIndex()+1);
-				issue.setIssuedAt(currentDate);
-				issue.setScheduledDateTime(null);
-				issue.setRepId(null);
+				if (opt == 0) {
+					Issue issue = new Issue();
+					issue.setIssueID(issueID_lbl.getText());
+					issue.setType(addIssue_comboBox.getItemAt(addIssue_comboBox.getSelectedIndex()));
+					issue.setStatus("Unresolved");
+					issue.setStudentID("1800000");
+					issue.setMessage(issueTextArea.getText());
+					issue.setServiceID(addListOfServices_comboBox.getSelectedIndex()+1);
+					issue.setIssuedAt(currentDate);
+					issue.setScheduledDateTime(null);
+					issue.setRepId(null);
+					
+					boolean issueAdded = IssueController.addIssue(issue);
+
+					issueID_lbl.setText(Identification.getIssueId());
+					if(issueAdded) {
+						JOptionPane.showConfirmDialog(workSpaceDesktop, 
+								"ISSUE ADDED SUCCESSFULLY", 
+								"SUCCESS",
+								JOptionPane.OK_OPTION,
+								JOptionPane.INFORMATION_MESSAGE);
+						
+						//Adds values to table on ADD ISSUE VIEW
+						addToTable(issue.getIssueID());
+						
+					}else
+						JOptionPane.showConfirmDialog(workSpaceDesktop, 
+								"Oops.. Problem occured adding your issue.", 
+								"ERROR",
+								JOptionPane.OK_OPTION,
+								JOptionPane.ERROR_MESSAGE);
+
+				}else 
+					if(opt == 1) {
+						//RETURN
+					}
+			}else
+				JOptionPane.showConfirmDialog(workSpaceDesktop, 
+						"Message field cannot be empty", 
+						"ERROR",
+						JOptionPane.OK_OPTION,
+						JOptionPane.ERROR_MESSAGE);
 				
-				boolean issueAdded = IssueController.addIssue(issue);
-				if(issueAdded)
-					JOptionPane.showConfirmDialog(workSpaceDesktop, 
-							"ISSUE ADDED SUCCESSFULLY", 
-							"SUCCESS",
-							JOptionPane.OK_OPTION,
-							JOptionPane.INFORMATION_MESSAGE);
-				else
-					JOptionPane.showConfirmDialog(workSpaceDesktop, 
-							"Oops.. Problem occured adding your issue.", 
-							"ERROR",
-							JOptionPane.OK_OPTION,
-							JOptionPane.ERROR_MESSAGE);
-
-			}else 
-				if(opt == 1) {
-					//RETURN
-				}
+				
 		}
 		
 		if(e.getSource() == clearBtn) {
@@ -465,6 +477,26 @@ public class AddIssue extends JInternalFrame implements ActionListener{
 					break;
 			}
 		}
+	}
+	/**
+	 * When issue is added successfully the JTable on the ADD ISSUE VIEW
+	 * needs to be updated. Method will capture current issue details and
+	 * add to the JTable issueTable. 
+	 * 
+	 * @param issueID   The issue ID that was pushed to the database is captures
+	 * 					before it updates to display on JTable.
+	 */
+	private void addToTable(String issueID) {
+		//"Issue ID", "TYPE", "DATE ISSUED", "SERVICE", "DETAILS"
+
+		DefaultTableModel model = (DefaultTableModel) issueTable.getModel();
+		model.addRow(new Object[]{
+				issueID, 
+				addIssue_comboBox.getItemAt(addIssue_comboBox.getSelectedIndex()), 
+				currentDate,
+				addListOfServices_comboBox.getItemAt(addListOfServices_comboBox.getSelectedIndex()),
+				issueTextArea.getText()
+		});
 	}
     
 }

@@ -144,5 +144,45 @@ public class UTeQueDBOperations {
 		
 		return services;
 	}
+	
+	public static ArrayList<Issue> getAllIssuesForStudent(String studentID){
+		
+		ArrayList<Issue> studentIssues = new ArrayList<Issue>();
+		
+		String issueID = "", type = "", status = "", message = "", repID = "";
+		Date issuedAt = null, scheduledDateTime = null;
+		int serviceID = 0;
+
+		String getStudentIssues = "SELECT * FROM UTeQueDB.`Issue` WHERE studentID = ?";
+		
+		try (Connection dbConn = DBConnectorFactory.getDatabaseConnection()){
+			
+			PreparedStatement statement = dbConn.prepareStatement(getStudentIssues);
+			statement.setString(1, studentID);
+			ResultSet result = statement.executeQuery();
+			
+			while(result.next()) {
+				issueID = result.getString(1);
+				type = result.getString(2);
+				status = result.getString(3);
+				studentID = result.getString(4);
+				message = result.getString(5);
+				serviceID = result.getInt(6);
+				issuedAt = result.getDate(7);
+				scheduledDateTime = result.getDate(8);
+				repID = result.getString(9);
+				
+				studentIssues.add(new Issue(issueID, type, status, studentID, message, 
+						serviceID, issuedAt, scheduledDateTime, repID));
+				
+			}
+			
+		} catch (SQLException e) {
+			System.out.println("Error(" + e.getErrorCode() 
+					+ ") " + e.getMessage());
+		}
+		
+		return studentIssues;
+	}
 
 }
