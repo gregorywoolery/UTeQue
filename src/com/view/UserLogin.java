@@ -379,7 +379,7 @@ public class UserLogin extends JFrame implements ActionListener{
 				}
 				
 			if(LoginController.authenticate(txtUsername.getText(), txtPassword.getPassword(), userType)) {				
-				currentUser = UTeQueDBOperations.getUser(txtUsername.getText(),userType);
+				currentUser = LoginController.getCurrentUser(txtUsername.getText(),userType);
 				StudentDashboard dash = new StudentDashboard();
 				dash.setVisible(true);
 				disposeFrame();
