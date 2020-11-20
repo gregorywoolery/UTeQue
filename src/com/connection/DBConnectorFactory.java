@@ -13,7 +13,7 @@ import javax.swing.JOptionPane;
 public class DBConnectorFactory {
 	private static Connection dbConn = null;
 
-	private static String DATABASE_URL = "jdbc:mysql://localhost:3306/UTeQueDB?useSSL=false";
+	private static String DATABASE_URL = "jdbc:mysql://localhost:3306/UTeQueDB?autoReconnect=true&useSSL=false";
 	//User name & Password for database connection
 	private static String username = "root"; 
 	private static String password = "root";
