@@ -224,6 +224,7 @@ public class Dashboard extends JFrame {
 		username_panel.setLayout(gbl_username_panel);
 		
 		username_lbl = new JLabel("Ariana Lenoxx");
+		username_lbl.setText(UserLogin.currentUser.getFirstname()+" " + UserLogin.currentUser.getLastname());
 		username_lbl.setFont(new Font("Arial Rounded MT Bold", Font.BOLD, 18));
 		username_lbl.setForeground(new Color(255, 255, 255));
 		GridBagConstraints gbc_username_lbl = new GridBagConstraints();

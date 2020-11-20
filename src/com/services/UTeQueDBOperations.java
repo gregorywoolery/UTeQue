@@ -15,6 +15,8 @@ import com.connection.DBConnectorFactory;
 import com.model.Issue;
 import com.model.Response;
 import com.model.Service;
+import com.model.Student;
+import com.model.User;
 
 
 public class UTeQueDBOperations {
@@ -184,5 +186,136 @@ public class UTeQueDBOperations {
 		
 		return studentIssues;
 	}
+
+	public static boolean loginAgent(String username, String password) {
+		
+		String studentID, pass = "";
+		
+		String loginSql = "SELECT agentID, password FROM UTeQueDB.`StudentServicesAgent` WHERE agentID = ? AND password =?";
+		
+		try (Connection dbConn = DBConnectorFactory.getDatabaseConnection()){
+			PreparedStatement statement = dbConn.prepareStatement(loginSql);
+			statement.setString(1, username);
+			statement.setString(2, password);
+			
+			logger.warn("Receiving results from executed Prepared Statement, Error May Occur");
+			ResultSet result = statement.executeQuery();
+			
+			while(result.next()) {
+				studentID = result.getString(1);
+				pass = result.getString(2);
+				
+				if(studentID.equals(username) && pass.equals(password))
+					return true;
+			}
+			
+		} catch (SQLException e) {
+			System.out.println("Error(" + e.getErrorCode() 
+					+ ") " + e.getMessage());
+		}
+		
+		return false;
+	}
+	
+	public static boolean loginRep(String username, String password) {
+		
+		String studentID, pass = "";
+		
+		String loginSql = "SELECT repID, password FROM UTeQueDB.`StudentServicesRep` WHERE repID = ? AND password =?";
+		
+		try (Connection dbConn = DBConnectorFactory.getDatabaseConnection()){
+			PreparedStatement statement = dbConn.prepareStatement(loginSql);
+			statement.setString(1, username);
+			statement.setString(2, password);
+			
+			logger.warn("Receiving results from executed Prepared Statement, Error May Occur");
+			ResultSet result = statement.executeQuery();
+			
+			while(result.next()) {
+				studentID = result.getString(1);
+				pass = result.getString(2);
+				
+				if(studentID.equals(username) && pass.equals(password))
+					return true;
+			}
+			
+		} catch (SQLException e) {
+			System.out.println("Error(" + e.getErrorCode() 
+					+ ") " + e.getMessage());
+		}
+		
+		return false;
+	}
+	
+	public static boolean loginStudent(String username, String password) {
+		
+		String studentID, pass = "";
+		
+		String loginSql = "SELECT studentID, password FROM UTeQueDB.`Student` WHERE studentID = ? AND password =?";
+		
+		try (Connection dbConn = DBConnectorFactory.getDatabaseConnection()){
+			PreparedStatement statement = dbConn.prepareStatement(loginSql);
+			statement.setString(1, username);
+			statement.setString(2, password);
+			
+			logger.warn("Receiving results from executed Prepared Statement, Error May Occur");
+			ResultSet result = statement.executeQuery();
+			
+			while(result.next()) {
+				studentID = result.getString(1);
+				pass = result.getString(2);
+				
+				if(studentID.equals(username) && pass.equals(password))
+					return true;
+			}
+			
+		} catch (SQLException e) {
+			System.out.println("Error(" + e.getErrorCode() 
+					+ ") " + e.getMessage());
+		}
+		
+		return false;
+	}
+	
+	public static User getUser(String username, String type) {
+		User currentUser = new User();
+		
+		String searchSql = null;
+		if(type.equals("Student"))
+			searchSql = "SELECT studentID, firstname, lastname, gender, email FROM UTeQueDB.`Student` WHERE studentID = ?";
+		else if(type.equals("Agent"))
+			searchSql = "SELECT agentID, firstname, lastname, gender, email FROM UTeQueDB.`StudentServicesAgent` WHERE agentID = ?";
+		else if(type.equals("Rep"))
+			searchSql = "SELECT repID, firstname, lastname, gender, email FROM UTeQueDB.`StudentServicesRep` WHERE repID = ?";
+		 
+		
+		//if type is Student
+		try (Connection dbConn = DBConnectorFactory.getDatabaseConnection()){
+			
+			PreparedStatement statement = dbConn.prepareStatement(searchSql);
+			statement.setString(1, username);
+			
+			logger.warn("Receiving results from executed Prepared Statement, Error May Occur");
+			ResultSet result = statement.executeQuery();
+			
+			while(result.next()) {
+				currentUser.setID(result.getString(1));
+				currentUser.setFirstname(result.getString(2));
+				currentUser.setLastname(result.getString(3));
+				currentUser.setGender(result.getString(4));
+				currentUser.setEmail(result.getString(5));
+				
+				if(currentUser.getID().equals(username))
+					return currentUser;
+			}
+			
+		} catch (SQLException e) {
+			System.out.println("Error(" + e.getErrorCode() 
+					+ ") " + e.getMessage());
+		}
+		
+		return null;
+	}
+
 
 }
