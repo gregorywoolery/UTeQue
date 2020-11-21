@@ -36,6 +36,7 @@ import javax.swing.JPanel;
 import javax.swing.JSeparator;
 import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.ListSelectionModel;
 import javax.swing.JScrollPane;
 
 import com.controller.IssueController;
@@ -458,6 +459,10 @@ public class StudentMain extends JInternalFrame implements ActionListener{
 		issueTable.setBackground(new Color(0,204, 225));
 		issueTable.setEnabled(false);
 		
+		issueTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		issueTable.setRowSelectionAllowed(true);
+		issueTable.setColumnSelectionAllowed(false);
+		
 		GridBagConstraints gbc_table = new GridBagConstraints();
 		gbc_table.fill = GridBagConstraints.BOTH;
 		gbc_table.gridx = 0;
@@ -519,8 +524,10 @@ public class StudentMain extends JInternalFrame implements ActionListener{
 	}
 	
 	public void updateIssueTable() {
-		ArrayList<Issue> studentIssues = IssueController.getAllIssuesForStudent("1800000");
+		String studentID = UserLogin.currentUser.getID();
+		ArrayList<Issue> studentIssues = IssueController.getAllIssuesForStudent(studentID);
 		DefaultTableModel model = (DefaultTableModel) issueTable.getModel();
+		
 		int serviceInd;
 		String repAssigned;
 		
