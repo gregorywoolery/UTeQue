@@ -1,7 +1,5 @@
 package com.controller;
 
-import java.util.Arrays;
-
 import com.model.User;
 import com.services.UTeQueDBOperations;
 
@@ -23,13 +21,6 @@ public class LoginController {
 		}
 		else
 			return false;
-	}
-	
-	public static User getCurrentUser(String username, String userType) {
-		 User currentUser = new User();
-		 currentUser = UTeQueDBOperations.getUser(username,userType);
-		
-		return currentUser;
 	}
 	
 	/*

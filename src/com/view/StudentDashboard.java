@@ -58,6 +58,15 @@ public class StudentDashboard extends Dashboard implements ActionListener{
 	}
 	
 	public void initializeComponents(){
+		username_lbl.setText(UserLogin.currentUser.getFirstname()+" " + UserLogin.currentUser.getLastname());
+		String gender = UserLogin.currentUser.getGender();
+		if(gender.equals("M"))
+			gender = "male";
+		else
+			gender = "female";
+		
+		userAvatar_lbl.setIcon(new ImageIcon(Dashboard.class.getResource("/img/"+ gender +"/student.png")));
+		
 		
 		issuesBtn_lbl = new JLabel("Issues");
 		issuesBtn_lbl.setIcon(new ImageIcon(Dashboard.class.getResource("/img/dash/search-paper.png")));

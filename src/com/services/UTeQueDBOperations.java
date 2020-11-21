@@ -140,7 +140,7 @@ public class UTeQueDBOperations {
 			}
 			
 		} catch (SQLException e) {
-			System.out.println("Error(" + e.getErrorCode() 
+			logger.error("Error(" + e.getErrorCode() 
 					+ ") " + e.getMessage());
 		}
 		
@@ -180,18 +180,28 @@ public class UTeQueDBOperations {
 			}
 			
 		} catch (SQLException e) {
-			System.out.println("Error(" + e.getErrorCode() 
+			logger.error("Error(" + e.getErrorCode() 
 					+ ") " + e.getMessage());
 		}
 		
 		return studentIssues;
 	}
 
+	/**
+	 * Gets USERNAME and PASSWORD from DATABASE for specified STUDENT SERVICES AGENT
+	 * using SQL SELECT STATEMENT.
+	 * 
+	 * @param username - USERNAME entered by AGENT at the login screen
+	 * @param password - PASSWORD entered by AGENT at the login screen
+	 * @return 	true 	- USER was FOUND and PASSWORD matched to that in the DATABASE.
+	 * 			false 	- EITHER USER was NOT found in the system OR PASSWORD did not match.
+	 */
 	public static boolean loginAgent(String username, String password) {
 		
-		String studentID, pass = "";
+		String agentID = "", pass = "";
 		
-		String loginSql = "SELECT agentID, password FROM UTeQueDB.`StudentServicesAgent` WHERE agentID = ? AND password =?";
+		String loginSql = "SELECT agentID, password FROM UTeQueDB.`StudentServicesAgent` "
+								+ "WHERE agentID = ? AND password = ?";
 		
 		try (Connection dbConn = DBConnectorFactory.getDatabaseConnection()){
 			PreparedStatement statement = dbConn.prepareStatement(loginSql);
@@ -201,25 +211,35 @@ public class UTeQueDBOperations {
 			logger.warn("Receiving results from executed Prepared Statement, Error May Occur");
 			ResultSet result = statement.executeQuery();
 			
+			logger.info("AGENT Results Recieved");
 			while(result.next()) {
-				studentID = result.getString(1);
+				agentID = result.getString(1);
 				pass = result.getString(2);
 				
-				if(studentID.equals(username) && pass.equals(password))
+				if(agentID.equals(username) && pass.equals(password))
 					return true;
 			}
 			
 		} catch (SQLException e) {
-			System.out.println("Error(" + e.getErrorCode() 
+			logger.error("Error(" + e.getErrorCode() 
 					+ ") " + e.getMessage());
 		}
 		
 		return false;
 	}
 	
+	/**
+	 * Gets USERNAME and PASSWORD from DATABASE for specified STUDENT SERVICES REPRESENTATIVE
+	 * using SQL SELECT STATEMENT.
+	 * 
+	 * @param username 	- USERNAME entered by REPRESENTATIVE at the login screen.
+	 * @param password 	- PASSWORD entered by REPRESENTATIVE at the login screen.
+	 * @return 	true 	- USER was FOUND and PASSWORD matched to that in the DATABASE.
+	 * 			false 	- EITHER USER was NOT found in the system OR PASSWORD did not match.
+	 */
 	public static boolean loginRep(String username, String password) {
 		
-		String studentID, pass = "";
+		String repID, pass = "";
 		
 		String loginSql = "SELECT repID, password FROM UTeQueDB.`StudentServicesRep` WHERE repID = ? AND password =?";
 		
@@ -231,22 +251,32 @@ public class UTeQueDBOperations {
 			logger.warn("Receiving results from executed Prepared Statement, Error May Occur");
 			ResultSet result = statement.executeQuery();
 			
+			logger.info("REPRESENTATIVE Results Recieved");
 			while(result.next()) {
-				studentID = result.getString(1);
+				repID = result.getString(1);
 				pass = result.getString(2);
 				
-				if(studentID.equals(username) && pass.equals(password))
+				if(repID.equals(username) && pass.equals(password))
 					return true;
 			}
 			
 		} catch (SQLException e) {
-			System.out.println("Error(" + e.getErrorCode() 
+			logger.error("Error(" + e.getErrorCode() 
 					+ ") " + e.getMessage());
 		}
 		
 		return false;
 	}
 	
+	/**
+	 * Gets USERNAME and PASSWORD from DATABASE for specified STUDENT
+	 * using SQL SELECT STATEMENT.
+	 * 
+	 * @param username - USERNAME entered by STUDENT at the login screen
+	 * @param password - PASSWORD entered by STUDENT at the login screen
+	 * @return 	true 	- USER was FOUND and PASSWORD matched to that in the DATABASE.
+	 * 			false 	- EITHER USER was NOT found in the system OR PASSWORD did not match.
+	 */
 	public static boolean loginStudent(String username, String password) {
 		
 		String studentID, pass = "";
@@ -261,6 +291,8 @@ public class UTeQueDBOperations {
 			logger.warn("Receiving results from executed Prepared Statement, Error May Occur");
 			ResultSet result = statement.executeQuery();
 			
+			logger.info("STUDENT Results Recieved");
+			
 			while(result.next()) {
 				studentID = result.getString(1);
 				pass = result.getString(2);
@@ -270,24 +302,30 @@ public class UTeQueDBOperations {
 			}
 			
 		} catch (SQLException e) {
-			System.out.println("Error(" + e.getErrorCode() 
+			logger.error("Error(" + e.getErrorCode() 
 					+ ") " + e.getMessage());
 		}
 		
 		return false;
 	}
 	
-	public static User getUser(String username, String type) {
+	public static User getUser(String username, String userType) {
 		User currentUser = new User();
 		
+		userType = userType.toUpperCase();
+		
 		String searchSql = null;
-		if(type.equals("Student"))
-			searchSql = "SELECT studentID, firstname, lastname, gender, email FROM UTeQueDB.`Student` WHERE studentID = ?";
-		else if(type.equals("Agent"))
-			searchSql = "SELECT agentID, firstname, lastname, gender, email FROM UTeQueDB.`StudentServicesAgent` WHERE agentID = ?";
-		else if(type.equals("Rep"))
-			searchSql = "SELECT repID, firstname, lastname, gender, email FROM UTeQueDB.`StudentServicesRep` WHERE repID = ?";
-		 
+		switch(userType) {
+			case "STUDENT":
+				searchSql = "SELECT studentID, firstname, lastname, gender, email, phone FROM UTeQueDB.`Student` WHERE studentID = ?";
+				break;
+			case "AGENT":
+				searchSql = "SELECT agentID, firstname, lastname, gender, email FROM UTeQueDB.`StudentServicesAgent` WHERE agentID = ?";
+				break;
+			case "REP":
+				searchSql = "SELECT repID, firstname, lastname, gender, email FROM UTeQueDB.`StudentServicesRep` WHERE repID = ?";
+				break;
+		}		 
 		
 		//if type is Student
 		try (Connection dbConn = DBConnectorFactory.getDatabaseConnection()){
@@ -310,7 +348,7 @@ public class UTeQueDBOperations {
 			}
 			
 		} catch (SQLException e) {
-			System.out.println("Error(" + e.getErrorCode() 
+			logger.error("Error(" + e.getErrorCode() 
 					+ ") " + e.getMessage());
 		}
 		

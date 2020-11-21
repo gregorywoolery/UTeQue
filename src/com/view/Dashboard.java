@@ -223,8 +223,7 @@ public class Dashboard extends JFrame {
 		gbl_username_panel.rowWeights = new double[]{0.0};
 		username_panel.setLayout(gbl_username_panel);
 		
-		username_lbl = new JLabel("Ariana Lenoxx");
-		username_lbl.setText(UserLogin.currentUser.getFirstname()+" " + UserLogin.currentUser.getLastname());
+		username_lbl = new JLabel();
 		username_lbl.setFont(new Font("Arial Rounded MT Bold", Font.BOLD, 18));
 		username_lbl.setForeground(new Color(255, 255, 255));
 		GridBagConstraints gbc_username_lbl = new GridBagConstraints();
@@ -248,8 +247,7 @@ public class Dashboard extends JFrame {
 		notification_lbl.setIcon(new ImageIcon(Dashboard.class.getResource("/img/notification-false.png")));
 		userAccessories_panel.add(notification_lbl);
 		
-		userAvatar_lbl = new JLabel("");
-		userAvatar_lbl.setIcon(new ImageIcon(Dashboard.class.getResource("/img/"+ "female" +"/student.png")));
+		userAvatar_lbl = new JLabel();
 		userAccessories_panel.add(userAvatar_lbl);
 		
 		workspace_desktopPane = new JDesktopPane();		

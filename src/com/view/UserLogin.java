@@ -5,6 +5,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.controller.LoginController;
+import com.controller.UserController;
 import com.model.Student;
 import com.model.StudentServicesAgent;
 import com.model.StudentServicesRep;
@@ -24,6 +25,7 @@ import java.awt.Rectangle;
 import java.awt.Toolkit;
 import java.awt.Cursor;
 import java.awt.Dimension;
+import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
@@ -68,6 +70,22 @@ public class UserLogin extends JFrame implements ActionListener{
 	
 	public static User currentUser = new User();
 
+	/**
+	 * Launch the application.
+	 */
+	public static void main(String[] args) {
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				try {
+					UserLogin frame = new UserLogin();
+					frame.setVisible(true);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
+	}
+	
 	/**
 	 * Create the frame.
 	 */
@@ -284,6 +302,7 @@ public class UserLogin extends JFrame implements ActionListener{
 		student_rdbtn.setFont(new Font("Times New Roman", Font.PLAIN, 13));
 		student_rdbtn.setForeground(new Color(255, 255, 255));
 		student_rdbtn.setBackground(new Color(0, 0, 51));
+		student_rdbtn.setSelected(true);
 		buttonGroup.add(student_rdbtn);
 		userSelect_Panel.add(student_rdbtn);
 		
@@ -299,6 +318,7 @@ public class UserLogin extends JFrame implements ActionListener{
 		rep_rdbtn.setForeground(Color.WHITE);
 		rep_rdbtn.setFont(new Font("Times New Roman", Font.PLAIN, 13));
 		rep_rdbtn.setBackground(new Color(0, 0, 51));
+		buttonGroup.add(rep_rdbtn);
 		userSelect_Panel.add(rep_rdbtn);
 		
 		login_Panel = new JPanel();
@@ -330,7 +350,8 @@ public class UserLogin extends JFrame implements ActionListener{
 	private void registerListeners() {
 		agent_rdbtn.addActionListener(this);
 		student_rdbtn.addActionListener(this);
-		this.login_btn.addActionListener(this);
+		rep_rdbtn.addActionListener(this);
+		login_btn.addActionListener(this);
 	}
 	
 	//Removes frame from display after use
@@ -364,22 +385,23 @@ public class UserLogin extends JFrame implements ActionListener{
 		 * If the login button was used and either the staff or student radio 
 		 * button is selected then execute authentication method.
 		 */
-		if(e.getSource() == login_btn && (agent_rdbtn.isSelected() || student_rdbtn.isSelected()|| rep_rdbtn.isSelected() )) {
+		if(e.getSource() == login_btn && 
+				(agent_rdbtn.isSelected() || student_rdbtn.isSelected()|| rep_rdbtn.isSelected() )
+		) {
 			String userType = "";
 			
-			if(agent_rdbtn.isSelected()) {
+			if(agent_rdbtn.isSelected())
 				userType = "Agent";
-			}
 				
-			else if (student_rdbtn.isSelected()) {
+			else if (student_rdbtn.isSelected())
 				userType = "Student";
-				}
-			else if (rep_rdbtn.isSelected()) {
+				
+			else if (rep_rdbtn.isSelected())
 				userType = "Rep";
-				}
+				
 				
 			if(LoginController.authenticate(txtUsername.getText(), txtPassword.getPassword(), userType)) {				
-				currentUser = LoginController.getCurrentUser(txtUsername.getText(),userType);
+				currentUser = UserController.getCurrentUser(txtUsername.getText(), userType);
 				StudentDashboard dash = new StudentDashboard();
 				dash.setVisible(true);
 				disposeFrame();

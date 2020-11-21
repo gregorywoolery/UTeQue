@@ -41,6 +41,8 @@ import javax.swing.ImageIcon;
 import java.awt.Component;
 import java.awt.GridLayout;
 import javax.swing.JRadioButton;
+import javax.swing.JCheckBox;
+import javax.swing.border.LineBorder;
 
 
 public class UpdateIssue extends JInternalFrame implements ActionListener{
@@ -65,14 +67,14 @@ public class UpdateIssue extends JInternalFrame implements ActionListener{
 	private DefaultStyledDocument issueAreaDoc;
 	private JPanel return_pnl;
 	private JButton returnBtn;
-	private JPanel paramType_panel;
-	private JRadioButton paraTypeIn_rdbtn;
-	private JRadioButton paraTypeEx_rdbtn;
-	private JPanel paramService_panel;
-	private JRadioButton paraServiceIn_rdbtn;
-	private JRadioButton paraSeriveEx_rdbtn;
 	private final ButtonGroup type_buttonGroup = new ButtonGroup();
 	private final ButtonGroup service_buttonGroup = new ButtonGroup();
+	private JCheckBox issueID_chckbx;
+	private JCheckBox type_chckbx;
+	private JCheckBox dateIssued_chckbx;
+	private JCheckBox service_chckbx;
+	private JCheckBox message_chckbx;
+	private JButton helpBtn;
 	
 	/**
 	 * Create the frame.
@@ -110,11 +112,23 @@ public class UpdateIssue extends JInternalFrame implements ActionListener{
 		header_lbl.setFont(new Font("Arial Rounded MT Bold", Font.PLAIN, 17));
 		
 		GridBagConstraints gbc_header_lbl = new GridBagConstraints();
-		gbc_header_lbl.insets = new Insets(10, 0, 0, 5);
+		gbc_header_lbl.insets = new Insets(10, 0, 5, 5);
 		gbc_header_lbl.gridx = 0;
 		gbc_header_lbl.gridy = 0;
 		
 		getContentPane().add(header_lbl, gbc_header_lbl);
+		
+		helpBtn = new JButton();
+		helpBtn.setToolTipText("Help?");
+		helpBtn.setBackground(new Color(0,204, 225));
+		helpBtn.setBorder(null);
+		helpBtn.setIcon(new ImageIcon(UpdateIssue.class.getResource("/img/help.png")));
+
+		GridBagConstraints gbc_helpBtn = new GridBagConstraints();
+		gbc_helpBtn.insets = new Insets(0, 0, 5, 0);
+		gbc_helpBtn.gridx = 1;
+		gbc_helpBtn.gridy = 0;
+		getContentPane().add(helpBtn, gbc_helpBtn);
 		
 		home_panel = new JPanel();
 		home_panel.setBackground(new Color(0, 0, 51));
@@ -128,12 +142,24 @@ public class UpdateIssue extends JInternalFrame implements ActionListener{
 		getContentPane().add(home_panel, gbc_home_panel);
 		
 		GridBagLayout gbl_home_panel = new GridBagLayout();
-		gbl_home_panel.columnWidths = new int[] {0, 0, 30};
+		gbl_home_panel.columnWidths = new int[] {40, 0, 30};
 		gbl_home_panel.rowHeights = new int[]{0, 0, 0, 0, 0, 0, 0, 0};
-		gbl_home_panel.columnWeights = new double[]{1.0, 1.0, Double.MIN_VALUE};
+		gbl_home_panel.columnWeights = new double[]{0.0, 1.0, 1.0};
 		gbl_home_panel.rowWeights = new double[]{0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, Double.MIN_VALUE};
 		
 		home_panel.setLayout(gbl_home_panel);
+		
+		issueID_chckbx = new JCheckBox("");
+		issueID_chckbx.setHorizontalTextPosition(SwingConstants.LEADING);
+		issueID_chckbx.setMargin(new Insets(20, 2, 2, 0));
+		issueID_chckbx.setHorizontalAlignment(SwingConstants.RIGHT);
+		issueID_chckbx.setBackground(new Color(0, 0, 51));
+		GridBagConstraints gbc_issueID_chckbx = new GridBagConstraints();
+		gbc_issueID_chckbx.anchor = GridBagConstraints.EAST;
+		gbc_issueID_chckbx.insets = new Insets(0, 0, 5, 5);
+		gbc_issueID_chckbx.gridx = 0;
+		gbc_issueID_chckbx.gridy = 0;
+		home_panel.add(issueID_chckbx, gbc_issueID_chckbx);
 		
 		issueID_lbl = new JLabel("Issue ID:");
 		issueID_lbl.setForeground(new Color(255, 255, 255));
@@ -142,7 +168,7 @@ public class UpdateIssue extends JInternalFrame implements ActionListener{
 		GridBagConstraints gbc_issueID_lbl = new GridBagConstraints();
 		gbc_issueID_lbl.anchor = GridBagConstraints.WEST;
 		gbc_issueID_lbl.insets = new Insets(15, 20, 5, 5);
-		gbc_issueID_lbl.gridx = 0;
+		gbc_issueID_lbl.gridx = 1;
 		gbc_issueID_lbl.gridy = 0;
 		
 		home_panel.add(issueID_lbl, gbc_issueID_lbl);
@@ -155,11 +181,22 @@ public class UpdateIssue extends JInternalFrame implements ActionListener{
 		GridBagConstraints gbc_issueID_textField = new GridBagConstraints();
 		gbc_issueID_textField.anchor = GridBagConstraints.WEST;
 		gbc_issueID_textField.insets = new Insets(5, 20, 15, 5);
-		gbc_issueID_textField.gridx = 0;
+		gbc_issueID_textField.gridx = 1;
 		gbc_issueID_textField.gridy = 1;
 		
 		home_panel.add(issueID_textField, gbc_issueID_textField);
 		issueID_textField.setColumns(14);
+		
+		type_chckbx = new JCheckBox("");
+		type_chckbx.setHorizontalAlignment(SwingConstants.RIGHT);
+		type_chckbx.setMargin(new Insets(0, 0, 0, 0));
+		type_chckbx.setBackground(new Color(0, 0, 51));
+		GridBagConstraints gbc_type_chckbx = new GridBagConstraints();
+		gbc_type_chckbx.anchor = GridBagConstraints.EAST;
+		gbc_type_chckbx.insets = new Insets(0, 0, 5, 5);
+		gbc_type_chckbx.gridx = 0;
+		gbc_type_chckbx.gridy = 2;
+		home_panel.add(type_chckbx, gbc_type_chckbx);
 		
 		issueType_comboBox = new JComboBox(new String[] {"Complaint", "Query"});
 		issueType_comboBox.setPreferredSize(new Dimension(125, 25));
@@ -170,42 +207,20 @@ public class UpdateIssue extends JInternalFrame implements ActionListener{
 		GridBagConstraints gbc_issueType_comboBox = new GridBagConstraints();
 		gbc_issueType_comboBox.anchor = GridBagConstraints.WEST;
 		gbc_issueType_comboBox.insets = new Insets(10, 20, 15, 5);
-		gbc_issueType_comboBox.gridx = 0;
+		gbc_issueType_comboBox.gridx = 1;
 		gbc_issueType_comboBox.gridy = 2;
 		
 		home_panel.add(issueType_comboBox, gbc_issueType_comboBox);
 		
-		paramType_panel = new JPanel();
-		FlowLayout flowLayout = (FlowLayout) paramType_panel.getLayout();
-		flowLayout.setHgap(10);
-		paramType_panel.setPreferredSize(new Dimension(170, 25));
-		paramType_panel.setBackground(new Color(0, 0, 51));
-		GridBagConstraints gbc_paramType_panel = new GridBagConstraints();
-		gbc_paramType_panel.insets = new Insets(0, 0, 5, 0);
-		gbc_paramType_panel.fill = GridBagConstraints.HORIZONTAL;
-		gbc_paramType_panel.gridx = 1;
-		gbc_paramType_panel.gridy = 2;
-		home_panel.add(paramType_panel, gbc_paramType_panel);
-		
-		paraTypeIn_rdbtn = new JRadioButton("Include");
-		paraTypeIn_rdbtn.setBorder(null);
-		paraTypeIn_rdbtn.setHorizontalAlignment(SwingConstants.LEFT);
-		paraTypeIn_rdbtn.setHorizontalTextPosition(SwingConstants.RIGHT);
-		paraTypeIn_rdbtn.setFont(new Font("Arial Rounded MT Bold", Font.PLAIN, 13));
-		paraTypeIn_rdbtn.setForeground(new Color(255, 255, 255));
-		paraTypeIn_rdbtn.setBackground(new Color(0, 0, 51));
-		type_buttonGroup.add(paraTypeIn_rdbtn);
-		paramType_panel.add(paraTypeIn_rdbtn);
-		
-		paraTypeEx_rdbtn = new JRadioButton("Exclude");
-		paraTypeEx_rdbtn.setBorder(null);
-		paraTypeEx_rdbtn.setHorizontalAlignment(SwingConstants.LEFT);
-		paraTypeEx_rdbtn.setHorizontalTextPosition(SwingConstants.RIGHT);
-		paraTypeEx_rdbtn.setFont(new Font("Arial Rounded MT Bold", Font.PLAIN, 13));
-		paraTypeEx_rdbtn.setForeground(new Color(255, 255, 255));
-		paraTypeEx_rdbtn.setBackground(new Color(0, 0, 51));
-		type_buttonGroup.add(paraTypeEx_rdbtn);
-		paramType_panel.add(paraTypeEx_rdbtn);
+		dateIssued_chckbx = new JCheckBox("");
+		dateIssued_chckbx.setHorizontalAlignment(SwingConstants.RIGHT);
+		dateIssued_chckbx.setBackground(new Color(0, 0, 51));
+		GridBagConstraints gbc_dateIssued_chckbx = new GridBagConstraints();
+		gbc_dateIssued_chckbx.anchor = GridBagConstraints.EAST;
+		gbc_dateIssued_chckbx.insets = new Insets(0, 0, 5, 5);
+		gbc_dateIssued_chckbx.gridx = 0;
+		gbc_dateIssued_chckbx.gridy = 3;
+		home_panel.add(dateIssued_chckbx, gbc_dateIssued_chckbx);
 		
 		updateDatePicker = new DatePicker();
 		updateDatePicker.getComponentToggleCalendarButton().setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
@@ -215,10 +230,20 @@ public class UpdateIssue extends JInternalFrame implements ActionListener{
 		GridBagConstraints gbc_textField_1 = new GridBagConstraints();
 		gbc_textField_1.anchor = GridBagConstraints.WEST;
 		gbc_textField_1.insets = new Insets(10, 20, 15, 5);
-		gbc_textField_1.gridx = 0;
+		gbc_textField_1.gridx = 1;
 		gbc_textField_1.gridy = 3;
 		
 		home_panel.add(updateDatePicker, gbc_textField_1);
+		
+		service_chckbx = new JCheckBox("");
+		service_chckbx.setHorizontalAlignment(SwingConstants.RIGHT);
+		service_chckbx.setBackground(new Color(0, 0, 51));
+		GridBagConstraints gbc_service_chckbx = new GridBagConstraints();
+		gbc_service_chckbx.anchor = GridBagConstraints.EAST;
+		gbc_service_chckbx.insets = new Insets(0, 0, 5, 5);
+		gbc_service_chckbx.gridx = 0;
+		gbc_service_chckbx.gridy = 4;
+		home_panel.add(service_chckbx, gbc_service_chckbx);
 		
 		service_lbl = new JLabel("Service");
 		service_lbl.setForeground(new Color(255, 255, 255));
@@ -227,7 +252,7 @@ public class UpdateIssue extends JInternalFrame implements ActionListener{
 		GridBagConstraints gbc_service_lbl = new GridBagConstraints();
 		gbc_service_lbl.anchor = GridBagConstraints.WEST;
 		gbc_service_lbl.insets = new Insets(0, 20, 5, 5);
-		gbc_service_lbl.gridx = 0;
+		gbc_service_lbl.gridx = 1;
 		gbc_service_lbl.gridy = 4;
 		
 		home_panel.add(service_lbl, gbc_service_lbl);
@@ -244,46 +269,28 @@ public class UpdateIssue extends JInternalFrame implements ActionListener{
 		GridBagConstraints gbc_service_combobox = new GridBagConstraints();
 		gbc_service_combobox.anchor = GridBagConstraints.WEST;
 		gbc_service_combobox.insets = new Insets(0, 20, 5, 5);
-		gbc_service_combobox.gridx = 0;
+		gbc_service_combobox.gridx = 1;
 		gbc_service_combobox.gridy = 5;
 		
 		home_panel.add(service_combobox, gbc_service_combobox);
 		
-		paramService_panel = new JPanel();
-		FlowLayout flowLayout_1 = (FlowLayout) paramService_panel.getLayout();
-		flowLayout_1.setHgap(10);
-		paramService_panel.setBackground(new Color(0, 0, 51));
-		GridBagConstraints gbc_paramService_panel = new GridBagConstraints();
-		gbc_paramService_panel.insets = new Insets(0, 0, 5, 0);
-		gbc_paramService_panel.fill = GridBagConstraints.BOTH;
-		gbc_paramService_panel.gridx = 1;
-		gbc_paramService_panel.gridy = 5;
-		home_panel.add(paramService_panel, gbc_paramService_panel);
+		message_chckbx = new JCheckBox("");
+		message_chckbx.setHorizontalAlignment(SwingConstants.RIGHT);
+		message_chckbx.setBackground(new Color(0, 0, 51));
+		GridBagConstraints gbc_message_chckbx = new GridBagConstraints();
+		gbc_message_chckbx.anchor = GridBagConstraints.EAST;
+		gbc_message_chckbx.insets = new Insets(0, 0, 0, 5);
+		gbc_message_chckbx.gridx = 0;
+		gbc_message_chckbx.gridy = 6;
+		home_panel.add(message_chckbx, gbc_message_chckbx);
 		
-		paraServiceIn_rdbtn = new JRadioButton("Include");
-		paraServiceIn_rdbtn.setBorder(null);
-		paraServiceIn_rdbtn.setHorizontalTextPosition(SwingConstants.RIGHT);
-		paraServiceIn_rdbtn.setForeground(new Color(255, 255, 255));
-		paraServiceIn_rdbtn.setFont(new Font("Arial Rounded MT Bold", Font.PLAIN, 13));
-		paraServiceIn_rdbtn.setBackground(new Color(0, 0, 51));
-		service_buttonGroup.add(paraServiceIn_rdbtn);
-		paramService_panel.add(paraServiceIn_rdbtn);
-		
-		paraSeriveEx_rdbtn = new JRadioButton("Exclude");
-		paraSeriveEx_rdbtn.setBorder(null);
-		paraSeriveEx_rdbtn.setForeground(new Color(255, 255, 255));
-		paraSeriveEx_rdbtn.setFont(new Font("Arial Rounded MT Bold", Font.PLAIN, 13));
-		paraSeriveEx_rdbtn.setBackground(new Color(0, 0, 51));
-		service_buttonGroup.add(paraSeriveEx_rdbtn);
-		paramService_panel.add(paraSeriveEx_rdbtn);
-		
-		issueDetails_lbl = new JLabel("Issue Made:");
+		issueDetails_lbl = new JLabel("Message");
 		issueDetails_lbl.setForeground(new Color(255, 255, 255));
 		issueDetails_lbl.setFont(new Font("Arial Rounded MT Bold", Font.PLAIN, 13));
 		GridBagConstraints gbc_issueDetails_lbl = new GridBagConstraints();
 		gbc_issueDetails_lbl.anchor = GridBagConstraints.WEST;
 		gbc_issueDetails_lbl.insets = new Insets(5, 20, 0, 5);
-		gbc_issueDetails_lbl.gridx = 0;
+		gbc_issueDetails_lbl.gridx = 1;
 		gbc_issueDetails_lbl.gridy = 6;
 		
 		home_panel.add(issueDetails_lbl, gbc_issueDetails_lbl);
@@ -292,7 +299,7 @@ public class UpdateIssue extends JInternalFrame implements ActionListener{
 		issueRem_lbl.setForeground(new Color(255, 0, 0));
 		issueRem_lbl.setFont(new Font("Arial Rounded MT Bold", Font.PLAIN, 12));
 		GridBagConstraints gbc_issueRem_lbl = new GridBagConstraints();
-		gbc_issueRem_lbl.gridx = 1;
+		gbc_issueRem_lbl.gridx = 2;
 		gbc_issueRem_lbl.gridy = 6;
 		home_panel.add(issueRem_lbl, gbc_issueRem_lbl);
 		
@@ -459,7 +466,11 @@ public class UpdateIssue extends JInternalFrame implements ActionListener{
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if(e.getSource().equals(searchBtn)) {
-			
+			if(true) {
+				JOptionPane.showMessageDialog(workSpaceDesktop, 
+						"", 
+						"HELP", JOptionPane.INFORMATION_MESSAGE);
+			}
 		}
 		if(e.getSource().equals(updateBtn)) {}
 		if(e.getSource().equals(returnBtn)) {}
