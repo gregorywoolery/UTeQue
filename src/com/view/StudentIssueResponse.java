@@ -3,6 +3,7 @@ package com.view;
 import java.awt.Color;
 import java.awt.EventQueue;
 
+import javax.swing.JDesktopPane;
 import javax.swing.JInternalFrame;
 import javax.swing.border.LineBorder;
 import java.awt.GridBagLayout;
@@ -18,35 +19,36 @@ import java.awt.FlowLayout;
 import javax.swing.JTextArea;
 import javax.swing.JSeparator;
 import javax.swing.JTabbedPane;
+import java.awt.GridLayout;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
+
+import java.awt.Cursor;
+import javax.swing.BoxLayout;
 
 public class StudentIssueResponse extends JInternalFrame {
-
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					StudentIssueResponse frame = new StudentIssueResponse();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
+	
+	public StudentIssueResponse(JDesktopPane workSpaceDesktop) {
+		super("Issue-Response", 
+				false, 	//resizable
+				true, 	//closable
+				false, 	//maximizable
+				true);	//iconifiable
+		initializeComponents();
+		registerListeners();
 	}
-
+	
 	/**
 	 * Create the frame.
 	 */
-	public StudentIssueResponse() {
+	private void initializeComponents() {
 		//Removes top bar from internal frame
 		((javax.swing.plaf.basic.BasicInternalFrameUI)this.getUI()).setNorthPane(null);
 		
 		getContentPane().setBackground(new Color(0, 0, 51));
 		GridBagLayout gridBagLayout = new GridBagLayout();
-		gridBagLayout.columnWidths = new int[] {670, 0, 0};
+		gridBagLayout.columnWidths = new int[] {540, 0, 0};
 		gridBagLayout.rowHeights = new int[] {0, 0};
 		gridBagLayout.columnWeights = new double[]{0.0, 1.0, Double.MIN_VALUE};
 		gridBagLayout.rowWeights = new double[]{0.0, 1.0};
@@ -54,7 +56,7 @@ public class StudentIssueResponse extends JInternalFrame {
 		
 		JLabel titile_lbl = new JLabel("Issue - Response");
 		titile_lbl.setHorizontalTextPosition(SwingConstants.LEADING);
-		titile_lbl.setPreferredSize(new Dimension(170, 50));
+		titile_lbl.setPreferredSize(new Dimension(250, 50));
 		titile_lbl.setForeground(new Color(255, 255, 255));
 		titile_lbl.setFont(new Font("Arial Rounded MT Bold", Font.PLAIN, 15));
 		GridBagConstraints gbc_titile_lbl = new GridBagConstraints();
@@ -64,166 +66,190 @@ public class StudentIssueResponse extends JInternalFrame {
 		gbc_titile_lbl.gridy = 0;
 		getContentPane().add(titile_lbl, gbc_titile_lbl);
 		
-		JLabel label = new JLabel("New label");
-		GridBagConstraints gbc_label = new GridBagConstraints();
-		gbc_label.insets = new Insets(0, 0, 5, 0);
-		gbc_label.gridx = 1;
-		gbc_label.gridy = 0;
-		getContentPane().add(label, gbc_label);
+		JLabel help_label = new JLabel("");
+		help_label.setIcon(new ImageIcon(StudentIssueResponse.class.getResource("/img/help.png")));
+		GridBagConstraints gbc_help_label = new GridBagConstraints();
+		gbc_help_label.insets = new Insets(5, 0, 5, 0);
+		gbc_help_label.gridx = 1;
+		gbc_help_label.gridy = 0;
+		getContentPane().add(help_label, gbc_help_label);
 		
-		JPanel panel = new JPanel();
-		GridBagConstraints gbc_panel = new GridBagConstraints();
-		gbc_panel.insets = new Insets(0, 0, 0, 5);
-		gbc_panel.fill = GridBagConstraints.BOTH;
-		gbc_panel.gridx = 0;
-		gbc_panel.gridy = 1;
-		getContentPane().add(panel, gbc_panel);
-		GridBagLayout gbl_panel = new GridBagLayout();
-		gbl_panel.columnWidths = new int[] {0, 140};
-		gbl_panel.rowHeights = new int[] {0, 80, 30, 370, 0};
-		gbl_panel.columnWeights = new double[]{1.0, 0.0};
-		gbl_panel.rowWeights = new double[]{1.0, 0.0, 0.0, 0.0};
-		panel.setLayout(gbl_panel);
+		JPanel main_panel = new JPanel();
+		main_panel.setBackground(new Color(204, 0, 0));
+		GridBagConstraints gbc_main_panel = new GridBagConstraints();
+		gbc_main_panel.insets = new Insets(0, 0, 0, 5);
+		gbc_main_panel.fill = GridBagConstraints.BOTH;
+		gbc_main_panel.gridx = 0;
+		gbc_main_panel.gridy = 1;
+		getContentPane().add(main_panel, gbc_main_panel);
+		GridBagLayout gbl_main_panel = new GridBagLayout();
+		gbl_main_panel.columnWidths = new int[] {440, 200};
+		gbl_main_panel.rowHeights = new int[] {30, 80, 30, 30, 360};
+		gbl_main_panel.columnWeights = new double[]{1.0, 0.0};
+		gbl_main_panel.rowWeights = new double[]{1.0, 0.0, 0.0, 0.0, 1.0};
+		main_panel.setLayout(gbl_main_panel);
 		
-		JTextArea textArea = new JTextArea();
-		textArea.setLineWrap(true);
-		textArea.setFont(new Font("Times New Roman", Font.PLAIN, 14));
-		textArea.setTabSize(4);
-		GridBagConstraints gbc_textArea = new GridBagConstraints();
-		gbc_textArea.gridheight = 3;
-		gbc_textArea.insets = new Insets(15, 15, 5, 10);
-		gbc_textArea.fill = GridBagConstraints.BOTH;
-		gbc_textArea.gridx = 0;
-		gbc_textArea.gridy = 0;
-		panel.add(textArea, gbc_textArea);
+		JTextArea issueMessage_txtArea = new JTextArea();
+		issueMessage_txtArea.setBackground(new Color(255, 255, 255));
+		issueMessage_txtArea.setEnabled(false);
+		issueMessage_txtArea.setForeground(new Color(255, 255, 255));
+		issueMessage_txtArea.setMargin(new Insets(2, 4, 2, 4));
+		issueMessage_txtArea.setLineWrap(true);
+		issueMessage_txtArea.setFont(new Font("Times New Roman", Font.PLAIN, 14));
+		issueMessage_txtArea.setTabSize(4);
+		GridBagConstraints gbc_issueMessage_txtArea = new GridBagConstraints();
+		gbc_issueMessage_txtArea.gridheight = 3;
+		gbc_issueMessage_txtArea.insets = new Insets(15, 15, 5, 10);
+		gbc_issueMessage_txtArea.fill = GridBagConstraints.BOTH;
+		gbc_issueMessage_txtArea.gridx = 0;
+		gbc_issueMessage_txtArea.gridy = 0;
+		main_panel.add(issueMessage_txtArea, gbc_issueMessage_txtArea);
 		
-		JLabel lblNewLabel_7 = new JLabel("New label");
-		lblNewLabel_7.setHorizontalAlignment(SwingConstants.CENTER);
-		lblNewLabel_7.setPreferredSize(new Dimension(150, 20));
-		lblNewLabel_7.setFont(new Font("Arial Rounded MT Bold", Font.PLAIN, 13));
-		GridBagConstraints gbc_lblNewLabel_7 = new GridBagConstraints();
-		gbc_lblNewLabel_7.gridheight = 2;
-		gbc_lblNewLabel_7.insets = new Insets(15, 0, 5, 0);
-		gbc_lblNewLabel_7.gridx = 1;
-		gbc_lblNewLabel_7.gridy = 0;
-		panel.add(lblNewLabel_7, gbc_lblNewLabel_7);
+		JLabel services_lbl = new JLabel("New label");
+		services_lbl.setForeground(new Color(255, 255, 255));
+		services_lbl.setBackground(new Color(255, 255, 255));
+		services_lbl.setHorizontalAlignment(SwingConstants.CENTER);
+		services_lbl.setFont(new Font("Times New Roman", Font.BOLD, 13));
+		GridBagConstraints gbc_services_lbl = new GridBagConstraints();
+		gbc_services_lbl.gridheight = 2;
+		gbc_services_lbl.insets = new Insets(15, 0, 5, 0);
+		gbc_services_lbl.gridx = 1;
+		gbc_services_lbl.gridy = 0;
+		main_panel.add(services_lbl, gbc_services_lbl);
 		
-		JLabel label_1 = new JLabel("New label");
-		label_1.setHorizontalAlignment(SwingConstants.CENTER);
-		label_1.setPreferredSize(new Dimension(150, 20));
-		label_1.setFont(new Font("Arial Rounded MT Bold", Font.PLAIN, 13));
-		GridBagConstraints gbc_label_1 = new GridBagConstraints();
-		gbc_label_1.insets = new Insets(0, 0, 5, 0);
-		gbc_label_1.gridx = 1;
-		gbc_label_1.gridy = 2;
-		panel.add(label_1, gbc_label_1);
+		JLabel type_label = new JLabel("New label");
+		type_label.setForeground(new Color(255, 255, 255));
+		type_label.setBackground(new Color(255, 255, 255));
+		type_label.setHorizontalAlignment(SwingConstants.CENTER);
+		type_label.setFont(new Font("Times New Roman", Font.BOLD, 13));
+		GridBagConstraints gbc_type_label = new GridBagConstraints();
+		gbc_type_label.insets = new Insets(0, 0, 5, 0);
+		gbc_type_label.gridx = 1;
+		gbc_type_label.gridy = 2;
+		main_panel.add(type_label, gbc_type_label);
 		
-		JPanel panel_2 = new JPanel();
-		GridBagConstraints gbc_panel_2 = new GridBagConstraints();
-		gbc_panel_2.insets = new Insets(0, 0, 5, 0);
-		gbc_panel_2.gridwidth = 2;
-		gbc_panel_2.fill = GridBagConstraints.BOTH;
-		gbc_panel_2.gridx = 0;
-		gbc_panel_2.gridy = 3;
-		panel.add(panel_2, gbc_panel_2);
-		GridBagLayout gbl_panel_2 = new GridBagLayout();
-		gbl_panel_2.columnWidths = new int[]{0, 0};
-		gbl_panel_2.rowHeights = new int[]{0, 0, 0};
-		gbl_panel_2.columnWeights = new double[]{1.0, Double.MIN_VALUE};
-		gbl_panel_2.rowWeights = new double[]{0.0, 1.0, Double.MIN_VALUE};
-		panel_2.setLayout(gbl_panel_2);
-		
-		JLabel lblNewLabel_9 = new JLabel("Responses");
-		lblNewLabel_9.setFont(new Font("Arial Rounded MT Bold", Font.PLAIN, 14));
-		GridBagConstraints gbc_lblNewLabel_9 = new GridBagConstraints();
-		gbc_lblNewLabel_9.anchor = GridBagConstraints.WEST;
-		gbc_lblNewLabel_9.insets = new Insets(5, 15, 5, 0);
-		gbc_lblNewLabel_9.gridx = 0;
-		gbc_lblNewLabel_9.gridy = 0;
-		panel_2.add(lblNewLabel_9, gbc_lblNewLabel_9);
-		
-		JPanel panel_3 = new JPanel();
-		GridBagConstraints gbc_panel_3 = new GridBagConstraints();
-		gbc_panel_3.fill = GridBagConstraints.BOTH;
-		gbc_panel_3.gridx = 0;
-		gbc_panel_3.gridy = 1;
-		panel_2.add(panel_3, gbc_panel_3);
+		JLabel reponsesTitle_lbl = new JLabel("Responses");
+		reponsesTitle_lbl.setForeground(new Color(255, 255, 255));
+		reponsesTitle_lbl.setFont(new Font("Arial Rounded MT Bold", Font.PLAIN, 14));
+		GridBagConstraints gbc_reponsesTitle_lbl = new GridBagConstraints();
+		gbc_reponsesTitle_lbl.anchor = GridBagConstraints.WEST;
+		gbc_reponsesTitle_lbl.insets = new Insets(0, 15, 5, 5);
+		gbc_reponsesTitle_lbl.gridx = 0;
+		gbc_reponsesTitle_lbl.gridy = 3;
+		main_panel.add(reponsesTitle_lbl, gbc_reponsesTitle_lbl);
 		
 		JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP);
-		panel_3.add(tabbedPane);
+		tabbedPane.setMaximumSize(new Dimension(360, 320));
 		
-		JPanel panel_1 = new JPanel();
-		GridBagConstraints gbc_panel_1 = new GridBagConstraints();
-		gbc_panel_1.fill = GridBagConstraints.BOTH;
-		gbc_panel_1.gridx = 1;
-		gbc_panel_1.gridy = 1;
-		getContentPane().add(panel_1, gbc_panel_1);
-		panel_1.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 10));
+		GridBagConstraints gbc_tabbedPane = new GridBagConstraints();
+		gbc_tabbedPane.insets = new Insets(0, 50, 30, 10);
+		gbc_tabbedPane.fill = GridBagConstraints.BOTH;
+		gbc_tabbedPane.gridx = 0;
+		gbc_tabbedPane.gridy = 4;
+		main_panel.add(tabbedPane, gbc_tabbedPane);
 		
-		JLabel lblNewLabel = new JLabel("New label");
-		lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
-		lblNewLabel.setPreferredSize(new Dimension(115, 20));
-		lblNewLabel.setFont(new Font("Arial Rounded MT Bold", Font.PLAIN, 14));
-		panel_1.add(lblNewLabel);
+		ResponseSlot response = new ResponseSlot();
+		tabbedPane.addTab(" 1 ", response);
+
 		
-		JLabel lblNewLabel_8 = new JLabel("New label");
-		panel_1.add(lblNewLabel_8);
-		lblNewLabel_8.setHorizontalAlignment(SwingConstants.CENTER);
-		lblNewLabel_8.setPreferredSize(new Dimension(115, 20));
-		lblNewLabel_8.setFont(new Font("Arial Rounded MT Bold", Font.PLAIN, 13));
+		JPanel side_panel = new JPanel();
+		side_panel.setBackground(new Color(204, 0, 0));
+		GridBagConstraints gbc_side_panel = new GridBagConstraints();
+		gbc_side_panel.fill = GridBagConstraints.BOTH;
+		gbc_side_panel.gridx = 1;
+		gbc_side_panel.gridy = 1;
+		getContentPane().add(side_panel, gbc_side_panel);
+		side_panel.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 10));
+		
+		JLabel issueID_lbl = new JLabel("New label");
+		issueID_lbl.setForeground(new Color(255, 255, 255));
+		issueID_lbl.setHorizontalAlignment(SwingConstants.CENTER);
+		issueID_lbl.setPreferredSize(new Dimension(130, 25));
+		issueID_lbl.setFont(new Font("Arial Rounded MT Bold", Font.PLAIN, 14));
+		side_panel.add(issueID_lbl);
+		
+		JLabel issuedAt_lbl = new JLabel("New label");
+		issuedAt_lbl.setForeground(new Color(255, 255, 255));
+		side_panel.add(issuedAt_lbl);
+		issuedAt_lbl.setHorizontalAlignment(SwingConstants.CENTER);
+		issuedAt_lbl.setPreferredSize(new Dimension(130, 25));
+		issuedAt_lbl.setFont(new Font("Arial Rounded MT Bold", Font.PLAIN, 13));
 		
 		JSeparator separator = new JSeparator();
 		separator.setPreferredSize(new Dimension(110, 10));
-		panel_1.add(separator);
+		side_panel.add(separator);
 		
 		JLabel lblNewLabel_10 = new JLabel("Student");
+		lblNewLabel_10.setForeground(new Color(255, 255, 255));
 		lblNewLabel_10.setHorizontalAlignment(SwingConstants.CENTER);
-		lblNewLabel_10.setPreferredSize(new Dimension(115, 20));
+		lblNewLabel_10.setPreferredSize(new Dimension(130, 25));
 		lblNewLabel_10.setFont(new Font("Arial Rounded MT Bold", Font.PLAIN, 14));
-		panel_1.add(lblNewLabel_10);
+		side_panel.add(lblNewLabel_10);
 		
 		JLabel lblNewLabel_1 = new JLabel("New label");
+		lblNewLabel_1.setForeground(new Color(255, 255, 255));
 		lblNewLabel_1.setHorizontalAlignment(SwingConstants.CENTER);
-		lblNewLabel_1.setPreferredSize(new Dimension(115, 20));
+		lblNewLabel_1.setPreferredSize(new Dimension(130, 25));
 		lblNewLabel_1.setFont(new Font("Arial Rounded MT Bold", Font.PLAIN, 14));
-		panel_1.add(lblNewLabel_1);
+		side_panel.add(lblNewLabel_1);
 		
 		JLabel lblNewLabel_2 = new JLabel("New label");
+		lblNewLabel_2.setForeground(new Color(255, 255, 255));
 		lblNewLabel_2.setHorizontalAlignment(SwingConstants.CENTER);
-		lblNewLabel_2.setPreferredSize(new Dimension(115, 20));
+		lblNewLabel_2.setPreferredSize(new Dimension(130, 25));
 		lblNewLabel_2.setFont(new Font("Arial Rounded MT Bold", Font.PLAIN, 14));
-		panel_1.add(lblNewLabel_2);
+		side_panel.add(lblNewLabel_2);
 		
 		JLabel lblNewLabel_3 = new JLabel("New label");
+		lblNewLabel_3.setForeground(new Color(255, 255, 255));
 		lblNewLabel_3.setHorizontalAlignment(SwingConstants.CENTER);
-		lblNewLabel_3.setPreferredSize(new Dimension(115, 20));
+		lblNewLabel_3.setPreferredSize(new Dimension(130, 25));
 		lblNewLabel_3.setFont(new Font("Arial Rounded MT Bold", Font.PLAIN, 14));
-		panel_1.add(lblNewLabel_3);
+		side_panel.add(lblNewLabel_3);
 		
 		JLabel lblNewLabel_4 = new JLabel("New label");
+		lblNewLabel_4.setForeground(new Color(255, 255, 255));
 		lblNewLabel_4.setHorizontalAlignment(SwingConstants.CENTER);
-		lblNewLabel_4.setPreferredSize(new Dimension(115, 20));
+		lblNewLabel_4.setPreferredSize(new Dimension(130, 25));
 		lblNewLabel_4.setFont(new Font("Arial Rounded MT Bold", Font.PLAIN, 14));
-		panel_1.add(lblNewLabel_4);
+		side_panel.add(lblNewLabel_4);
 		
 		JSeparator separator_1 = new JSeparator();
 		separator_1.setPreferredSize(new Dimension(110, 10));
-		panel_1.add(separator_1);
+		side_panel.add(separator_1);
 		
 		JLabel lblNewLabel_5 = new JLabel("Representative");
+		lblNewLabel_5.setForeground(new Color(255, 255, 255));
 		lblNewLabel_5.setHorizontalAlignment(SwingConstants.CENTER);
-		lblNewLabel_5.setPreferredSize(new Dimension(110, 20));
+		lblNewLabel_5.setPreferredSize(new Dimension(130, 25));
 		lblNewLabel_5.setFont(new Font("Arial Rounded MT Bold", Font.PLAIN, 14));
-		panel_1.add(lblNewLabel_5);
+		side_panel.add(lblNewLabel_5);
 		
 		JLabel lblNewLabel_6 = new JLabel("New label");
+		lblNewLabel_6.setForeground(new Color(255, 255, 255));
 		lblNewLabel_6.setHorizontalAlignment(SwingConstants.CENTER);
-		lblNewLabel_6.setPreferredSize(new Dimension(115, 20));
+		lblNewLabel_6.setPreferredSize(new Dimension(130, 25));
 		lblNewLabel_6.setFont(new Font("Arial Rounded MT Bold", Font.PLAIN, 14));
-		panel_1.add(lblNewLabel_6);
+		side_panel.add(lblNewLabel_6);
+		
+		JSeparator separator_2 = new JSeparator();
+		separator_2.setPreferredSize(new Dimension(110, 30));
+		side_panel.add(separator_2);
+		
+		JButton returnBtn = new JButton("Return");
+		returnBtn.setPreferredSize(new Dimension(100, 35));
+		returnBtn.setIcon(new ImageIcon(StudentIssueResponse.class.getResource("/img/return.png")));
+		returnBtn.setFont(new Font("Arial Rounded MT Bold", Font.PLAIN, 14));
+		returnBtn.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+		returnBtn.setBorder(null);
+		returnBtn.setBackground(new Color(0, 255, 0));
+		side_panel.add(returnBtn);
 		setBorder(new LineBorder(new Color(0, 0, 51), 10));
 		setBounds(100, 100, 820, 570);
-
+		
+		setVisible(true);
 	}
+	
+	private void registerListeners(){}
 
 }
