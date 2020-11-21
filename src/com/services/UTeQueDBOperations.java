@@ -327,7 +327,6 @@ public class UTeQueDBOperations {
 				break;
 		}		 
 		
-		//if type is Student
 		try (Connection dbConn = DBConnectorFactory.getDatabaseConnection()){
 			
 			PreparedStatement statement = dbConn.prepareStatement(searchSql);
@@ -353,6 +352,36 @@ public class UTeQueDBOperations {
 		}
 		
 		return null;
+	}
+	
+	public static int[] getUserIssueStats(String studentID){
+		String status = null;
+		int[] stats = new int[] {0,0,0};
+		
+		String selectAssignment = "SELECT status FROM UTeQueDB.`Issue` WHERE studentID = ?";
+		
+		try (Connection dbConn = DBConnectorFactory.getDatabaseConnection()){
+			PreparedStatement statement = dbConn.prepareStatement(selectAssignment);
+			statement.setString(1, studentID);
+			ResultSet result = statement.executeQuery();
+
+			while(result.next()) {
+				status = result.getString(1);
+				
+				if(status.equals("Resolved"))
+					stats[1]+=1;
+				else
+					stats[2]+=1;
+			}	
+			stats[0] = stats[1] + stats[2];
+			
+		}catch(SQLException e){
+			logger.error("Error(" + e.getErrorCode()
+								+ ") Occured. " + e.getMessage());
+		}
+	
+		return stats;
+		
 	}
 
 

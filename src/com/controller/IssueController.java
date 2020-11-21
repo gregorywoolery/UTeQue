@@ -24,16 +24,21 @@ public class IssueController {
 		
 	//Methods
 	public void viewAll(String type){
-			/*
-			 * - Students should be able to view all past complaints or queries in a list. 
-			 	  For each complaint or query in the list, the last response date and who provided the response, 
-			 	  should be shown.
-			 */	
+	/** 
+	 * Students should be able to view all past complaints or queries in a list. 
+	 * For each complaint or query in the list, the last response date and who provided the response, 
+	 * should be shown.
+	 */	
 	}
 	
 	public static ArrayList<Issue> getAllIssuesForStudent(String studentID) {
 		ArrayList<Issue> foundStudentIssues =  UTeQueDBOperations.getAllIssuesForStudent(studentID);
 		return foundStudentIssues;
+	}
+	
+	public static int[] getStudentIssueStats(String studentID){
+		int[] stats = UTeQueDBOperations.getUserIssueStats(studentID);
+		return stats;
 	}
 	
 	public void viewSpecific(String type, String id) {

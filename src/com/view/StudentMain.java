@@ -201,6 +201,8 @@ public class StudentMain extends JInternalFrame implements ActionListener{
 		getContentPane().add(addIssue_panel, gbc_addIssue_panel);
 		addIssue_panel.setLayout(new BoxLayout(addIssue_panel, BoxLayout.Y_AXIS));
 		
+		getIssueStats();
+		
 		addIssueTitle_lbl = new JLabel("ADD ISSUE");
 		addIssueTitle_lbl.setBorder(new LineBorder(new Color(255, 255, 0), 10));
 		addIssueTitle_lbl.setForeground(new Color(0, 0, 51));
@@ -559,5 +561,18 @@ public class StudentMain extends JInternalFrame implements ActionListener{
 					repAssigned
 			});
 		}
+	}
+	
+	private void getIssueStats() {
+		String studentID = UserLogin.currentUser.getID();
+		int []stats = IssueController.getStudentIssueStats(studentID);
+		
+		String issueMade = String.valueOf(stats[0]);
+		String issueCompleted = String.valueOf(stats[1]); 
+		String issuePending = String.valueOf(stats[2]);
+		
+		issueMade_lbl.setText(issueMade);
+		issueCompleted_lbl.setText(issueCompleted);
+		issuePending_lbl.setText(issuePending);
 	}
 }

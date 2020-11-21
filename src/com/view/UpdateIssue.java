@@ -149,7 +149,7 @@ public class UpdateIssue extends JInternalFrame implements ActionListener{
 		
 		home_panel.setLayout(gbl_home_panel);
 		
-		issueID_chckbx = new JCheckBox("");
+		issueID_chckbx = new JCheckBox();
 		issueID_chckbx.setHorizontalTextPosition(SwingConstants.LEADING);
 		issueID_chckbx.setMargin(new Insets(20, 2, 2, 0));
 		issueID_chckbx.setHorizontalAlignment(SwingConstants.RIGHT);
@@ -187,7 +187,7 @@ public class UpdateIssue extends JInternalFrame implements ActionListener{
 		home_panel.add(issueID_textField, gbc_issueID_textField);
 		issueID_textField.setColumns(14);
 		
-		type_chckbx = new JCheckBox("");
+		type_chckbx = new JCheckBox();
 		type_chckbx.setHorizontalAlignment(SwingConstants.RIGHT);
 		type_chckbx.setMargin(new Insets(0, 0, 0, 0));
 		type_chckbx.setBackground(new Color(0, 0, 51));
@@ -212,7 +212,7 @@ public class UpdateIssue extends JInternalFrame implements ActionListener{
 		
 		home_panel.add(issueType_comboBox, gbc_issueType_comboBox);
 		
-		dateIssued_chckbx = new JCheckBox("");
+		dateIssued_chckbx = new JCheckBox();
 		dateIssued_chckbx.setHorizontalAlignment(SwingConstants.RIGHT);
 		dateIssued_chckbx.setBackground(new Color(0, 0, 51));
 		GridBagConstraints gbc_dateIssued_chckbx = new GridBagConstraints();
@@ -235,7 +235,7 @@ public class UpdateIssue extends JInternalFrame implements ActionListener{
 		
 		home_panel.add(updateDatePicker, gbc_textField_1);
 		
-		service_chckbx = new JCheckBox("");
+		service_chckbx = new JCheckBox();
 		service_chckbx.setHorizontalAlignment(SwingConstants.RIGHT);
 		service_chckbx.setBackground(new Color(0, 0, 51));
 		GridBagConstraints gbc_service_chckbx = new GridBagConstraints();
@@ -274,7 +274,7 @@ public class UpdateIssue extends JInternalFrame implements ActionListener{
 		
 		home_panel.add(service_combobox, gbc_service_combobox);
 		
-		message_chckbx = new JCheckBox("");
+		message_chckbx = new JCheckBox();
 		message_chckbx.setHorizontalAlignment(SwingConstants.RIGHT);
 		message_chckbx.setBackground(new Color(0, 0, 51));
 		GridBagConstraints gbc_message_chckbx = new GridBagConstraints();
@@ -295,7 +295,7 @@ public class UpdateIssue extends JInternalFrame implements ActionListener{
 		
 		home_panel.add(issueDetails_lbl, gbc_issueDetails_lbl);
 		
-		issueRem_lbl = new JLabel("");
+		issueRem_lbl = new JLabel();
 		issueRem_lbl.setForeground(new Color(255, 0, 0));
 		issueRem_lbl.setFont(new Font("Arial Rounded MT Bold", Font.PLAIN, 12));
 		GridBagConstraints gbc_issueRem_lbl = new GridBagConstraints();
@@ -461,6 +461,13 @@ public class UpdateIssue extends JInternalFrame implements ActionListener{
 		updateBtn.addActionListener(this);
 		clearBtn.addActionListener(this);
 		returnBtn.addActionListener(this);
+		helpBtn.addActionListener(this);
+		
+		issueID_chckbx.addActionListener(this);
+		type_chckbx.addActionListener(this);
+		dateIssued_chckbx.addActionListener(this);
+		service_chckbx.addActionListener(this);
+		message_chckbx.addActionListener(this);
 	}
 	
 	@Override
@@ -472,7 +479,10 @@ public class UpdateIssue extends JInternalFrame implements ActionListener{
 						"HELP", JOptionPane.INFORMATION_MESSAGE);
 			}
 		}
-		if(e.getSource().equals(updateBtn)) {}
+		if(e.getSource().equals(updateBtn)) {
+			if(canUpdate()) {}
+				
+		}
 		if(e.getSource().equals(returnBtn)) {}
 		
 		
@@ -495,7 +505,18 @@ public class UpdateIssue extends JInternalFrame implements ActionListener{
     private void updateCount(){
     	issueRem_lbl.setText((150 -issueAreaDoc.getLength()) + " characters remaining");
     }
-	
+    
+    
+	private boolean canUpdate() {
+		if(!issueID_textField.getText().isBlank()) {
+			if(type_chckbx.isSelected()) {}
+			if(dateIssued_chckbx.isSelected()) {}
+			if(service_chckbx.isSelected()) {}
+			if(message_chckbx.isSelected()) {}
+		}
+		
+		return true;
+	}
 
 
 }
