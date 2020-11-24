@@ -7,19 +7,15 @@ import java.text.ParseException;
 import javax.swing.JDesktopPane;
 import javax.swing.JInternalFrame;
 
-public class ViewIssue extends JInternalFrame implements ActionListener{
-
-	private JDesktopPane workSpaceDesktop;
+public class JoinMeeting extends JInternalFrame implements ActionListener{
 	
-	public ViewIssue() {
-		// TODO Auto-generated constructor stub
-	}
+	private JDesktopPane workSpaceDesktop;
 	
 	/**
 	 * @throws ParseException 
 	 * @wbp.parser.constructor
 	 */
-	public ViewIssue(JDesktopPane workSpaceDesktop) throws ParseException {
+	public JoinMeeting(JDesktopPane workSpaceDesktop) throws ParseException {
 		super("View Issue", 
 				false, 	//resizable
 				true, 	//closable

@@ -7,20 +7,15 @@ import java.text.ParseException;
 import javax.swing.JDesktopPane;
 import javax.swing.JInternalFrame;
 
-public class ViewIssue extends JInternalFrame implements ActionListener{
-
+public class ViewService  extends JInternalFrame implements ActionListener{
 	private JDesktopPane workSpaceDesktop;
-	
-	public ViewIssue() {
-		// TODO Auto-generated constructor stub
-	}
 	
 	/**
 	 * @throws ParseException 
 	 * @wbp.parser.constructor
 	 */
-	public ViewIssue(JDesktopPane workSpaceDesktop) throws ParseException {
-		super("View Issue", 
+	public ViewService(JDesktopPane workSpaceDesktop) throws ParseException {
+		super("View Service", 
 				false, 	//resizable
 				true, 	//closable
 				false, 	//maximizable
@@ -30,6 +25,7 @@ public class ViewIssue extends JInternalFrame implements ActionListener{
 		this.workSpaceDesktop =  workSpaceDesktop;
 	}
 	
+	
 	public void initializeComponents() {
 		
 	}
@@ -37,6 +33,7 @@ public class ViewIssue extends JInternalFrame implements ActionListener{
 	public void registerListeners() {
 		
 	}
+
 
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
