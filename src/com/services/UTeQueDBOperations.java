@@ -383,6 +383,158 @@ public class UTeQueDBOperations {
 		return stats;
 		
 	}
+	
+	//view a list of services
+		public static int countSpecificService(int serviceID, String status) {
+			String Sql = "SELECT Count(*) FROM UTeQueDB.`Issue` WHERE serviceID=? AND status=?";
 
+			try(Connection dbConn = DBConnectorFactory.getDatabaseConnection()) {
+				PreparedStatement statement = dbConn.prepareStatement(Sql);
+				statement.setInt(1, serviceID);
+				statement.setString(2, status);
+				logger.warn("Receiving results from executed Prepared Statement, Error May Occur");
+				ResultSet result = statement.executeQuery();
+				result.next();
+				int count = result.getInt(1);
+				logger.info("COUNT SQL WAS  SUCCESSFUL");
+				return count;
+			} catch (SQLException e) {
+				logger.error("SQL READ Statement NOT Successful: "
+						+ "ERROR(" + e.getErrorCode()
+						+ ") " + e.getMessage());
+			}
+			return 0;
+		}
+		
+		public static String retrieveServiceType(int serviceID) {
+			String Sql = "SELECT type FROM UTeQueDB.`Service` WHERE serviceID=?";
+			String type = null;
+			try(Connection dbConn = DBConnectorFactory.getDatabaseConnection()) {
+				PreparedStatement statement = dbConn.prepareStatement(Sql);
+				statement.setInt(1, serviceID);
+				logger.warn("Receiving results from executed Prepared Statement, Error May Occur");
+				ResultSet result = statement.executeQuery();
+				result.next();
+				type = result.getString(1);
+				logger.info("SQL WAS  SUCCESSFUL");
+			} catch (SQLException e) {
+				logger.error("SQL READ Statement NOT Successful: "
+						+ "ERROR(" + e.getErrorCode()
+						+ ") " + e.getMessage());
+				return null;
+			}
+			return type;
+		}
+		
+		//An employee should be able to view all students’ enquiries by category.
+		public static ArrayList<Issue> getIssuesByType(int serviceID) {
+			
+			ArrayList<Issue> issues = new ArrayList<Issue>();
+			Issue issueObj = new Issue();
+
+			String Sql = "SELECT * FROM UTeQueDB.Issue WHERE serviceID=?";
+			
+			try (Connection dbConn = DBConnectorFactory.getDatabaseConnection()){
+				PreparedStatement statement = dbConn.prepareStatement(Sql);
+				statement.setInt(1, serviceID);
+				logger.warn("Receiving results from executed Prepared Statement, Error May Occur");
+				
+				ResultSet result = statement.executeQuery(Sql);
+				
+				while(result.next()) {
+					issueObj.setIssueID(result.getString(1));
+					issueObj.setType(result.getString(2));
+					issueObj.setStatus(result.getString(3));
+					issueObj.setStudentID(result.getString(4));
+					issueObj.setMessage(result.getString(5));
+					issueObj.setServiceID(result.getInt(6));
+					issueObj.setIssuedAt(result.getDate(7));
+					issueObj.setScheduledDateTime(result.getDate(8));
+					issueObj.setRepId(result.getString(9));
+					
+					issues.add(issueObj);
+				}
+				logger.info("SQL WAS  SUCCESSFUL");
+				
+			} catch (SQLException e) {
+				logger.error("SQL READ Statement NOT Successful: "
+						+ "ERROR(" + e.getErrorCode()
+						+ ") " + e.getMessage());
+				return null;
+			}
+			
+			return issues;
+		}
+		//Get Student Details
+		public static Student getStudentDetails(String studentID) {
+			Student studentObj = null;
+		
+
+			String Sql = "SELECT * FROM UTeQueDB.Student WHERE studentID=?";
+			
+			try (Connection dbConn = DBConnectorFactory.getDatabaseConnection()){
+				PreparedStatement statement = dbConn.prepareStatement(Sql);
+				statement.setString(1, studentID);
+				logger.warn("Receiving results from executed Prepared Statement, Error May Occur");
+				
+				ResultSet result = statement.executeQuery(Sql);
+				
+				while(result.next()) {
+					studentObj.setID(result.getString(1));
+					studentObj.setPassword(result.getString(2));
+					studentObj.setFirstname(result.getString(3));
+					studentObj.setLastname(result.getString(4));
+					studentObj.setGender(result.getString(5));
+					studentObj.setEmail(result.getString(6));
+					studentObj.setPhone(result.getString(7));
+					studentObj.setDOB(result.getDate(8));
+				}
+				logger.info("SQL WAS  SUCCESSFUL");
+				
+			} catch (SQLException e) {
+				logger.error("SQL READ Statement NOT Successful: "
+						+ "ERROR(" + e.getErrorCode()
+						+ ") " + e.getMessage());
+				return null;
+			}
+			
+			return studentObj;
+		}
+		//Get Specific Issue
+		public static Issue getSpecificIssue(String issueID ) {
+			
+			Issue issueObj = new Issue();
+
+			String Sql = "SELECT * FROM UTeQueDB.Issue WHERE issueID=?";
+			
+			try (Connection dbConn = DBConnectorFactory.getDatabaseConnection()){
+				PreparedStatement statement = dbConn.prepareStatement(Sql);
+				statement.setString(1, issueID);
+				logger.warn("Receiving results from executed Prepared Statement, Error May Occur");
+				
+				ResultSet result = statement.executeQuery(Sql);
+				
+				while(result.next()) {
+					issueObj.setIssueID(result.getString(1));
+					issueObj.setType(result.getString(2));
+					issueObj.setStatus(result.getString(3));
+					issueObj.setStudentID(result.getString(4));
+					issueObj.setMessage(result.getString(5));
+					issueObj.setServiceID(result.getInt(6));
+					issueObj.setIssuedAt(result.getDate(7));
+					issueObj.setScheduledDateTime(result.getDate(8));
+					issueObj.setRepId(result.getString(9));
+				}
+				logger.info("SQL WAS  SUCCESSFUL");
+				
+			} catch (SQLException e) {
+				logger.error("SQL READ Statement NOT Successful: "
+						+ "ERROR(" + e.getErrorCode()
+						+ ") " + e.getMessage());
+				return null;
+			}
+			
+			return issueObj;
+		}
 
 }
