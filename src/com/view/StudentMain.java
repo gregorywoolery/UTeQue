@@ -73,7 +73,7 @@ public class StudentMain extends JInternalFrame implements ActionListener{
 	private JTable issueTable;
 	private JLabel tableTitle_lbl;
 	private JPanel search_panel;
-	private JTextField searchFor_lbl;
+	private JTextField searchID_txtfield;
 	private JComboBox service_combobox;
 	private JComboBox searchIssueType_comboBox;
 	private JButton searchBtn;
@@ -218,7 +218,7 @@ public class StudentMain extends JInternalFrame implements ActionListener{
 		
 		addIssue_panel.add(addIssueTitle_lbl);
 		
-		String issueType []={"Complaint", "Query"};  
+		String issueType []={"Exclude", "Complaint", "Query"};  
 		addIssue_comboBox = new JComboBox(issueType);
 		addIssue_comboBox.setToolTipText("Select issue type here");
 		addIssue_comboBox.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
@@ -368,17 +368,17 @@ public class StudentMain extends JInternalFrame implements ActionListener{
 		search_panel.setPreferredSize(new Dimension(770, 40));
 		issue_panel.add(search_panel);
 		
-		searchFor_lbl = new JTextField("");
-		searchFor_lbl.setBorder(new TitledBorder(
+		searchID_txtfield = new JTextField("");
+		searchID_txtfield.setBorder(new TitledBorder(
 				new LineBorder(new Color(0, 0, 51), 2), 
 								"Issue ID", 
 								TitledBorder.LEADING, 
 								TitledBorder.TOP, null, null));
-		searchFor_lbl.setPreferredSize(new Dimension(110, 40));
-		search_panel.add(searchFor_lbl);
-		searchFor_lbl.setForeground(new Color(0, 0, 51));
-		searchFor_lbl.setBackground(new Color(255, 255, 0));
-		searchFor_lbl.setFont(new Font("Arial Rounded MT Bold", Font.PLAIN, 13));
+		searchID_txtfield.setPreferredSize(new Dimension(110, 40));
+		search_panel.add(searchID_txtfield);
+		searchID_txtfield.setForeground(new Color(0, 0, 51));
+		searchID_txtfield.setBackground(new Color(255, 255, 0));
+		searchID_txtfield.setFont(new Font("Arial Rounded MT Bold", Font.PLAIN, 13));
 		
 		searchIssueType_comboBox = new JComboBox(issueType);
 		searchIssueType_comboBox.setToolTipText("Select issue type here");
@@ -473,6 +473,7 @@ public class StudentMain extends JInternalFrame implements ActionListener{
 		
 		
 	public void registerListeners() {
+		liveChatBtn.addActionListener(this);
 		addBtn.addActionListener(this);
 		updateBtn.addActionListener(this);
 		addIssue_comboBox.addActionListener(this);
@@ -523,7 +524,7 @@ public class StudentMain extends JInternalFrame implements ActionListener{
 		}
 	}
 	
-	public void updateIssueTable() {
+	private void updateIssueTable() {
 		String studentID = UserLogin.currentUser.getID();
 		ArrayList<Issue> studentIssues = IssueController.getAllIssuesForStudent(studentID);
 		DefaultTableModel model = (DefaultTableModel) issueTable.getModel();
@@ -581,5 +582,20 @@ public class StudentMain extends JInternalFrame implements ActionListener{
 		issueMade_lbl.setText(issueMade);
 		issueCompleted_lbl.setText(issueCompleted);
 		issuePending_lbl.setText(issuePending);
+	}
+	
+	private void searchStudentIssue() {
+//		serviceTypes
+//		searchIssueType_comboBox
+//		searchFor_lbl
+//		searchDatePicker
+		String studentID = UserLogin.currentUser.getID();
+		String searchID = searchID_txtfield.getText();
+		int serviceType = service_combobox.getSelectedIndex()+1;
+		String type = (String)searchIssueType_comboBox.getItemAt(searchIssueType_comboBox.getSelectedIndex());
+		
+				
+		if(true) {}
+		
 	}
 }
