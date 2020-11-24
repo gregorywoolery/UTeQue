@@ -2,8 +2,17 @@ package com.model;
 
 import java.io.Serializable;
 
-public class StudentServicesRep extends Users implements Serializable{
+public class StudentServicesRep extends User implements Serializable{
 	//Attributes
 	private static final long serialVersionUID = 1L;
 
+	private boolean canRespond;
+	
+	public boolean getCanRespond() {
+		return canRespond;
+	}
+	
+	public void setCanRespond(boolean canRespond) {
+		this.canRespond = canRespond;
+	}
 }

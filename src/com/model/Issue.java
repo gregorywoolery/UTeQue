@@ -6,105 +6,125 @@ import java.util.Date;
 public class Issue implements Serializable{
 	//Attributes
 	protected static final long serialVersionUID = 1L;
-	private String issueId;
+	private String issueID;
 	private String type;
 	private String status;
-	private String studentId;
+	private String studentID;
 	private String message;
+	private int serviceID;
+	private Date issuedAt;
 	private Date scheduledDateTime;
-	private String repId;
+	private String repID;
 	
 	public Issue() {
-		this.issueId = "";
+		this.issueID = "";
 		this.type = "";
 		this.status = "";
-		this.studentId = "";
+		this.studentID = "";
 		this.message = "";
+		this.serviceID = -1;
+		this.issuedAt = null;
 		this.scheduledDateTime = null;
-		this.repId = "";	
+		this.repID = "";	
 	}
 	
-	public Issue(String issueId, String type, String status, String studentId, String message, 
-			Date scheduledDateTime, String repId) {
-		this.issueId = issueId;
+	public Issue(String issueID, String type, String status, 
+			String studentID, String message, int serviceID,
+			Date issuedAt, Date scheduledDateTime, String repID) {
+		
+		this.issueID = issueID;
 		this.type = type;
 		this.status = status;
-		this.studentId = studentId;
+		this.studentID = studentID;
 		this.message = message;
+		this.serviceID = serviceID;
+		this.issuedAt = issuedAt;
 		this.scheduledDateTime = scheduledDateTime;
-		this.repId = repId;	
+		this.repID = repID;	
 		
 	}
-	
-	//Getters and Setters
-	public String getIssueId() {
-		return issueId;
+
+	public String getIssueID() {
+		return issueID;
 	}
 
-	public void setIssueId(String issueId) {
-		this.issueId = issueId;
-	}
-	
-	
 	public String getType() {
 		return type;
-	}
-
-	public void setType(String type) {
-		this.type = type;
 	}
 
 	public String getStatus() {
 		return status;
 	}
 
-	public void setStatus(String status) {
-		this.status = status;
-	}
-
-	public String getStudentId() {
-		return studentId;
-	}
-
-	public void setStudentId(String studentId) {
-		this.studentId = studentId;
+	public String getStudentID() {
+		return studentID;
 	}
 
 	public String getMessage() {
 		return message;
 	}
 
-	public void setMessage(String message) {
-		this.message = message;
+	public int getServiceID() {
+		return serviceID;
+	}
+
+	public Date getIssuedAt() {
+		return issuedAt;
 	}
 
 	public Date getScheduledDateTime() {
 		return scheduledDateTime;
 	}
 
+	public String getRepID() {
+		return repID;
+	}
+
+	public void setIssueID(String issueID) {
+		this.issueID = issueID;
+	}
+
+	public void setType(String type) {
+		this.type = type;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
+	}
+
+	public void setStudentID(String studentID) {
+		this.studentID = studentID;
+	}
+
+	public void setMessage(String message) {
+		this.message = message;
+	}
+
+	public void setServiceID(int serviceID) {
+		this.serviceID = serviceID;
+	}
+
+	public void setIssuedAt(Date issuedAt) {
+		this.issuedAt = issuedAt;
+	}
+
 	public void setScheduledDateTime(Date scheduledDateTime) {
 		this.scheduledDateTime = scheduledDateTime;
 	}
 
-	public String getRepId() {
-		return repId;
+	public void setRepId(String repID) {
+		this.repID = repID;
 	}
 
-	public void setRepId(String repId) {
-		this.repId = repId;
-	}
-	
 	@Override
 	public String toString() {
-		return "Issue [IssueID=" + issueId + ", Type=" + type + ", Status=" + status + ", Student Id=" + studentId
-				+ ", Message=" + message + ", Scheduled DateTime=" + scheduledDateTime
-				+ ", RepId=" + repId + "]";
+		return "Issue [issueID=" + issueID + ", type=" + type + ", status=" + status + ", studentID=" + studentID
+				+ ", message=" + message + ", serviceID=" + serviceID + ", issuedAt=" + issuedAt
+				+ ", scheduledDateTime=" + scheduledDateTime + ", repID=" + repID + "]";
 	}
-
-	public void display() {
-		System.out.println(toString());
-	}
-
+	
+	
+	
 	
 
 }
