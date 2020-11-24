@@ -1,4 +1,4 @@
-package com.view;
+package com.view.student;
 
 import java.awt.Color;
 import java.awt.EventQueue;

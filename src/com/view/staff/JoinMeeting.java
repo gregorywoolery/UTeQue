@@ -1,4 +1,4 @@
-package com.view;
+package com.view.staff;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;

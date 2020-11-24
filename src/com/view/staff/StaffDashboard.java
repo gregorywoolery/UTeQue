@@ -1,4 +1,4 @@
-package com.view ;
+package com.view.staff;
 
 import java.awt.BorderLayout;
 import java.awt.EventQueue;
@@ -11,6 +11,10 @@ import javax.swing.JFrame;
 import javax.swing.JInternalFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+
+import com.view.Dashboard;
+import com.view.UserLogin;
+
 import javax.swing.JLabel;
 import javax.swing.JButton;
 import java.awt.Font;

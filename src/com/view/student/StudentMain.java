@@ -1,4 +1,4 @@
-package com.view;
+package com.view.student;
 
 import java.awt.GridBagConstraints;
 import java.awt.Cursor;
@@ -43,6 +43,8 @@ import com.controller.IssueController;
 import com.controller.ServiceController;
 import com.github.lgooddatepicker.components.DatePicker;
 import com.model.Issue;
+import com.view.Dashboard;
+import com.view.UserLogin;
 
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;

@@ -1,4 +1,4 @@
-package com.view;
+package com.view.staff;
 
 import javax.swing.JInternalFrame;
 import javax.swing.border.LineBorder;

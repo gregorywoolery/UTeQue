@@ -1,4 +1,4 @@
-package com.view;
+package com.view.student;
 
 import javax.swing.JPanel;
 import javax.swing.JLabel;

@@ -1,4 +1,4 @@
-package com.view;
+package com.view.student;
 
 import java.awt.Color;
 import java.awt.Component;
@@ -23,6 +23,9 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 import javax.swing.border.LineBorder;
+
+import com.view.Dashboard;
+import com.view.UserLogin;
 
 
 public class StudentDashboard extends Dashboard implements ActionListener{
