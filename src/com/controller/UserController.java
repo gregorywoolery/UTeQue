@@ -54,8 +54,11 @@ public class UserController {
 			
 			logger.info("Recieving User Information");			
 			
+			os.flush();
 			os.writeObject("GET-CURRENT-USER");
+			os.flush();
 			os.writeObject(currentUser);
+			os.flush();
 			
 			currentUser = (User) is.readObject();
 

@@ -33,6 +33,7 @@ public class ServiceController {
 			logger.info("Receving List of SERVICES from SERVER");			
 			
 			os.writeObject("GET-ALL-SERVICES");
+			os.flush();
 			
 			services = (ArrayList<Service>) is.readObject();
 

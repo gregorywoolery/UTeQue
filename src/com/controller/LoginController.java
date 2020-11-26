@@ -33,12 +33,13 @@ public class LoginController {
 			
 			logger.info("Trying to AUTHENTICATE USER ON SYSTEM");		
 			
+			os.flush();
 			os.writeObject("AUTHENTICATE");
-			System.out.println("In Authenticate");
+			os.flush();
 			os.writeObject(new User(username, password, userType));
-
+			os.flush();
+			
 			authenticateSuccess = (boolean) is.readObject();		
-			System.out.println(authenticateSuccess);	
 			
 		} catch (UnknownHostException e) {
 			logger.error("IP ADDRESS OF HOST ERROR - " + e.getMessage()

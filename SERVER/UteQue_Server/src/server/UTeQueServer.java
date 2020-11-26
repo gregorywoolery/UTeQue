@@ -85,10 +85,7 @@ public class UTeQueServer {
 					switch(operation) {						
 						case "AUTHENTICATE":
 							User userAuth = (User) is.readObject();
-							System.out.println("After Recieve \n" + userAuth.toString());
 							success = LoginAuthentication.authLoginUser(userAuth);
-							System.out.println("After Auth " + success);
-							System.out.println(success);
 							os.writeObject(success);
 							break;
 							
@@ -99,13 +96,19 @@ public class UTeQueServer {
 							break;
 							
 						case "GET-STUDENT-ISSUE-STATS":
+							System.out.println("Before read STATS");
 							studentID = (String) is.readObject();
+							System.out.println("AfterRead " + studentID);
+							
 							stats = IssueOperation.getUserIssueStats(studentID);
+							System.out.println("ONE" + stats[0] + " " + stats[1] + " "+ stats[2]);
 							os.writeObject(stats);
 							break;
 							
-						case "GET-ALL-ISSUES-FOR-STUDENT":
+						case "GET-STUDENT-ISSUES":
+							System.out.println("Before READ ALL");
 							studentID = (String) is.readObject();
+							System.out.println("AfterRead\n" + studentID);
 							os.writeObject(IssueOperation.getAllIssuesForStudent(studentID));
 							break;
 							
@@ -116,9 +119,11 @@ public class UTeQueServer {
 						case "GET-CURRENT-USER":
 							user = (User) is.readObject();
 							os.writeObject(UserOperation.getUserInfo(user.getID(), user.getType()));
-							
 							break;
-					}	
+					}
+					os.flush();
+					
+					socketConnection.close();
 					
 				}
 			}catch(IOException ioex){

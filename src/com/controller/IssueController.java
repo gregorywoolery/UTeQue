@@ -29,8 +29,11 @@ public class IssueController {
 			
 			logger.info("Sending ISSUE to SERVER for ADDING");			
 			
+			os.flush();
 			os.writeObject("ADD-ISSUE");
+			os.flush();
 			os.writeObject(issue);
+			os.flush();
 			
 			addIssueSuccess = is.readBoolean();
 
@@ -46,14 +49,6 @@ public class IssueController {
 		return addIssueSuccess;	
 	}
 	
-	public void updateIssue(String issueId) {
-			
-	}
-	
-	public void removeIssue(String issueId) {
-		
-	}
-	
 	@SuppressWarnings("unchecked")
 	public static ArrayList<Issue> getAllIssuesForStudent(String studentID) {
 		ArrayList<Issue> foundStudentIssues = new ArrayList<>();
@@ -66,9 +61,13 @@ public class IssueController {
 			
 			logger.info("Getting ISSUE for STUDENT "+ studentID +" from SERVER");			
 
-			os.writeObject("GET-ALL-ISSUES-FOR-STUDENT");
-			os.writeObject(studentID);
-
+			os.flush();
+			String getString = "GET-STUDENT-ISSUES";
+			os.writeObject(getString);
+			os.flush();
+			os.writeObject(String.valueOf(studentID));
+			os.flush();
+			
 			foundStudentIssues =  (ArrayList<Issue>) is.readObject();
 			
 		} catch (UnknownHostException e) {
@@ -118,8 +117,9 @@ public class IssueController {
 		}
 		
 		return stats;
-		
-
+	}
+	
+	public void removeIssue(String issueId) {
 		
 	}
 	

@@ -41,8 +41,10 @@ import javax.swing.JScrollPane;
 
 import com.controller.IssueController;
 import com.controller.ServiceController;
+import com.controller.UserController;
 import com.github.lgooddatepicker.components.DatePicker;
 import com.model.Issue;
+import com.model.User;
 import com.view.Dashboard;
 import com.view.UserLogin;
 
@@ -50,8 +52,11 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
 import javax.swing.border.TitledBorder;
 
-
+@SuppressWarnings("rawtypes")
 public class StudentMain extends JInternalFrame implements ActionListener{
+
+	private static final long serialVersionUID = -8375563652031458336L;
+
 	private JPanel addIssue_panel;
 	private JPanel updateIssue_panel;
 	private JPanel IssueDisplay_panel;
@@ -88,7 +93,9 @@ public class StudentMain extends JInternalFrame implements ActionListener{
 	private DatePicker updateDatePicker;
 	private JDesktopPane workSpaceDesktop;
 	private String currDate;
-	ArrayList<String> serviceTypes;
+	private ArrayList<String> serviceTypes;
+	
+	private User student;
 	
 	/**
 	 * Create the frame.
@@ -106,6 +113,8 @@ public class StudentMain extends JInternalFrame implements ActionListener{
 	}
 	
 	private void initializeComponents() {
+		student =  UserController.getCurrentUser();
+		
 		//Removes top bar from internal frame
 		((javax.swing.plaf.basic.BasicInternalFrameUI)this.getUI()).setNorthPane(null);
 		
@@ -527,7 +536,7 @@ public class StudentMain extends JInternalFrame implements ActionListener{
 	}
 	
 	private void updateIssueTable() {
-		String studentID = UserLogin.currentUser.getID();
+		String studentID = student.getID();
 		ArrayList<Issue> studentIssues = IssueController.getAllIssuesForStudent(studentID);
 		DefaultTableModel model = (DefaultTableModel) issueTable.getModel();
 		
@@ -538,43 +547,46 @@ public class StudentMain extends JInternalFrame implements ActionListener{
 		 * Iterates through List of Issues relating to a specified student and displays
 		 * values in the issue table.
 		 */
-		for(Issue issue: studentIssues) {
-			
-			/**
-			 * Finds STRING from SERVICETYPES that related specified SERVICEID returned
-			 * from the DATABASE.
-			 */
-			for(serviceInd = 0; serviceInd<serviceTypes.size(); serviceInd++)
-				if(serviceInd == issue.getServiceID()-1)
-					break;
-			
-			/**
-			 * Finds whether a student services representative was assigned to specified 
-			 * issue. If no representative was assigned then the string "Not assigned"
-			 * is shown.
-			 */
-			if(issue.getRepID() == null)
-				repAssigned = "NOT Assigned";
-			else
-				repAssigned = issue.getRepID();
-					
+		if(studentIssues != null) {
+			for(Issue issue: studentIssues) {
 				
-			/**
-			 * Adds row to table with details relating to current student's issue.
-			 */
-			model.addRow(new Object[]{
-					issue.getIssueID(), 
-					issue.getType(),
-					serviceTypes.get(serviceInd),
-					issue.getIssuedAt(),
-					issue.getStatus(),
-					repAssigned
-			});
+				/**
+				 * Finds STRING from SERVICETYPES that related specified SERVICEID returned
+				 * from the DATABASE.
+				 */
+				for(serviceInd = 0; serviceInd<serviceTypes.size(); serviceInd++)
+					if(serviceInd == issue.getServiceID()-1)
+						break;
+				
+				/**
+				 * Finds whether a student services representative was assigned to specified 
+				 * issue. If no representative was assigned then the string "Not assigned"
+				 * is shown.
+				 */
+				if(issue.getRepID() == null)
+					repAssigned = "NOT Assigned";
+				else
+					repAssigned = issue.getRepID();
+						
+					
+				/**
+				 * Adds row to table with details relating to current student's issue.
+				 */
+				model.addRow(new Object[]{
+						issue.getIssueID(), 
+						issue.getType(),
+						serviceTypes.get(serviceInd),
+						issue.getIssuedAt(),
+						issue.getStatus(),
+						repAssigned
+				});
+			}			
 		}
+
 	}
 	
 	private void getIssueStats() {
-		String studentID = UserLogin.currentUser.getID();
+		String studentID = student.getID();
 		int []stats = IssueController.getStudentIssueStats(studentID);
 		
 		String issueMade = String.valueOf(stats[0]);

@@ -33,8 +33,10 @@ import com.controller.IssueController;
 import com.controller.ServiceController;
 import com.controller.UserController;
 import com.model.Issue;
+import com.model.User;
 import com.services.DocumentSizeFilter;
 import com.services.Identification;
+import com.view.UserLogin;
 
 import java.awt.event.ActionListener;
 import java.text.ParseException;
@@ -76,6 +78,7 @@ public class AddIssue extends JInternalFrame implements ActionListener{
 	private Date currentDate = new Date();
 	private JComboBox addListOfServices_comboBox;
 	
+	User student;
 	
 	/**
 	 * Create the frame.
@@ -111,6 +114,8 @@ public class AddIssue extends JInternalFrame implements ActionListener{
 	
 	@SuppressWarnings("unchecked")
 	private void initializeComponents() throws ParseException {
+		student =  UserController.getCurrentUser();
+		
 		//Removes top bar from internal frame
 		((javax.swing.plaf.basic.BasicInternalFrameUI)this.getUI()).setNorthPane(null);
 		
@@ -415,12 +420,11 @@ public class AddIssue extends JInternalFrame implements ActionListener{
 						JOptionPane.WARNING_MESSAGE);
 
 				if (opt == 0) {
-					String studentID = UserController.getUsername();
 					Issue issue = new Issue();
 					issue.setIssueID(issueID_lbl.getText());
 					issue.setType(addIssue_comboBox.getItemAt(addIssue_comboBox.getSelectedIndex()));
 					issue.setStatus("Unresolved");
-					issue.setStudentID(studentID);
+					issue.setStudentID(student.getID());
 					issue.setMessage(issueTextArea.getText());
 					issue.setServiceID(addListOfServices_comboBox.getSelectedIndex()+1);
 					issue.setIssuedAt(currentDate);
