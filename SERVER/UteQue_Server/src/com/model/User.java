@@ -70,6 +70,17 @@ public class User implements Serializable{
 		this.phone = user.phone;
 	}
 	
+	public User(String username, String type) {
+		this.id = username;
+		this.type = type;
+	}
+	
+	public User(String username, char[] password, String type) {
+		this.id = username;
+		this.password = String.valueOf(password);
+		this.type = type;
+	}
+	
 
 	public String getID() {
 		return id;

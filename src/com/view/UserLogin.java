@@ -403,6 +403,7 @@ public class UserLogin extends JFrame implements ActionListener{
 			if(LoginController.authenticate(
 					txtUsername.getText(), txtPassword.getPassword(), userType)
 			){
+				System.out.println("Chosesn");
 				UserController.setCurrentUser(txtUsername.getText(), userType);
 				chooseDashboard(userType);
 				disposeFrame();

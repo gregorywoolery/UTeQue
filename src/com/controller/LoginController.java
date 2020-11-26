@@ -37,8 +37,9 @@ public class LoginController {
 			System.out.println("In Authenticate");
 			os.writeObject(new User(username, password, userType));
 
-			authenticateSuccess = is.readBoolean();		
-			System.out.println(authenticateSuccess);			
+			authenticateSuccess = (boolean) is.readObject();		
+			System.out.println(authenticateSuccess);	
+			
 		} catch (UnknownHostException e) {
 			logger.error("IP ADDRESS OF HOST ERROR - " + e.getMessage()
 							+ e.getStackTrace());
@@ -49,8 +50,10 @@ public class LoginController {
 		}catch(NotSerializableException nsex) {
 			logger.error("ERROR - CLASS IS INVALID - " + nsex.getMessage()
 							+ nsex.getStackTrace());
-		}
-		catch (IOException e) {
+		} catch (ClassNotFoundException e) {
+			logger.error("ERROR OCCURED - " + e.getMessage()
+							+ e.getStackTrace());
+		}catch (IOException e) {
 			logger.error("ERROR OCCURED - " + e.getMessage()
 							+ e.getStackTrace());
 		}

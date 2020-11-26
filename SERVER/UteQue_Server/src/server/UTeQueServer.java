@@ -81,24 +81,15 @@ public class UTeQueServer {
 				while(!socketConnection.isClosed()) {
 					
 					operation = (String) is.readObject();
-					System.out.print(operation.toString());
-					
-					if(operation.equals("AUTHENTICATE")) {
-						User userAuth = (User) is.readObject();
-						userAuth.toString();
-						success = LoginAuthentication.authLoginUser(userAuth);
-						System.out.println(success);
-						os.writeBoolean(success);
-					}
-
 					
 					switch(operation) {						
 						case "AUTHENTICATE":
 							User userAuth = (User) is.readObject();
-							userAuth.toString();
+							System.out.println("After Recieve \n" + userAuth.toString());
 							success = LoginAuthentication.authLoginUser(userAuth);
+							System.out.println("After Auth " + success);
 							System.out.println(success);
-							os.writeBoolean(success);
+							os.writeObject(success);
 							break;
 							
 						case "ADD-ISSUE":

@@ -15,18 +15,16 @@ public class LoginAuthentication {
 	
 	private static final Logger logger = LogManager.getLogger(LoginAuthentication.class);
 
-	
 	public static boolean authLoginUser(User user) {
-		System.out.println(user.toString());
+		String userType = user.getType().toUpperCase();
 		
-		if(user.getType().equals("STUDENT"))
+		if(userType.equals("STUDENT"))
 			return loginStudent(user.getID(), user.getPassword());
 	
-		else if(user.getType().equals("REP")) 
+		else if(userType.equals("REP")) 
 			return loginRep(user.getID(), user.getPassword());
 		
-		
-		else if(user.getType().equals("AGENT"))
+		else if(userType.equals("AGENT"))
 			return loginAgent(user.getID(), user.getPassword());
 		
 		return false;

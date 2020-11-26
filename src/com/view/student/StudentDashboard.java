@@ -19,7 +19,7 @@ import javax.swing.JLabel;
 import javax.swing.SwingConstants;
 
 import com.controller.UserController;
-import com.model.Student;
+import com.model.User;
 import com.view.Dashboard;
 import com.view.UserLogin;
 
@@ -37,7 +37,7 @@ public class StudentDashboard extends Dashboard implements ActionListener{
 	private JButton updateBtnDash;
 	private JButton addBtnDash;
 	private JInternalFrame currFrame;
-	private Student student;
+	private User student;
 	
 	/**
 	 * Launch the application.
@@ -64,7 +64,7 @@ public class StudentDashboard extends Dashboard implements ActionListener{
 	}
 	
 	public void initializeComponents(){
-		student = (Student) UserController.getCurrentUser();
+		student =  UserController.getCurrentUser();
 		username_lbl.setText(student.getFirstname() + " " + student.getLastname());
 	
 		//For resource variables
