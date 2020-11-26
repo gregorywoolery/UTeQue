@@ -120,6 +120,10 @@ public class UTeQueServer {
 							user = (User) is.readObject();
 							os.writeObject(UserOperation.getUserInfo(user.getID(), user.getType()));
 							break;
+						case "GET-ISSUE-RESPONSE-JOIN":
+							studentID = (String) is.readObject();
+//							os.writeObject(obj);
+							break;
 					}
 					os.flush();
 					

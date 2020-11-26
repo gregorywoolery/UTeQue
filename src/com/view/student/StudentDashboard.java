@@ -16,6 +16,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JInternalFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.SwingConstants;
 
 import com.controller.UserController;
@@ -205,25 +206,17 @@ public class StudentDashboard extends Dashboard implements ActionListener{
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if(e.getSource().equals(viewBtnDash)) {
-			//Check if frame to remove is there(not null)
-			if(currFrame !=null) {
-				workspace_desktopPane.removeAll();
-				workspace_desktopPane.updateUI();
-				
-				currFrame = new StudentIssueResponse(workspace_desktopPane);
-				workspace_desktopPane.add(currFrame);
-				
-				//Opens JinternalFrame centered in the JDesktopPane
-				Dimension desktopSize = workspace_desktopPane.getSize();
-				Dimension jInternalFrameSize = currFrame.getSize();
-				
-				//Test if current internal frame is of class AddIssue and renders the frame with that
-				if(currFrame.getClass() == StudentIssueResponse.class){
-					currFrame.setLocation((desktopSize.width - jInternalFrameSize.width),
-					    (desktopSize.height- jInternalFrameSize.height));
-				}
-			}
+        	int opt = JOptionPane.showConfirmDialog(workspace_desktopPane, 
+					"Are you sure u want to return home? ", 
+					"HOME",
+					JOptionPane.YES_NO_OPTION,
+					JOptionPane.INFORMATION_MESSAGE);
+        	if(opt == 0)
+    			//Call METHOD to RETURN to STUDENT MAIN
+				addMainInternalFrame();
+			
 		}
+		
 		
 		if(e.getSource().equals(addBtnDash)) {
 			//Check if frame to remove is there(not null)

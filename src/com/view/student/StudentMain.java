@@ -5,6 +5,7 @@ import java.awt.Cursor;
 import java.awt.Font;
 import java.awt.Color;
 import java.awt.Insets;
+import java.awt.Point;
 import java.awt.Dimension;
 import javax.swing.SwingConstants;
 import javax.swing.border.LineBorder;
@@ -14,6 +15,8 @@ import javax.swing.ImageIcon;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.awt.font.TextAttribute;
 import java.text.ParseException;
 import java.time.LocalDate;
@@ -32,6 +35,7 @@ import javax.swing.JComboBox;
 import javax.swing.JDesktopPane;
 import javax.swing.JInternalFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JSeparator;
 import javax.swing.JTable;
@@ -91,7 +95,7 @@ public class StudentMain extends JInternalFrame implements ActionListener{
 	private JLabel dateMadeUpdate_lbl;
 	private JPanel date_panel;
 	private DatePicker updateDatePicker;
-	private JDesktopPane workSpaceDesktop;
+	private JDesktopPane workspace_desktopPane;
 	private String currDate;
 	private ArrayList<String> serviceTypes;
 	
@@ -101,7 +105,7 @@ public class StudentMain extends JInternalFrame implements ActionListener{
 	 * Create the frame.
 	 */
 
-	public StudentMain(JDesktopPane workSpaceDesktop) {
+	public StudentMain(JDesktopPane workspace_desktopPane) {
 		super("Main",
 				false, 	//resizable
 				true, 	//closable
@@ -109,7 +113,7 @@ public class StudentMain extends JInternalFrame implements ActionListener{
 				true);	//iconifiable
 		initializeComponents();
 		registerListeners();
-		this.workSpaceDesktop = workSpaceDesktop;
+		this.workspace_desktopPane = workspace_desktopPane;
 	}
 	
 	private void initializeComponents() {
@@ -441,45 +445,87 @@ public class StudentMain extends JInternalFrame implements ActionListener{
 		
 		
 		issueTable = new JTable();
-		issueTable.setSelectionBackground(Color.WHITE);
+		issueTable.setForeground(new Color(0, 0, 0));
+		issueTable.setRowHeight(25);
+		issueTable.setSelectionBackground(new Color(255, 204, 102));
 		issueTable.setFont(new Font("Times New Roman", Font.PLAIN, 14));
 		
 		issueTable.setModel(new DefaultTableModel(
 			new Object[][] {
+				{null, null, null, null, null, null},
 			},
 			new String[] {
-				"ISSUE ID", "TYPE", "SERVICE", "DATE ISSUED", "STATUS", "AGENT"
+				"ISSUE ID", "TYPE", "SERVICE", "LAST RESPONSE", "STATUS", "AGENT"
 			}
-		));
+		) {
+			boolean[] columnEditables = new boolean[] {
+				false, false, false, false, false, false
+			};
+			public boolean isCellEditable(int row, int column) {
+				return columnEditables[column];
+			}
+		});
+		issueTable.getColumnModel().getColumn(0).setResizable(false);
 		issueTable.getColumnModel().getColumn(0).setPreferredWidth(85);
 		issueTable.getColumnModel().getColumn(1).setResizable(false);
 		issueTable.getColumnModel().getColumn(1).setPreferredWidth(85);
+		issueTable.getColumnModel().getColumn(2).setResizable(false);
 		issueTable.getColumnModel().getColumn(2).setPreferredWidth(100);
-		issueTable.getColumnModel().getColumn(3).setPreferredWidth(85);
+		issueTable.getColumnModel().getColumn(3).setResizable(false);
+		issueTable.getColumnModel().getColumn(3).setPreferredWidth(95);
+		issueTable.getColumnModel().getColumn(4).setResizable(false);
 		issueTable.getColumnModel().getColumn(4).setPreferredWidth(92);
+		issueTable.getColumnModel().getColumn(5).setResizable(false);
 		issueTable.getColumnModel().getColumn(5).setPreferredWidth(122);
 		
 		updateIssueTable();
+		
 		
 		//Changes table heaver font
 		JTableHeader tableHeader = issueTable.getTableHeader();
 		tableHeader.setBackground(new Color(0, 0, 51));
 		tableHeader.setForeground(Color.white);
 		tableHeader.setFont(new Font("Times New Roman", Font.PLAIN, 15));
+		
 		issueTable.setGridColor(new Color(0, 0, 51));
-		issueTable.setBackground(new Color(0,204, 225));
-		issueTable.setEnabled(false);
+		issueTable.setBackground(Color.WHITE);
+		issueTable.setEnabled(true);
 		
 		issueTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		issueTable.setRowSelectionAllowed(true);
 		issueTable.setColumnSelectionAllowed(false);
+		
+		issueTable.addMouseListener(new MouseAdapter() {
+		    public void mousePressed(MouseEvent mouseEvent) {
+		        JTable table =(JTable) mouseEvent.getSource();
+		        Point point = mouseEvent.getPoint();
+		        
+		        int row = table.rowAtPoint(point);
+		        
+		        if (mouseEvent.getClickCount() == 2 && table.getSelectedRow() != -1) {
+		        	int opt = JOptionPane.showConfirmDialog(workspace_desktopPane, 
+							"View Responses to this ISSUE ? ", 
+							"Responses",
+							JOptionPane.YES_NO_OPTION,
+							JOptionPane.INFORMATION_MESSAGE);
+		        	if(opt == 0) {
+		        		int column = 0;
+		        		int selRow = table.getSelectedRow();
+		        		String issueID = table.getModel().getValueAt(selRow, column).toString();
+		        		addStudentIssueResponse(issueID);
+		        	}
+
+		        }
+		    }
+		});
 		
 		GridBagConstraints gbc_table = new GridBagConstraints();
 		gbc_table.fill = GridBagConstraints.BOTH;
 		gbc_table.gridx = 0;
 		gbc_table.gridy = 1;
 		IssueDisplay_panel.add(new JScrollPane(issueTable), gbc_table);
-		this.setVisible(true);
+		
+		setVisible(true);
 	}
 		
 		
@@ -496,17 +542,24 @@ public class StudentMain extends JInternalFrame implements ActionListener{
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if(e.getSource().equals(addBtn)) {
+			/**
+			 * Dispose of current internal frame. Add new internal 
+			 * frame to workspace desktop pane.
+			 */
 			dispose();
+			
 			JInternalFrame currFrame = null;
 			try {
-				currFrame = new AddIssue(workSpaceDesktop, addIssue_comboBox.getSelectedIndex());
+				currFrame = new AddIssue(workspace_desktopPane, addIssue_comboBox.getSelectedIndex());
+			
 			} catch (ParseException e1) {
+		
 				e1.printStackTrace();
 			}
-			workSpaceDesktop.add(currFrame);
+			workspace_desktopPane.add(currFrame);
 			
 			//Opens JinternalFrame centered in the JDesktopPane
-			Dimension desktopSize = workSpaceDesktop.getSize();
+			Dimension desktopSize = workspace_desktopPane.getSize();
 			Dimension jInternalFrameSize = currFrame.getSize();
 			
 			//Test if current internal frame is of class AddIssue and renders the frame with that
@@ -519,12 +572,12 @@ public class StudentMain extends JInternalFrame implements ActionListener{
 	
 		if(e.getSource().equals(updateBtn)) {
 			dispose();
-			JInternalFrame currFrame = new UpdateIssue(workSpaceDesktop);
+			JInternalFrame currFrame = new UpdateIssue(workspace_desktopPane);
 
-			workSpaceDesktop.add(currFrame);
+			workspace_desktopPane.add(currFrame);
 			
 			//Opens JinternalFrame centered in the JDesktopPane
-			Dimension desktopSize = workSpaceDesktop.getSize();
+			Dimension desktopSize = workspace_desktopPane.getSize();
 			Dimension jInternalFrameSize = currFrame.getSize();
 			
 			//Test if current internal frame is of class AddIssue and renders the frame with that
@@ -615,5 +668,24 @@ public class StudentMain extends JInternalFrame implements ActionListener{
 	
 	private void removeStudentIssue() {
 		
+	}
+	
+	private void addStudentIssueResponse(String issueID) {
+		workspace_desktopPane.removeAll();
+		workspace_desktopPane.updateUI();
+		
+		JInternalFrame currFrame = null;
+		currFrame = new StudentIssueResponse(workspace_desktopPane, issueID);
+		workspace_desktopPane.add(currFrame);
+		
+		//Opens JinternalFrame centered in the JDesktopPane
+		Dimension desktopSize = workspace_desktopPane.getSize();
+		Dimension jInternalFrameSize = currFrame.getSize();
+		
+		//Test if current internal frame is of class AddIssue and renders the frame with that
+		if(currFrame.getClass() == StudentIssueResponse.class){
+			currFrame.setLocation((desktopSize.width - jInternalFrameSize.width),
+			    (desktopSize.height- jInternalFrameSize.height)/2);
+		}
 	}
 }

@@ -119,6 +119,41 @@ public class IssueController {
 		return stats;
 	}
 	
+	@SuppressWarnings("unchecked")
+	public static ArrayList<String> getMainIssueResponse(String studentID){
+		ArrayList<String> tableData = new ArrayList<String>();
+		
+		logger.info("Client Trying to connect using socket at port " + port);
+		
+		try(Socket socketConnection = new Socket(InetAddress.getLocalHost(), port);
+				ObjectOutputStream os = new ObjectOutputStream(socketConnection.getOutputStream());
+				ObjectInputStream is = new ObjectInputStream(socketConnection.getInputStream());
+		){
+			
+			logger.info("Getting JOIN from ISSUE and RESPONSE TABLES for main TABLE");		
+			
+			os.writeObject("GET-ISSUE-RESPONSE-JOIN");
+			os.writeObject(studentID);
+
+			tableData = (ArrayList<String>) is.readObject();
+			
+		} catch (UnknownHostException e) {
+			logger.error("IP ADDRESS OF HOST ERROR - " + e.getMessage()
+							+ e.getStackTrace());
+			
+		} catch (ClassNotFoundException e) {
+			logger.error("ERROR OCCURED - " + e.getMessage()
+							+ e.getStackTrace());
+			
+		} catch (IOException e) {
+			logger.error("ERROR OCCURED - " + e.getMessage()
+							+ e.getStackTrace());
+		}
+		
+		return tableData;		
+		
+	}
+	
 	public void removeIssue(String issueId) {
 		
 	}
