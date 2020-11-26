@@ -4,8 +4,9 @@ import java.io.*;
 import java.util.Date;
 
 public class Issue implements Serializable{
-	//Attributes
-	protected static final long serialVersionUID = 1L;
+
+	private static final long serialVersionUID = 5158752509920824080L;
+
 	private String issueID;
 	private String type;
 	private String status;

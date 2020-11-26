@@ -4,7 +4,9 @@ import java.io.Serializable;
 import java.util.Date;
 
 public class Student extends User implements Serializable{
-	private static final long serialVersionUID = 1L;
+
+	private static final long serialVersionUID = 3935091312256888891L;
+
 	private Date dob ;
 	
 	public Student(String studentID, String password, 

@@ -3,8 +3,9 @@ package com.model;
 import java.io.Serializable;
 
 public class User implements Serializable{
-	//Attributes
-	protected static final long serialVersionUID = 1L;
+
+	private static final long serialVersionUID = 8642887600908555187L;
+
 	protected String id;
 	protected String password ;
 	protected String firstname ;
@@ -12,6 +13,7 @@ public class User implements Serializable{
 	protected String gender;
 	protected String email;
 	protected String phone;
+	private String type;
 
 	//Default Constructor
 	public User() {
@@ -22,6 +24,7 @@ public class User implements Serializable{
 		this.gender = "";
 		this.email= "";
 		this.phone = "";
+		this.type = "";
 	}
 	
 	//Primary Constructor
@@ -36,6 +39,17 @@ public class User implements Serializable{
 		this.gender = gender;
 		this.email = email;
 		this.phone = phone;
+	}
+	
+	public User(String username, String type) {
+		this.id = username;
+		this.type = type;
+	}
+	
+	public User(String username, char[] password, String type) {
+		this.id = username;
+		this.password = String.valueOf(password);
+		this.type = type;
 	}
 	
 	//Copy Constructor
@@ -92,7 +106,13 @@ public class User implements Serializable{
 	public void setPhone(String phone) {
 		this.phone = phone;
 	}
-	
+	public String getType() {
+		return type;
+	}
+	public void setType(String type) {
+		this.type = type;
+	}
+
 	@Override
 	public String toString() {
 		return "User [ID=" + id + ", Password=" + password + ", First name=" + firstname + ", Last name=" + lastname

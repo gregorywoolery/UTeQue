@@ -6,7 +6,6 @@ import java.util.Date;
 
 public class Identification {
 	private static String generatedIssueID;
-	private static int serviceId = -1;
 	
 	public static String getIssueId() {
 		DateFormat issueFormat = new SimpleDateFormat("yyMMddhhmmss");

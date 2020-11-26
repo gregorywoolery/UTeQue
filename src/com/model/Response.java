@@ -4,6 +4,9 @@ import java.io.Serializable;
 import java.util.Date;
 
 public class Response implements Serializable{
+
+	private static final long serialVersionUID = 931876114821350932L;
+
 	private String responseID;
 	private String issueID;
 	private String userID;

@@ -35,10 +35,8 @@ import com.controller.IssueController;
 import com.controller.ServiceController;
 import com.model.Issue;
 import com.model.Student;
-import com.mysql.jdbc.Connection;
 import com.services.DocumentSizeFilter;
 import com.services.Identification;
-import com.services.UTeQueDBOperations;
 
 import java.awt.event.ActionListener;
 import java.sql.DriverManager;
@@ -55,17 +53,12 @@ import java.awt.ScrollPane;
 import javax.swing.border.BevelBorder;
 
 public class ViewStudentDetails extends JInternalFrame implements ActionListener{
+
+	private static final long serialVersionUID = -3530403283450512137L;
+	
 	private JDesktopPane workSpaceDesktop;
-	JTextField entryStudentID_tbox;
-	JLabel searchStudentID_lbl;
-	JButton submitbtn;
-	JPanel mainPanel;
-	static JTable studentTable = new JTable();
-	private String studentID;
-	String[] columnNames = {"StudentID", "First Name", "Last Name", "Gender", "Email", "Phone, DOB"};
 	
 	public ViewStudentDetails() {
-		showStudentTable();
 	}
 	
 	/**
@@ -92,61 +85,61 @@ public class ViewStudentDetails extends JInternalFrame implements ActionListener
 	}
 	
 	public void showStudentTable() {
-		DefaultTableModel model = new DefaultTableModel();
-		this.setTitle("Student Details");
-		model.setColumnIdentifiers(columnNames);
-		studentTable = new JTable();
-		studentTable.setModel(model); 
-		studentTable.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
-		studentTable.setFillsViewportHeight(true);
-		JScrollPane scroll = new JScrollPane(studentTable);
-		scroll.setHorizontalScrollBarPolicy(
-		JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-		scroll.setVerticalScrollBarPolicy(
-		JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED); 
-		String textvalue =  entryStudentID_tbox.getText();
-		String roll= "";
-		String name= "";
-		String cl = "";
-		String sec = "";
-		try
-		{ 
-			Student student = null;
-			student= UTeQueDBOperations.getStudentDetails(studentID);
-			
-			
-
-			
-			
-		
-		if(student.getID()==null)
-		{
-			JOptionPane.showMessageDialog(null, "No Record Found","Error",
-					JOptionPane.ERROR_MESSAGE);
-		}else 
-		{
-			JOptionPane.showMessageDialog(null, "Record Found");
-			model.addRow(new Object[] {
-					student.getID(),
-					student.getFirstname(),
-					student.getLastname(),
-					student.getGender(),
-					student.getEmail(),
-					student.getPhone(),
-					student.getDOB()
-					});
-		}
-		
-		}
-		
-		catch(Exception ex)
-		{
-			JOptionPane.showMessageDialog(null, ex.getMessage(),"Error",
-			JOptionPane.ERROR_MESSAGE);
-		}
-		add(scroll);
-		setVisible(true);
-		setSize(600,500);
+//		DefaultTableModel model = new DefaultTableModel();
+//		this.setTitle("Student Details");
+//		model.setColumnIdentifiers(columnNames);
+//		studentTable = new JTable();
+//		studentTable.setModel(model); 
+//		studentTable.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
+//		studentTable.setFillsViewportHeight(true);
+//		JScrollPane scroll = new JScrollPane(studentTable);
+//		scroll.setHorizontalScrollBarPolicy(
+//		JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+//		scroll.setVerticalScrollBarPolicy(
+//		JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED); 
+//		String textvalue =  entryStudentID_tbox.getText();
+//		String roll= "";
+//		String name= "";
+//		String cl = "";
+//		String sec = "";
+//		try
+//		{ 
+//			Student student = null;
+//			student= UTeQueDBOperations.getStudentDetails(studentID);
+//			
+//			
+//
+//			
+//			
+//		
+//		if(student.getID()==null)
+//		{
+//			JOptionPane.showMessageDialog(null, "No Record Found","Error",
+//					JOptionPane.ERROR_MESSAGE);
+//		}else 
+//		{
+//			JOptionPane.showMessageDialog(null, "Record Found");
+//			model.addRow(new Object[] {
+//					student.getID(),
+//					student.getFirstname(),
+//					student.getLastname(),
+//					student.getGender(),
+//					student.getEmail(),
+//					student.getPhone(),
+//					student.getDOB()
+//					});
+//		}
+//		
+//		}
+//		
+//		catch(Exception ex)
+//		{
+//			JOptionPane.showMessageDialog(null, ex.getMessage(),"Error",
+//			JOptionPane.ERROR_MESSAGE);
+//		}
+//		add(scroll);
+//		setVisible(true);
+//		setSize(600,500);
 	}
 
 	@Override

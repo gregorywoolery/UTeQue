@@ -105,7 +105,7 @@ public class StudentIssueResponse extends JInternalFrame {
 		gbc_issueMessage_txtArea.gridy = 0;
 		main_panel.add(issueMessage_txtArea, gbc_issueMessage_txtArea);
 		
-		JLabel services_lbl = new JLabel("New label");
+		JLabel services_lbl = new JLabel("");
 		services_lbl.setForeground(new Color(255, 255, 255));
 		services_lbl.setBackground(new Color(255, 255, 255));
 		services_lbl.setHorizontalAlignment(SwingConstants.CENTER);
@@ -117,7 +117,7 @@ public class StudentIssueResponse extends JInternalFrame {
 		gbc_services_lbl.gridy = 0;
 		main_panel.add(services_lbl, gbc_services_lbl);
 		
-		JLabel type_label = new JLabel("New label");
+		JLabel type_label = new JLabel("");
 		type_label.setForeground(new Color(255, 255, 255));
 		type_label.setBackground(new Color(255, 255, 255));
 		type_label.setHorizontalAlignment(SwingConstants.CENTER);
@@ -161,14 +161,14 @@ public class StudentIssueResponse extends JInternalFrame {
 		getContentPane().add(side_panel, gbc_side_panel);
 		side_panel.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 10));
 		
-		JLabel issueID_lbl = new JLabel("New label");
+		JLabel issueID_lbl = new JLabel("");
 		issueID_lbl.setForeground(new Color(255, 255, 255));
 		issueID_lbl.setHorizontalAlignment(SwingConstants.CENTER);
 		issueID_lbl.setPreferredSize(new Dimension(130, 25));
 		issueID_lbl.setFont(new Font("Arial Rounded MT Bold", Font.PLAIN, 14));
 		side_panel.add(issueID_lbl);
 		
-		JLabel issuedAt_lbl = new JLabel("New label");
+		JLabel issuedAt_lbl = new JLabel("");
 		issuedAt_lbl.setForeground(new Color(255, 255, 255));
 		side_panel.add(issuedAt_lbl);
 		issuedAt_lbl.setHorizontalAlignment(SwingConstants.CENTER);
@@ -179,62 +179,62 @@ public class StudentIssueResponse extends JInternalFrame {
 		separator.setPreferredSize(new Dimension(110, 10));
 		side_panel.add(separator);
 		
-		JLabel lblNewLabel_10 = new JLabel("Student");
-		lblNewLabel_10.setForeground(new Color(255, 255, 255));
-		lblNewLabel_10.setHorizontalAlignment(SwingConstants.CENTER);
-		lblNewLabel_10.setPreferredSize(new Dimension(130, 25));
-		lblNewLabel_10.setFont(new Font("Arial Rounded MT Bold", Font.PLAIN, 14));
-		side_panel.add(lblNewLabel_10);
+		JLabel student_lbl = new JLabel("Student");
+		student_lbl.setForeground(new Color(255, 255, 255));
+		student_lbl.setHorizontalAlignment(SwingConstants.CENTER);
+		student_lbl.setPreferredSize(new Dimension(130, 25));
+		student_lbl.setFont(new Font("Arial Rounded MT Bold", Font.PLAIN, 14));
+		side_panel.add(student_lbl);
 		
-		JLabel lblNewLabel_1 = new JLabel("New label");
-		lblNewLabel_1.setForeground(new Color(255, 255, 255));
-		lblNewLabel_1.setHorizontalAlignment(SwingConstants.CENTER);
-		lblNewLabel_1.setPreferredSize(new Dimension(130, 25));
-		lblNewLabel_1.setFont(new Font("Arial Rounded MT Bold", Font.PLAIN, 14));
-		side_panel.add(lblNewLabel_1);
+		JLabel studentID_lbl = new JLabel("");
+		studentID_lbl.setForeground(new Color(255, 255, 255));
+		studentID_lbl.setHorizontalAlignment(SwingConstants.CENTER);
+		studentID_lbl.setPreferredSize(new Dimension(130, 25));
+		studentID_lbl.setFont(new Font("Arial Rounded MT Bold", Font.PLAIN, 14));
+		side_panel.add(studentID_lbl);
 		
-		JLabel lblNewLabel_2 = new JLabel("New label");
-		lblNewLabel_2.setForeground(new Color(255, 255, 255));
-		lblNewLabel_2.setHorizontalAlignment(SwingConstants.CENTER);
-		lblNewLabel_2.setPreferredSize(new Dimension(130, 25));
-		lblNewLabel_2.setFont(new Font("Arial Rounded MT Bold", Font.PLAIN, 14));
-		side_panel.add(lblNewLabel_2);
+		JLabel studentName_lbl = new JLabel("");
+		studentName_lbl.setForeground(new Color(255, 255, 255));
+		studentName_lbl.setHorizontalAlignment(SwingConstants.CENTER);
+		studentName_lbl.setPreferredSize(new Dimension(130, 25));
+		studentName_lbl.setFont(new Font("Arial Rounded MT Bold", Font.PLAIN, 14));
+		side_panel.add(studentName_lbl);
 		
-		JLabel lblNewLabel_3 = new JLabel("New label");
-		lblNewLabel_3.setForeground(new Color(255, 255, 255));
-		lblNewLabel_3.setHorizontalAlignment(SwingConstants.CENTER);
-		lblNewLabel_3.setPreferredSize(new Dimension(130, 25));
-		lblNewLabel_3.setFont(new Font("Arial Rounded MT Bold", Font.PLAIN, 14));
-		side_panel.add(lblNewLabel_3);
+		JLabel email_lbl = new JLabel("");
+		email_lbl.setForeground(new Color(255, 255, 255));
+		email_lbl.setHorizontalAlignment(SwingConstants.CENTER);
+		email_lbl.setPreferredSize(new Dimension(130, 25));
+		email_lbl.setFont(new Font("Arial Rounded MT Bold", Font.PLAIN, 14));
+		side_panel.add(email_lbl);
 		
-		JLabel lblNewLabel_4 = new JLabel("New label");
-		lblNewLabel_4.setForeground(new Color(255, 255, 255));
-		lblNewLabel_4.setHorizontalAlignment(SwingConstants.CENTER);
-		lblNewLabel_4.setPreferredSize(new Dimension(130, 25));
-		lblNewLabel_4.setFont(new Font("Arial Rounded MT Bold", Font.PLAIN, 14));
-		side_panel.add(lblNewLabel_4);
+		JLabel contactNo_lbl = new JLabel("");
+		contactNo_lbl.setForeground(new Color(255, 255, 255));
+		contactNo_lbl.setHorizontalAlignment(SwingConstants.CENTER);
+		contactNo_lbl.setPreferredSize(new Dimension(130, 25));
+		contactNo_lbl.setFont(new Font("Arial Rounded MT Bold", Font.PLAIN, 14));
+		side_panel.add(contactNo_lbl);
 		
-		JSeparator separator_1 = new JSeparator();
-		separator_1.setPreferredSize(new Dimension(110, 10));
-		side_panel.add(separator_1);
+		JSeparator separator1 = new JSeparator();
+		separator1.setPreferredSize(new Dimension(110, 10));
+		side_panel.add(separator1);
 		
-		JLabel lblNewLabel_5 = new JLabel("Representative");
-		lblNewLabel_5.setForeground(new Color(255, 255, 255));
-		lblNewLabel_5.setHorizontalAlignment(SwingConstants.CENTER);
-		lblNewLabel_5.setPreferredSize(new Dimension(130, 25));
-		lblNewLabel_5.setFont(new Font("Arial Rounded MT Bold", Font.PLAIN, 14));
-		side_panel.add(lblNewLabel_5);
+		JLabel representative_lbl = new JLabel("Representative");
+		representative_lbl.setForeground(new Color(255, 255, 255));
+		representative_lbl.setHorizontalAlignment(SwingConstants.CENTER);
+		representative_lbl.setPreferredSize(new Dimension(130, 25));
+		representative_lbl.setFont(new Font("Arial Rounded MT Bold", Font.PLAIN, 14));
+		side_panel.add(representative_lbl);
 		
-		JLabel lblNewLabel_6 = new JLabel("New label");
-		lblNewLabel_6.setForeground(new Color(255, 255, 255));
-		lblNewLabel_6.setHorizontalAlignment(SwingConstants.CENTER);
-		lblNewLabel_6.setPreferredSize(new Dimension(130, 25));
-		lblNewLabel_6.setFont(new Font("Arial Rounded MT Bold", Font.PLAIN, 14));
-		side_panel.add(lblNewLabel_6);
+		JLabel representativeName_lbl = new JLabel("");
+		representativeName_lbl.setForeground(new Color(255, 255, 255));
+		representativeName_lbl.setHorizontalAlignment(SwingConstants.CENTER);
+		representativeName_lbl.setPreferredSize(new Dimension(130, 25));
+		representativeName_lbl.setFont(new Font("Arial Rounded MT Bold", Font.PLAIN, 14));
+		side_panel.add(representativeName_lbl);
 		
-		JSeparator separator_2 = new JSeparator();
-		separator_2.setPreferredSize(new Dimension(110, 30));
-		side_panel.add(separator_2);
+		JSeparator separator2 = new JSeparator();
+		separator2.setPreferredSize(new Dimension(110, 30));
+		side_panel.add(separator2);
 		
 		JButton returnBtn = new JButton("Return");
 		returnBtn.setPreferredSize(new Dimension(100, 35));

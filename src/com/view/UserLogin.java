@@ -1,19 +1,15 @@
 package com.view;
 
-//Import Log4j packages
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.controller.LoginController;
 import com.controller.UserController;
-import com.model.Student;
-import com.model.StudentServicesAgent;
-import com.model.StudentServicesRep;
 import com.model.User;
-import com.services.UTeQueDBOperations;
+import com.view.staff.StaffDashboard;
 import com.view.student.StudentDashboard;
 
-//Import AWT packages
 import java.awt.Color;
 import java.awt.BorderLayout;
 import java.awt.Component;
@@ -32,7 +28,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
-//Import SWING packages
+
 import javax.swing.BoxLayout;
 import javax.swing.border.TitledBorder;
 import javax.swing.border.LineBorder;
@@ -48,6 +44,9 @@ import javax.swing.ImageIcon;
 import javax.swing.SwingConstants;
 
 public class UserLogin extends JFrame implements ActionListener{
+	private static final Logger logger = LogManager.getLogger(UserLogin.class);
+	private static final long serialVersionUID = 7031615204478770810L;
+
 	private JPanel mainPanel;
 	private JPanel bannerPanel;
 	private JLabel bannerIcon;
@@ -91,6 +90,7 @@ public class UserLogin extends JFrame implements ActionListener{
 	 * Create the frame.
 	 */
 	public UserLogin() {
+		logger.info("Starting Login Interface");
 		initializeComponents();
 		registerListeners();
 	}
@@ -392,19 +392,19 @@ public class UserLogin extends JFrame implements ActionListener{
 			String userType = "";
 			
 			if(agent_rdbtn.isSelected())
-				userType = "Agent";
+				userType = "AGENT";
 				
 			else if (student_rdbtn.isSelected())
-				userType = "Student";
+				userType = "STUDENT";
 				
 			else if (rep_rdbtn.isSelected())
-				userType = "Rep";
+				userType = "REP";
 				
-				
-			if(LoginController.authenticate(txtUsername.getText(), txtPassword.getPassword(), userType)) {				
-				currentUser = UserController.getCurrentUser(txtUsername.getText(), userType);
-				StudentDashboard dash = new StudentDashboard();
-				dash.setVisible(true);
+			if(LoginController.authenticate(
+					txtUsername.getText(), txtPassword.getPassword(), userType)
+			){
+				UserController.setCurrentUser(txtUsername.getText(), userType);
+				chooseDashboard(userType);
 				disposeFrame();
 			}
 			else
@@ -412,4 +412,20 @@ public class UserLogin extends JFrame implements ActionListener{
 		}
 		
 	}
+	
+	private void chooseDashboard(String userType) {
+		switch(userType) {
+		case "STUDENT":
+			StudentDashboard studentDash = new StudentDashboard();
+			studentDash.setVisible(true);
+			break;
+			
+		case "REP":
+		case "AGENT":
+			StaffDashboard staffDash = new StaffDashboard();
+			staffDash.setVisible(true);
+			break;
+		}
+	}
+	
 }

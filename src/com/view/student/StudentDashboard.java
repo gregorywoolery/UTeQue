@@ -7,34 +7,37 @@ import java.awt.Dimension;
 import java.awt.EventQueue;
 
 import java.awt.Font;
-import java.awt.GridBagConstraints;
 
-import java.awt.Image;
-import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.text.ParseException;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
-import javax.swing.JDesktopPane;
 import javax.swing.JInternalFrame;
 import javax.swing.JLabel;
-import javax.swing.JPanel;
 import javax.swing.SwingConstants;
-import javax.swing.border.LineBorder;
 
+import com.controller.UserController;
+import com.model.Student;
 import com.view.Dashboard;
 import com.view.UserLogin;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 
 public class StudentDashboard extends Dashboard implements ActionListener{
+	private static final Logger logger = LogManager.getLogger(StudentDashboard.class);
+	private static final long serialVersionUID = -1418595725623251209L;
+
 	private JLabel issuesBtn_lbl;
 	private JButton viewBtnDash;
 	private JButton removeBtnDash;
 	private JButton updateBtnDash;
 	private JButton addBtnDash;
 	private JInternalFrame currFrame;
+	private Student student;
 	
 	/**
 	 * Launch the application.
@@ -61,15 +64,19 @@ public class StudentDashboard extends Dashboard implements ActionListener{
 	}
 	
 	public void initializeComponents(){
-		username_lbl.setText(UserLogin.currentUser.getFirstname()+" " + UserLogin.currentUser.getLastname());
-		String gender = UserLogin.currentUser.getGender();
+		student = (Student) UserController.getCurrentUser();
+		username_lbl.setText(student.getFirstname() + " " + student.getLastname());
+	
+		//For resource variables
+		String gender = student.getGender();
 		if(gender.equals("M"))
 			gender = "male";
 		else
 			gender = "female";
 		
-		userAvatar_lbl.setIcon(new ImageIcon(Dashboard.class.getResource("/img/"+ gender +"/student.png")));
 		
+		setTitle("UTeQue - Student Issue System");
+		userAvatar_lbl.setIcon(new ImageIcon(Dashboard.class.getResource("/img/"+ gender +"/student.png")));
 		
 		issuesBtn_lbl = new JLabel("Issues");
 		issuesBtn_lbl.setIcon(new ImageIcon(Dashboard.class.getResource("/img/dash/search-paper.png")));
@@ -270,10 +277,13 @@ public class StudentDashboard extends Dashboard implements ActionListener{
 			EventQueue.invokeLater(new Runnable() {
 				public void run() {
 					try {
+						UserController.setCurrentUserNull();
+
 						UserLogin userLoginFrame = new UserLogin();
 						userLoginFrame.setVisible(true);
 					} catch (Exception e) {
-						e.printStackTrace();
+						logger.error("ERROR OCCURED - " + e.getMessage()
+										+ e.getStackTrace());
 					}
 				}
 			});

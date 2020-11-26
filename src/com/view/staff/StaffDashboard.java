@@ -1,17 +1,12 @@
 package com.view.staff;
 
-import java.awt.BorderLayout;
 import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.text.ParseException;
 
 import javax.swing.ImageIcon;
-import javax.swing.JFrame;
 import javax.swing.JInternalFrame;
-import javax.swing.JPanel;
-import javax.swing.border.EmptyBorder;
-
 import com.view.Dashboard;
 import com.view.UserLogin;
 
@@ -48,10 +43,15 @@ public class StaffDashboard extends Dashboard implements ActionListener {
 		});
 	}
 
+	public StaffDashboard() {
+		initializeComponents();
+		registerListeners();
+	}
+	
 	/**
 	 * Create the frame.
 	 */
-	public StaffDashboard() {
+	private void initializeComponents() {
 		username_lbl.setText(UserLogin.currentUser.getFirstname()+" " + UserLogin.currentUser.getLastname());
 		String gender = UserLogin.currentUser.getGender();
 		if(gender.equals("M"))
@@ -152,10 +152,13 @@ public class StaffDashboard extends Dashboard implements ActionListener {
 		
 		
 	}
-
+	
+	private void registerListeners(){
+		
+	}
+	
 	@Override
 	public void actionPerformed(ActionEvent e) {
-
 		
 		if(e.getSource().equals(joinMeetingBtn)) {
 			//Check if frame to remove is there(not null)
@@ -216,7 +219,7 @@ public class StaffDashboard extends Dashboard implements ActionListener {
 				workspace_desktopPane.updateUI();
 				
 				try {
-					currFrame = new ViewIssue(workspace_desktopPane);
+					currFrame = new IssueMain(workspace_desktopPane);
 				} catch (ParseException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
@@ -228,7 +231,7 @@ public class StaffDashboard extends Dashboard implements ActionListener {
 				Dimension jInternalFrameSize = currFrame.getSize();
 				
 				//Test if current internal frame is of class ViewIssue and renders the frame with that
-				if(currFrame.getClass() == ViewIssue.class){
+				if(currFrame.getClass() == IssueMain.class){
 					currFrame.setLocation((desktopSize.width - jInternalFrameSize.width)/2,
 					    (desktopSize.height- jInternalFrameSize.height)/2);
 				}
@@ -242,7 +245,7 @@ public class StaffDashboard extends Dashboard implements ActionListener {
 				workspace_desktopPane.updateUI();
 				
 				try {
-					currFrame = new ViewService(workspace_desktopPane);
+					currFrame = new ViewServiceStats(workspace_desktopPane);
 				} catch (ParseException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
@@ -254,7 +257,7 @@ public class StaffDashboard extends Dashboard implements ActionListener {
 				Dimension jInternalFrameSize = currFrame.getSize();
 				
 				//Test if current internal frame is of class ViewService and renders the frame with that
-				if(currFrame.getClass() == ViewService.class){
+				if(currFrame.getClass() == ViewServiceStats.class){
 					currFrame.setLocation((desktopSize.width - jInternalFrameSize.width)/2,
 					    (desktopSize.height- jInternalFrameSize.height)/2);
 				}

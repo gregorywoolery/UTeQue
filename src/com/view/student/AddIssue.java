@@ -21,18 +21,17 @@ import javax.swing.JOptionPane;
 import java.awt.Font;
 import javax.swing.JComboBox;
 import javax.swing.JDesktopPane;
-import javax.swing.JTextField; 
 import javax.swing.JButton;
 import javax.swing.BoxLayout;
 import javax.swing.JTable;
 import java.awt.Cursor;
-import javax.swing.DefaultComboBoxModel;
 import java.awt.Dimension;
 import javax.swing.SwingConstants;
 import javax.swing.JTextArea;
 
 import com.controller.IssueController;
 import com.controller.ServiceController;
+import com.controller.UserController;
 import com.model.Issue;
 import com.services.DocumentSizeFilter;
 import com.services.Identification;
@@ -47,7 +46,11 @@ import java.awt.event.ActionEvent;
 import javax.swing.ImageIcon;
 import java.awt.FlowLayout;
 
+@SuppressWarnings("rawtypes")
 public class AddIssue extends JInternalFrame implements ActionListener{
+
+	private static final long serialVersionUID = -7136979101087277758L;
+
 	private JTable issueTable;
 	private JTextArea issueTextArea;
 	private DefaultStyledDocument issueAreaDoc;
@@ -106,6 +109,7 @@ public class AddIssue extends JInternalFrame implements ActionListener{
 		this.workSpaceDesktop =  workSpaceDesktop;
 	}
 	
+	@SuppressWarnings("unchecked")
 	private void initializeComponents() throws ParseException {
 		//Removes top bar from internal frame
 		((javax.swing.plaf.basic.BasicInternalFrameUI)this.getUI()).setNorthPane(null);
@@ -411,11 +415,12 @@ public class AddIssue extends JInternalFrame implements ActionListener{
 						JOptionPane.WARNING_MESSAGE);
 
 				if (opt == 0) {
+					String studentID = UserController.getUsername();
 					Issue issue = new Issue();
 					issue.setIssueID(issueID_lbl.getText());
 					issue.setType(addIssue_comboBox.getItemAt(addIssue_comboBox.getSelectedIndex()));
 					issue.setStatus("Unresolved");
-					issue.setStudentID("1800000");
+					issue.setStudentID(studentID);
 					issue.setMessage(issueTextArea.getText());
 					issue.setServiceID(addListOfServices_comboBox.getSelectedIndex()+1);
 					issue.setIssuedAt(currentDate);
@@ -426,20 +431,18 @@ public class AddIssue extends JInternalFrame implements ActionListener{
 
 					issueID_lbl.setText(Identification.getIssueId());
 					if(issueAdded) {
-						JOptionPane.showConfirmDialog(workSpaceDesktop, 
+						JOptionPane.showMessageDialog(workSpaceDesktop, 
 								"ISSUE ADDED SUCCESSFULLY", 
 								"SUCCESS",
-								JOptionPane.OK_OPTION,
 								JOptionPane.INFORMATION_MESSAGE);
 						
 						//Adds values to table on ADD ISSUE VIEW
 						addToTable(issue.getIssueID());
 						
 					}else
-						JOptionPane.showConfirmDialog(workSpaceDesktop, 
+						JOptionPane.showMessageDialog(workSpaceDesktop, 
 								"Oops.. Problem occured adding your issue.", 
 								"ERROR",
-								JOptionPane.OK_OPTION,
 								JOptionPane.ERROR_MESSAGE);
 
 				}else 
@@ -447,10 +450,9 @@ public class AddIssue extends JInternalFrame implements ActionListener{
 						//RETURN
 					}
 			}else
-				JOptionPane.showConfirmDialog(workSpaceDesktop, 
+				JOptionPane.showMessageDialog(workSpaceDesktop, 
 						"Message field cannot be empty", 
 						"ERROR",
-						JOptionPane.OK_OPTION,
 						JOptionPane.ERROR_MESSAGE);
 				
 				

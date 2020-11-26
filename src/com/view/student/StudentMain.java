@@ -600,4 +600,8 @@ public class StudentMain extends JInternalFrame implements ActionListener{
 		if(true) {}
 		
 	}
+	
+	private void removeStudentIssue() {
+		
+	}
 }

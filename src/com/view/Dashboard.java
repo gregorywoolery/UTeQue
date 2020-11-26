@@ -2,7 +2,6 @@ package com.view;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
-import java.awt.EventQueue;
 import java.awt.Toolkit;
 
 import javax.swing.ImageIcon;
@@ -24,13 +23,15 @@ import java.awt.Font;
 import javax.swing.SwingConstants;
 import javax.swing.JButton;
 import javax.swing.JMenuBar;
-import javax.swing.JMenuItem;
 import javax.swing.BoxLayout;
 import javax.swing.JMenu;
 
 
 
 public class Dashboard extends JFrame {
+
+	private static final long serialVersionUID = 2616488795407658092L;
+
 	protected JPanel contentPane;
 	protected JPanel sidebar_panel;
 	protected JPanel headers_panel;
@@ -58,7 +59,6 @@ public class Dashboard extends JFrame {
 	 * Create the frame.
 	 */
 	public Dashboard() {
-		setTitle("UTeQue - Student Issue System");
 		setName("dashboard_frame");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 1024, 720);
