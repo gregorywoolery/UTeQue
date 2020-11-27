@@ -19,7 +19,9 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.SwingConstants;
 
+import com.controller.IssueController;
 import com.controller.UserController;
+import com.model.Issue;
 import com.model.User;
 import com.view.Dashboard;
 import com.view.UserLogin;
@@ -263,6 +265,8 @@ public class StudentDashboard extends Dashboard implements ActionListener{
 				}
 			}
 		}
+		
+		
 		
 		
 		if(e.getSource().equals(logoutBtn)) {

@@ -98,6 +98,7 @@ public class StudentMain extends JInternalFrame implements ActionListener{
 	private JDesktopPane workspace_desktopPane;
 	private String currDate;
 	private ArrayList<String> serviceTypes;
+	private String issueID=null;
 	
 	private User student;
 	
@@ -499,8 +500,13 @@ public class StudentMain extends JInternalFrame implements ActionListener{
 		    public void mousePressed(MouseEvent mouseEvent) {
 		        JTable table =(JTable) mouseEvent.getSource();
 		        Point point = mouseEvent.getPoint();
-		        
+		        int column= 0;
 		        int row = table.rowAtPoint(point);
+		        
+		        if(mouseEvent.getClickCount() == 1 && table.getSelectedRow() != -1) {
+	        		int selRow = table.getSelectedRow();
+	        		issueID = table.getModel().getValueAt(selRow, column).toString();
+		        }
 		        
 		        if (mouseEvent.getClickCount() == 2 && table.getSelectedRow() != -1) {
 		        	int opt = JOptionPane.showConfirmDialog(workspace_desktopPane, 
@@ -509,9 +515,8 @@ public class StudentMain extends JInternalFrame implements ActionListener{
 							JOptionPane.YES_NO_OPTION,
 							JOptionPane.INFORMATION_MESSAGE);
 		        	if(opt == 0) {
-		        		int column = 0;
 		        		int selRow = table.getSelectedRow();
-		        		String issueID = table.getModel().getValueAt(selRow, column).toString();
+		        		issueID = table.getModel().getValueAt(selRow, column).toString();
 		        		addStudentIssueResponse(issueID);
 		        	}
 
@@ -585,6 +590,25 @@ public class StudentMain extends JInternalFrame implements ActionListener{
 				currFrame.setLocation((desktopSize.width - jInternalFrameSize.width),
 				    (desktopSize.height- jInternalFrameSize.height)/2);
 			}
+		}
+		
+		if(e.getSource().equals(removeBtn) ) {
+			//To remove Issue record
+        	int opt = JOptionPane.showConfirmDialog(workspace_desktopPane, 
+					"Are you sure u want to Remove IssueID:"+ issueID + "? ", 
+					"REMOVE",
+					JOptionPane.YES_NO_OPTION,
+					JOptionPane.WARNING_MESSAGE);
+        	if(opt == 0) {
+        		removeStudentIssue();
+        		
+        	}else 
+				if(opt == 1) {
+					//RETURN
+				}
+        		
+
+			
 		}
 	}
 	
@@ -667,8 +691,24 @@ public class StudentMain extends JInternalFrame implements ActionListener{
 	}
 	
 	private void removeStudentIssue() {
-		
-	}
+		DefaultTableModel model = (DefaultTableModel) issueTable.getModel();
+		//Remove record from table on ISSUE VIEW
+		if(issueID!=null) {
+			boolean issueRemoved =IssueController.removeIssue(issueID);
+			model.removeRow(issueTable.getSelectedRow());
+			if(issueRemoved) {
+				JOptionPane.showMessageDialog(workspace_desktopPane, 
+						"ISSUE DELETED SUCCESSFULLY", 
+						"SUCCESS",
+						JOptionPane.INFORMATION_MESSAGE);	
+			}
+		}else {
+			JOptionPane.showMessageDialog(workspace_desktopPane, 
+					"Oops.. Problem occured deleting your issue.", 
+					"ERROR",
+					JOptionPane.ERROR_MESSAGE);
+		}
+		}
 	
 	private void addStudentIssueResponse(String issueID) {
 		workspace_desktopPane.removeAll();

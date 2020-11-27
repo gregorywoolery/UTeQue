@@ -154,8 +154,37 @@ public class IssueController {
 		
 	}
 	
-	public void removeIssue(String issueId) {
+	public static boolean removeIssue(String issueID) {
 		
+		boolean removeIssueSuccess = false;
+		
+		logger.info("Client Trying to connect using socket at port " + port);
+		
+		try(Socket socketConnection = new Socket(InetAddress.getLocalHost(), port);
+				ObjectOutputStream os = new ObjectOutputStream(socketConnection.getOutputStream());
+				ObjectInputStream is = new ObjectInputStream(socketConnection.getInputStream());
+		){
+			
+			logger.info("Sending ISSUE to SERVER for DELETING");			
+			
+			os.flush();
+			os.writeObject("DELETE-ISSUE");
+			os.flush();
+			os.writeObject(issueID);
+			os.flush();
+			
+			removeIssueSuccess = is.readBoolean();
+
+		} catch (UnknownHostException e) {
+			logger.error("IP ADDRESS OF HOST ERROR - " + e.getMessage()
+							+ e.getStackTrace());
+			
+		} catch (IOException e) {
+			logger.error("ERROR OCCURED - " + e.getMessage()
+							+ e.getStackTrace());
+		}
+		
+		return removeIssueSuccess;	
 	}
 	
 	public void viewSpecific(String type, String id) {
