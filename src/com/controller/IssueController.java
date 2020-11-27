@@ -6,6 +6,7 @@ import java.io.ObjectOutputStream;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.sql.Date;
 import java.util.ArrayList;
 
 import org.apache.logging.log4j.LogManager;
@@ -188,7 +189,7 @@ public class IssueController {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public static ArrayList<Issue> getSearchIssuesForStudent(String studentID, String type, String status, String issuedAt) {
+	public static ArrayList<Issue> getSearchIssuesForStudent(String studentID, String type, int serviceID, Date issuedAt) {
 		ArrayList<Issue> foundStudentIssues = new ArrayList<>();
 		logger.info("Client Trying to connect using socket at port " + port);
 		
@@ -207,9 +208,9 @@ public class IssueController {
 			os.flush();
 			os.writeObject(String.valueOf(type));
 			os.flush();
-			os.writeObject(String.valueOf(status));
+			os.writeObject(serviceID); // FIND INT  VALUE OF
 			os.flush();
-			os.writeObject(String.valueOf(issuedAt));
+			os.writeObject(issuedAt); // FIND SQL DATE VALUE OF
 			os.flush();
 			
 			foundStudentIssues =  (ArrayList<Issue>) is.readObject();

@@ -12,7 +12,7 @@ import javax.swing.border.LineBorder;
 import java.awt.Component;
 import java.awt.Image;
 import javax.swing.ImageIcon;
-
+import java.sql.Date;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
@@ -609,20 +609,8 @@ public class StudentMain extends JInternalFrame implements ActionListener{
 		}
 		
 		if(e.getSource().equals(searchBtn)) {
-			dispose();
-			JInternalFrame currFrame = new UpdateIssue(workspace_desktopPane);
+			searchStudentIssue();
 
-			workspace_desktopPane.add(currFrame);
-			
-			//Opens JinternalFrame centered in the JDesktopPane
-			Dimension desktopSize = workspace_desktopPane.getSize();
-			Dimension jInternalFrameSize = currFrame.getSize();
-			
-			//Test if current internal frame is of class AddIssue and renders the frame with that
-			if(currFrame.getClass() == UpdateIssue.class){
-				currFrame.setLocation((desktopSize.width - jInternalFrameSize.width),
-				    (desktopSize.height- jInternalFrameSize.height)/2);
-			}
 		}
 	}
 	
@@ -698,9 +686,40 @@ public class StudentMain extends JInternalFrame implements ActionListener{
 		String searchID = searchID_txtfield.getText();
 		int serviceType = service_combobox.getSelectedIndex()+1;
 		String type = (String)searchIssueType_comboBox.getItemAt(searchIssueType_comboBox.getSelectedIndex());
+		Date issuedAt = null
+				;
 		
+		if(type!=null || serviceType!=0 || issuedAt!=null) {
+			ArrayList<Issue> studentIssues = IssueController.getSearchIssuesForStudent(studentID, type, serviceType, issuedAt);
+			DefaultTableModel model = (DefaultTableModel) issueTable.getModel();
+			
+			/**
+			 * Iterates through List of Issues relating to a specified student and displays
+			 * values in the issue table.
+			 */
+			if(studentIssues != null) {
+				for(Issue issue: studentIssues) {
+					/**
+					 * Adds row to table with details relating to current student's issue.
+					 */
+					model.addRow(new Object[]{
+							issue.getIssueID(), 
+							issue.getType(),
+							issue.getServiceID(),
+							issue.getIssuedAt(),
+							issue.getStatus(),
+							issue.getRepID()
+					});
+				}			
+			}
+		} else {
+			JOptionPane.showMessageDialog(workspace_desktopPane, 
+					"Oops.. Results WERE NOT FOUND.", 
+					"ERROR",
+					JOptionPane.ERROR_MESSAGE);
+		}
 				
-		if(true) {}
+		
 		
 	}
 	
