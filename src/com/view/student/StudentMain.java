@@ -606,9 +606,23 @@ public class StudentMain extends JInternalFrame implements ActionListener{
 				if(opt == 1) {
 					//RETURN
 				}
-        		
+		}
+		
+		if(e.getSource().equals(searchBtn)) {
+			dispose();
+			JInternalFrame currFrame = new UpdateIssue(workspace_desktopPane);
 
+			workspace_desktopPane.add(currFrame);
 			
+			//Opens JinternalFrame centered in the JDesktopPane
+			Dimension desktopSize = workspace_desktopPane.getSize();
+			Dimension jInternalFrameSize = currFrame.getSize();
+			
+			//Test if current internal frame is of class AddIssue and renders the frame with that
+			if(currFrame.getClass() == UpdateIssue.class){
+				currFrame.setLocation((desktopSize.width - jInternalFrameSize.width),
+				    (desktopSize.height- jInternalFrameSize.height)/2);
+			}
 		}
 	}
 	

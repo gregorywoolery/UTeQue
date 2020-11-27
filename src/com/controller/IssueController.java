@@ -187,6 +187,50 @@ public class IssueController {
 		return removeIssueSuccess;	
 	}
 	
+	@SuppressWarnings("unchecked")
+	public static ArrayList<Issue> getSearchIssuesForStudent(String studentID, String type, String status, String issuedAt) {
+		ArrayList<Issue> foundStudentIssues = new ArrayList<>();
+		logger.info("Client Trying to connect using socket at port " + port);
+		
+		try(Socket socketConnection = new Socket(InetAddress.getLocalHost(), port);
+				ObjectOutputStream os = new ObjectOutputStream(socketConnection.getOutputStream());
+				ObjectInputStream is = new ObjectInputStream(socketConnection.getInputStream());
+		){
+			
+			logger.info("Getting SEARCH ISSUES for STUDENT "+ studentID +" from SERVER");			
+
+			os.flush();
+			String getString = "GET-STUDENT-SEARCH ISSUES";
+			os.writeObject(getString);
+			os.flush();
+			os.writeObject(String.valueOf(studentID));
+			os.flush();
+			os.writeObject(String.valueOf(type));
+			os.flush();
+			os.writeObject(String.valueOf(status));
+			os.flush();
+			os.writeObject(String.valueOf(issuedAt));
+			os.flush();
+			
+			foundStudentIssues =  (ArrayList<Issue>) is.readObject();
+			
+		} catch (UnknownHostException e) {
+			logger.error("IP ADDRESS OF HOST ERROR - " + e.getMessage()
+							+ e.getStackTrace());
+			
+		} catch (ClassNotFoundException e) {
+			logger.error("ERROR OCCURED - " + e.getMessage()
+							+ e.getStackTrace());
+			
+		} catch (IOException e) {
+			logger.error("ERROR OCCURED - " + e.getMessage()
+							+ e.getStackTrace());
+		}
+		
+		return foundStudentIssues;	
+	}
+	
+	
 	public void viewSpecific(String type, String id) {
 			/*
 			 * - Students should also be able to view a specific complaint or query and all its associated responses.
