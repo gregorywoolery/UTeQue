@@ -65,6 +65,7 @@ public class UTeQueServer {
 		boolean success = false;
 		int[] stats = new int[3];
 		User user;
+		int serviceID;
 		
 		public ClientHandler(Socket socket) {
 			logger.info("Socket connection recieved by server thread");
@@ -123,6 +124,11 @@ public class UTeQueServer {
 						case "GET-ISSUE-RESPONSE-JOIN":
 							studentID = (String) is.readObject();
 //							os.writeObject(obj);
+							break;
+						case "GET-STUDENT-ISSUES-BY-SERVICE":
+							studentID = (String) is.readObject();
+							serviceID = (int) is.readObject();
+							
 							break;
 					}
 					os.flush();

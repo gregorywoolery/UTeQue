@@ -86,6 +86,45 @@ public class IssueController {
 		return foundStudentIssues;	
 	}
 	
+	@SuppressWarnings("unchecked")
+	public static ArrayList<Issue> getStudentIssuesByService(String studentID, int service) {
+		ArrayList<Issue> studentIssues = new ArrayList<>();
+		
+		logger.info("Client Trying to connect using socket at port " + port);
+		
+		try(Socket socketConnection = new Socket(InetAddress.getLocalHost(), port);
+				ObjectOutputStream os = new ObjectOutputStream(socketConnection.getOutputStream());
+				ObjectInputStream is = new ObjectInputStream(socketConnection.getInputStream());
+		){
+			
+			logger.info("Getting ISSUE for STUDENT "+ studentID +" from SERVER");			
+
+			os.flush();
+			String getString = "GET-STUDENT-ISSUES-BY-SERVICE";
+			os.writeObject(getString);
+	
+			os.writeObject(String.valueOf(studentID));
+			os.writeObject(service);
+			os.flush();
+			
+			studentIssues =  (ArrayList<Issue>) is.readObject();
+			
+		} catch (UnknownHostException e) {
+			logger.error("IP ADDRESS OF HOST ERROR - " + e.getMessage()
+							+ e.getStackTrace());
+			
+		} catch (ClassNotFoundException e) {
+			logger.error("ERROR OCCURED - " + e.getMessage()
+							+ e.getStackTrace());
+			
+		} catch (IOException e) {
+			logger.error("ERROR OCCURED - " + e.getMessage()
+							+ e.getStackTrace());
+		}
+		
+		return studentIssues;	
+	}
+	
 	public static int[] getStudentIssueStats(String studentID){
 		int[] stats = new int[3];
 		

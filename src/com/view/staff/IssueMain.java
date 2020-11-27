@@ -5,6 +5,7 @@ import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.text.ParseException;
+import java.util.ArrayList;
 
 import javax.swing.JInternalFrame;
 import javax.swing.border.LineBorder;
@@ -24,6 +25,9 @@ import java.awt.Insets;
 import javax.swing.JSplitPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
+
+import com.controller.ServiceController;
+
 import java.awt.GridLayout;
 import java.awt.GridBagLayout;
 import java.awt.GridBagConstraints;
@@ -59,9 +63,10 @@ public class IssueMain extends JInternalFrame implements ActionListener{
 	private JComboBox selectRep_comboBox;
 	private JButton assignRepBtn;
 	private JButton respondBtn;
-	private JButton btnNewButton;
+	private JButton moreBtn;
 	@SuppressWarnings("unused")
 	private JDesktopPane workSpaceDesktop;
+	private JButton searchBtn;
 	
 	
 	public IssueMain(JDesktopPane workSpaceDesktop) throws ParseException {
@@ -98,9 +103,12 @@ public class IssueMain extends JInternalFrame implements ActionListener{
 		studentIssuesTitle_lbl.setFont(new Font("Arial Rounded MT Bold", Font.PLAIN, 16));
 		titleBanner_panel.add(studentIssuesTitle_lbl);
 		
-		services_comboBox = new JComboBox();
+		//List of Services JComboBox
+		ArrayList<String> serviceTypes = ServiceController.getAllServies();
+
+		services_comboBox = new JComboBox(serviceTypes.toArray());
 		services_comboBox.setBackground(new Color(255, 255, 0));
-		services_comboBox.setForeground(new Color(255, 255, 255));
+		services_comboBox.setForeground(new Color(0, 0, 102));
 		services_comboBox.setFont(new Font("Arial Rounded MT Bold", Font.PLAIN, 13));
 		services_comboBox.setPreferredSize(new Dimension(230, 30));
 		getContentPane().add(services_comboBox);
@@ -116,6 +124,13 @@ public class IssueMain extends JInternalFrame implements ActionListener{
 		studentSearchID_txtField.setPreferredSize(new Dimension(200, 45));
 		getContentPane().add(studentSearchID_txtField);
 		studentSearchID_txtField.setColumns(15);
+		
+		searchBtn = new JButton("SEARCH");
+		searchBtn.setPreferredSize(new Dimension(100, 30));
+		searchBtn.setFont(new Font("Arial Rounded MT Bold", Font.PLAIN, 13));
+		searchBtn.setBorder(null);
+		searchBtn.setBackground(new Color(102, 204, 0));
+		getContentPane().add(searchBtn);
 		
 		main_splitPane = new JSplitPane();
 		main_splitPane.setDividerSize(2);
@@ -258,7 +273,7 @@ public class IssueMain extends JInternalFrame implements ActionListener{
 		gbc_studentGender_lbl.gridy = 4;
 		studentInfo_panel.add(studentGender_lbl, gbc_studentGender_lbl);
 		
-		getStudntGender_lbl = new JLabel("M");
+		getStudntGender_lbl = new JLabel();
 		getStudntGender_lbl.setFont(new Font("Arial Rounded MT Bold", Font.PLAIN, 12));
 		GridBagConstraints gbc_getStudntGender_lbl = new GridBagConstraints();
 		gbc_getStudntGender_lbl.anchor = GridBagConstraints.WEST;
@@ -301,23 +316,32 @@ public class IssueMain extends JInternalFrame implements ActionListener{
 		assignRepBtn.setFont(new Font("Arial Rounded MT Bold", Font.PLAIN, 12));
 		assignRep_Panel.add(assignRepBtn);
 		
-		btnNewButton = new JButton("More+");
-		btnNewButton.setForeground(new Color(255, 255, 255));
-		btnNewButton.setBackground(new Color(0, 0, 51));
-		btnNewButton.setFont(new Font("Arial Rounded MT Bold", Font.PLAIN, 12));
-		btnNewButton.setPreferredSize(new Dimension(100, 25));
-		btnNewButton.setBorder(null);
-		
+		moreBtn = new JButton("More+");
+		moreBtn.setForeground(new Color(255, 255, 255));
+		moreBtn.setBackground(new Color(0, 0, 51));
+		moreBtn.setFont(new Font("Arial Rounded MT Bold", Font.PLAIN, 12));
+		moreBtn.setPreferredSize(new Dimension(100, 25));
+		moreBtn.setBorder(null);
 		
 		assaignOptionDisplay();
+		
 		setVisible(true);
 	}
 
-	private void registerListeners() {}
+	private void registerListeners() {
+		searchBtn.addActionListener(this);
+		respondBtn.addActionListener(this);
+		assignRepBtn.addActionListener(this);
+		moreBtn.addActionListener(this);
+	}
 	
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		// TODO Auto-generated method stub
+		if(e.getSource().equals(searchBtn)) {
+			if(studentSearchID_txtField.getText() != "") {
+				
+			}
+		}
 		
 	}
 	
@@ -330,7 +354,7 @@ public class IssueMain extends JInternalFrame implements ActionListener{
 			if(loggedUser == "Agent") {
 				issueOptions_panel.add(assignRep_Panel);
 			}
-			issueOptions_panel.add(btnNewButton);
+			issueOptions_panel.add(moreBtn);
 		}
 	}
 

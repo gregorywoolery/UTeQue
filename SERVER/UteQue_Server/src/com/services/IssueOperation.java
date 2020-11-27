@@ -6,13 +6,19 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.List;
 
 import com.connectionFactories.JDBC.DBConnectorFactory;
 import com.model.Issue;
 
+import com.connectionFactories.Hibernate.SessionFactoryBuilder;
+import com.model.Student;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.hibernate.HibernateException;
+import org.hibernate.Session;
+import org.hibernate.Transaction;
 
 public class IssueOperation {
 	private static final Logger logger = LogManager.getLogger(IssueOperation.class);
@@ -167,4 +173,40 @@ public class IssueOperation {
 		return issues;
 	}
 	
+//	public static ArrayList<Issue> getIssueByService(String studentID, int serviceID){
+//		ArrayList<Issue> studentIssue = new ArrayList<Issue>();
+//		
+//		List<Student> studentList = new ArrayList<>();
+//		
+//		Transaction transaction = null;
+//		try(Session session = SessionFactoryBuilder
+//				.getSessionFactory().getCurrentSession()
+//		){
+//			String hql = "select * from Issues I where I.studentID=:studentID and I.serviceID=:serviceID";
+//			
+//			transaction = session.beginTransaction();
+//			
+//			Query q = session.createQuery(hql);
+//
+//			Long countOfRecords = (Long)q.list().get(0);			studentList = session.createQuery("FROM Student")
+//					.getResultList();
+//
+//
+//					 
+//			transaction.commit();
+//			
+//		}catch(HibernateException hex) {
+//			if(transaction != null) {
+//				
+//				transaction.rollback();
+//			}
+//
+//		}
+//		return studentList;
+//		sessionFactory sesionfatory;
+//		ArrayList list = (ArrayList)sessionfactory.getCurruntSession().find(from table where name LIKE "xyz");
+//
+//		long size = list.get(0);
+//	}
+
 }

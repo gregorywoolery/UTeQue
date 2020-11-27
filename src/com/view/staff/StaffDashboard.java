@@ -7,8 +7,12 @@ import java.text.ParseException;
 
 import javax.swing.ImageIcon;
 import javax.swing.JInternalFrame;
+
+import com.controller.UserController;
+import com.model.User;
 import com.view.Dashboard;
 import com.view.UserLogin;
+import com.view.student.StudentMain;
 
 import javax.swing.JLabel;
 import javax.swing.JButton;
@@ -25,7 +29,7 @@ public class StaffDashboard extends Dashboard implements ActionListener {
 	private JButton serviceAssistBtn;
 	private JButton studentDetails_btn;
 	private JInternalFrame currFrame;
-
+	private User staff;
 
 	/**
 	 * Launch the application.
@@ -39,7 +43,7 @@ public class StaffDashboard extends Dashboard implements ActionListener {
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
-			}
+			} 	
 		});
 	}
 
@@ -52,13 +56,17 @@ public class StaffDashboard extends Dashboard implements ActionListener {
 	 * Create the frame.
 	 */
 	private void initializeComponents() {
-		username_lbl.setText(UserLogin.currentUser.getFirstname()+" " + UserLogin.currentUser.getLastname());
-		String gender = UserLogin.currentUser.getGender();
+		staff =  UserController.getCurrentUser();
+		username_lbl.setText(staff.getFirstname() + " " + staff.getLastname());
+	
+		//For resource variables
+		String gender = staff.getGender();
 		if(gender.equals("M"))
 			gender = "male";
 		else
 			gender = "female";
 		
+		setTitle("UTeQue - Staff Issue System");
 		userAvatar_lbl.setIcon(new ImageIcon(Dashboard.class.getResource("/img/"+ gender +"/staff.png")));
 		
 		JLabel livechatTitle_lbl = new JLabel("Live Chat");
@@ -148,8 +156,7 @@ public class StaffDashboard extends Dashboard implements ActionListener {
 		studentDetails_btn.setFont(new Font("Arial Rounded MT Bold", Font.PLAIN, 13));
 		menu_panel.add(studentDetails_btn);
 		
-		
-		
+		addMainInternalFrame();
 		
 	}
 	
@@ -213,29 +220,8 @@ public class StaffDashboard extends Dashboard implements ActionListener {
 		}
 		
 		if(e.getSource().equals(studentIssuesBtn)) {
-			//Check if frame to remove is there(not null)
-			if(currFrame !=null) {
-				workspace_desktopPane.removeAll();
-				workspace_desktopPane.updateUI();
-				
-				try {
-					currFrame = new IssueMain(workspace_desktopPane);
-				} catch (ParseException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
-				workspace_desktopPane.add(currFrame);
-				
-				//Opens JinternalFrame centered in the JDesktopPane
-				Dimension desktopSize = workspace_desktopPane.getSize();
-				Dimension jInternalFrameSize = currFrame.getSize();
-				
-				//Test if current internal frame is of class ViewIssue and renders the frame with that
-				if(currFrame.getClass() == IssueMain.class){
-					currFrame.setLocation((desktopSize.width - jInternalFrameSize.width)/2,
-					    (desktopSize.height- jInternalFrameSize.height)/2);
-				}
-			}
+			if(currFrame.getClass() != IssueMain.class)
+				addMainInternalFrame();
 		}
 		
 		if(e.getSource().equals(serviceAssistBtn)) {
@@ -288,6 +274,33 @@ public class StaffDashboard extends Dashboard implements ActionListener {
 					    (desktopSize.height- jInternalFrameSize.height)/2);
 				}
 			}
+		}
+		
+	}
+	
+	public void addMainInternalFrame() {
+		//Check if frame to remove is there(not null)
+		if(currFrame !=null) {
+			workspace_desktopPane.removeAll();
+			workspace_desktopPane.updateUI();
+		}
+		
+		try {
+			currFrame = new IssueMain(workspace_desktopPane);
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+		
+		workspace_desktopPane.add(currFrame);
+		
+		//Opens JinternalFrame centered in the JDesktopPane
+		Dimension desktopSize = workspace_desktopPane.getSize();
+		Dimension jInternalFrameSize = currFrame.getSize();
+		
+		//Test if current internal frame is of class Student main and renders the frame with that
+		if(currFrame.getClass() == IssueMain.class){
+			currFrame.setLocation((desktopSize.width - jInternalFrameSize.width)/500,
+			    (desktopSize.height- jInternalFrameSize.height)/90);
 		}
 		
 	}

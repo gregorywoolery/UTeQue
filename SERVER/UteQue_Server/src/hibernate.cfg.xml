@@ -14,7 +14,7 @@
         <!-- JDBC Connection Pool Setting -->
         <property name="connection.pool_size">10</property>
         
-        <!-- Choose the Hibernate dialect for the specific database type -->
+        <!-- Choose the HIBERNATE dialect for the specific database type -->
         <property name="hibernate.dialect">org.hibernate.dialect.MySQLDialect</property>
         
         <!-- Echo out the SQL to the console -->
