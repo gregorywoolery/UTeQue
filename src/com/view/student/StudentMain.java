@@ -12,13 +12,14 @@ import javax.swing.border.LineBorder;
 import java.awt.Component;
 import java.awt.Image;
 import javax.swing.ImageIcon;
-
+import java.sql.Date;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.font.TextAttribute;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -62,7 +63,6 @@ public class StudentMain extends JInternalFrame implements ActionListener{
 	private static final long serialVersionUID = -8375563652031458336L;
 
 	private JPanel addIssue_panel;
-	private JPanel updateIssue_panel;
 	private JPanel IssueDisplay_panel;
 	private JPanel studentIssue_panel;
 	private JLabel addIssueTitle_lbl;
@@ -71,7 +71,6 @@ public class StudentMain extends JInternalFrame implements ActionListener{
 	private JButton addBtn;
 	private JButton liveChatBtn;
 	private JPanel userIssueStats_panel;
-	private JLabel updateIssueTitle_lbl;
 	private JLabel issueMadeTitle_lbl;
 	private JLabel issueMade_lbl;
 	private JLabel issueCmpltTitle_lbl;
@@ -89,16 +88,11 @@ public class StudentMain extends JInternalFrame implements ActionListener{
 	private JComboBox searchIssueType_comboBox;
 	private JButton searchBtn;
 	private JButton removeBtn;
-	private JComboBox updateIssue_comboBox;
-	private JComboBox updateService_comboBox;
-	private JButton updateBtn;
-	private JLabel dateMadeUpdate_lbl;
-	private JPanel date_panel;
-	private DatePicker updateDatePicker;
 	private JDesktopPane workspace_desktopPane;
+	
 	private String currDate;
 	private ArrayList<String> serviceTypes;
-	
+	private String issueID = null;
 	private User student;
 	
 	/**
@@ -205,19 +199,19 @@ public class StudentMain extends JInternalFrame implements ActionListener{
 		issuePending_lbl.setForeground(new Color(255, 255, 255));
 		userIssueStats_panel.add(issuePending_lbl);
 		
+		getIssueStats();
+				
 		addIssue_panel = new JPanel();
 		addIssue_panel.setBackground(new Color(255, 255, 0));
 		addIssue_panel.setName("");
 		GridBagConstraints gbc_addIssue_panel = new GridBagConstraints();
 		gbc_addIssue_panel.fill = GridBagConstraints.BOTH;
 		gbc_addIssue_panel.insets = new Insets(0, 0, 5, 5);
-		gbc_addIssue_panel.gridx = 0;
+		gbc_addIssue_panel.gridx = 1;
 		gbc_addIssue_panel.gridy = 1;
 		
 		getContentPane().add(addIssue_panel, gbc_addIssue_panel);
 		addIssue_panel.setLayout(new BoxLayout(addIssue_panel, BoxLayout.Y_AXIS));
-		
-		getIssueStats();
 		
 		addIssueTitle_lbl = new JLabel("ADD ISSUE");
 		addIssueTitle_lbl.setBorder(new LineBorder(new Color(255, 255, 0), 10));
@@ -225,16 +219,8 @@ public class StudentMain extends JInternalFrame implements ActionListener{
 		addIssueTitle_lbl.setFont(new Font("Arial Rounded MT Bold", Font.PLAIN, 16));
 		addIssueTitle_lbl.setAlignmentX(Component.CENTER_ALIGNMENT);
 		
-		//Makes label text underline
-		Font font = addIssueTitle_lbl.getFont();
-		Map<TextAttribute, Object> attributes = new HashMap<>(font.getAttributes());
-		attributes.put(TextAttribute.UNDERLINE, TextAttribute.UNDERLINE_ON);
-		addIssueTitle_lbl.setFont(font.deriveFont(attributes));
-		
 		addIssue_panel.add(addIssueTitle_lbl);
-		
-		String issueType []={"Exclude", "Complaint", "Query"};  
-		addIssue_comboBox = new JComboBox(issueType);
+		addIssue_comboBox = new JComboBox(new DefaultComboBoxModel(new String[] {"Complaint", "Query"}));
 		addIssue_comboBox.setToolTipText("Select issue type here");
 		addIssue_comboBox.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		addIssue_comboBox.setForeground(new Color(255, 255, 255));
@@ -244,11 +230,6 @@ public class StudentMain extends JInternalFrame implements ActionListener{
 		addIssue_comboBox.setFont(new Font("Arial Rounded MT Bold", Font.PLAIN, 14));
 		
 		addIssue_panel.add(addIssue_comboBox);
-		
-		
-		LocalDate date = LocalDate.now(); // Gets the current date
-		DateTimeFormatter currentDateFormat = DateTimeFormatter.ofPattern("dd-MM-yyyy");
-		currDate = date.format(currentDateFormat);
 		
 		addedDate_lbl = new JLabel(currDate);
 		addedDate_lbl.setForeground(new Color(0, 0, 0));
@@ -270,75 +251,6 @@ public class StudentMain extends JInternalFrame implements ActionListener{
 		addBtn.setFont(new Font("Arial Rounded MT Bold", Font.PLAIN, 14));
 		addBtn.setAlignmentX(Component.CENTER_ALIGNMENT);
 		addIssue_panel.add(addBtn);
-		
-		updateIssue_panel = new JPanel();
-		updateIssue_panel.setBackground(new Color(255, 255, 0));
-		GridBagConstraints gbc_updateIssue_panel = new GridBagConstraints();
-		gbc_updateIssue_panel.fill = GridBagConstraints.BOTH;
-		gbc_updateIssue_panel.insets = new Insets(0, 0, 5, 0);
-		gbc_updateIssue_panel.gridx = 2;
-		gbc_updateIssue_panel.gridy = 1;
-		getContentPane().add(updateIssue_panel, gbc_updateIssue_panel);
-		
-		updateIssueTitle_lbl = new JLabel("UPDATE ISSUE");
-		updateIssueTitle_lbl.setAlignmentX(Component.CENTER_ALIGNMENT);
-		updateIssueTitle_lbl.setBorder(new LineBorder(new Color(255, 255, 0), 10));
-		updateIssueTitle_lbl.setForeground(new Color(0, 0, 51));
-		updateIssueTitle_lbl.setFont(new Font("Arial Rounded MT Bold", Font.PLAIN, 16));
-		
-		//Makes label text underline
-		Font font1 = updateIssueTitle_lbl.getFont();
-		Map<TextAttribute, Object> attributes1 = new HashMap<>(font1.getAttributes());
-		attributes1.put(TextAttribute.UNDERLINE, TextAttribute.UNDERLINE_ON);
-		updateIssue_panel.setLayout(new BoxLayout(updateIssue_panel, BoxLayout.Y_AXIS));
-		updateIssueTitle_lbl.setFont(font1.deriveFont(attributes1));
-		
-		updateIssue_panel.add(updateIssueTitle_lbl);
-		
-		 
-		updateIssue_comboBox  = new JComboBox(issueType);
-		updateIssue_comboBox.setToolTipText("Select issue type here");
-		updateIssue_comboBox.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-		updateIssue_comboBox.setMaximumSize(new Dimension(100, 25));
-		updateIssue_comboBox.setForeground(Color.WHITE);
-		updateIssue_comboBox.setFont(new Font("Arial Rounded MT Bold", Font.PLAIN, 14));
-		updateIssue_comboBox.setBorder(null);
-		updateIssue_comboBox.setBackground(new Color(0, 0, 51));
-		updateIssue_panel.add(updateIssue_comboBox);
-		
-		serviceTypes = ServiceController.getAllServies();
-		updateService_comboBox = new JComboBox(serviceTypes.toArray());
-		
-		dateMadeUpdate_lbl = new JLabel("Date Made:");
-		dateMadeUpdate_lbl.setAlignmentX(Component.CENTER_ALIGNMENT);
-		updateIssue_panel.add(dateMadeUpdate_lbl);
-		dateMadeUpdate_lbl.setMaximumSize(new Dimension(75, 22));
-		dateMadeUpdate_lbl.setForeground(new Color(0, 0, 51));
-		dateMadeUpdate_lbl.setFont(new Font("Arial Rounded MT Bold", Font.PLAIN, 12));
-		
-		date_panel = new JPanel();
-		date_panel.setBackground(new Color(255, 255, 0));
-		date_panel.setMaximumSize(new Dimension(300, 33));
-		updateIssue_panel.add(date_panel);
-		
-		updateDatePicker = new DatePicker();
-		updateDatePicker.getComponentToggleCalendarButton().setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-		updateDatePicker.getComponentDateTextField().setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-		updateDatePicker.setBackground(new Color(255, 255, 0));
-		date_panel.add(updateDatePicker);
-
-		
-		updateBtn = new JButton("UPDATE");
-
-		updateBtn.setToolTipText("Update a previous issue");
-		updateBtn.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-		updateBtn.setBorder(null);
-		updateBtn.setMaximumSize(new Dimension(100, 30));
-		updateBtn.setForeground(Color.WHITE);
-		updateBtn.setFont(new Font("Arial Rounded MT Bold", Font.PLAIN, 14));
-		updateBtn.setBackground(new Color(0, 153, 255));
-		updateBtn.setAlignmentX(0.5f);
-		updateIssue_panel.add(updateBtn);
 		
 		IssueDisplay_panel = new JPanel();
 		IssueDisplay_panel.setBackground(new Color(0, 0, 51));
@@ -377,7 +289,6 @@ public class StudentMain extends JInternalFrame implements ActionListener{
 		search_panel = new JPanel();
 		search_panel.setBackground(new Color(255, 255, 0));
 		FlowLayout fl_search_panel = (FlowLayout) search_panel.getLayout();
-		fl_search_panel.setAlignment(FlowLayout.LEFT);
 		fl_search_panel.setVgap(0);
 		fl_search_panel.setHgap(25);
 		search_panel.setPreferredSize(new Dimension(770, 40));
@@ -395,7 +306,9 @@ public class StudentMain extends JInternalFrame implements ActionListener{
 		searchID_txtfield.setBackground(new Color(255, 255, 0));
 		searchID_txtfield.setFont(new Font("Arial Rounded MT Bold", Font.PLAIN, 13));
 		
-		searchIssueType_comboBox = new JComboBox(issueType);
+		
+		
+		searchIssueType_comboBox = new JComboBox(new DefaultComboBoxModel(new String[] {"Exclude", "Complaint", "Query"}));
 		searchIssueType_comboBox.setToolTipText("Select issue type here");
 		searchIssueType_comboBox.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		searchIssueType_comboBox.setPreferredSize(new Dimension(100, 25));
@@ -415,15 +328,6 @@ public class StudentMain extends JInternalFrame implements ActionListener{
 		service_combobox.setPreferredSize(new Dimension(160, 30));
 		service_combobox.setFont(new Font("Times New Roman", Font.PLAIN, 12));
 		search_panel.add(service_combobox);
-		
-		/*	Using external LGoodDatePicker
-		 *  Create a date picker with some custom settings. 
-		 */
-	    DatePicker searchDatePicker = new DatePicker();
-	    searchDatePicker.getComponentToggleCalendarButton().setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-	    searchDatePicker.getComponentDateTextField().setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-	    searchDatePicker.setBackground(new Color(255, 255, 0));
-		search_panel.add(searchDatePicker);
 		
 		//Resize Search icon
 		ImageIcon searchImageIcon = new ImageIcon(new ImageIcon(Dashboard.class.getResource("/img/search.png"))
@@ -452,7 +356,6 @@ public class StudentMain extends JInternalFrame implements ActionListener{
 		
 		issueTable.setModel(new DefaultTableModel(
 			new Object[][] {
-				{null, null, null, null, null, null},
 			},
 			new String[] {
 				"ISSUE ID", "TYPE", "SERVICE", "LAST RESPONSE", "STATUS", "AGENT"
@@ -499,8 +402,13 @@ public class StudentMain extends JInternalFrame implements ActionListener{
 		    public void mousePressed(MouseEvent mouseEvent) {
 		        JTable table =(JTable) mouseEvent.getSource();
 		        Point point = mouseEvent.getPoint();
-		        
+		        int column= 0;
 		        int row = table.rowAtPoint(point);
+		        
+		        if(mouseEvent.getClickCount() == 1 && table.getSelectedRow() != -1) {
+	        		int selRow = table.getSelectedRow();
+	        		issueID = table.getModel().getValueAt(selRow, column).toString();
+		        }
 		        
 		        if (mouseEvent.getClickCount() == 2 && table.getSelectedRow() != -1) {
 		        	int opt = JOptionPane.showConfirmDialog(workspace_desktopPane, 
@@ -509,9 +417,8 @@ public class StudentMain extends JInternalFrame implements ActionListener{
 							JOptionPane.YES_NO_OPTION,
 							JOptionPane.INFORMATION_MESSAGE);
 		        	if(opt == 0) {
-		        		int column = 0;
 		        		int selRow = table.getSelectedRow();
-		        		String issueID = table.getModel().getValueAt(selRow, column).toString();
+		        		issueID = table.getModel().getValueAt(selRow, column).toString();
 		        		addStudentIssueResponse(issueID);
 		        	}
 
@@ -532,7 +439,6 @@ public class StudentMain extends JInternalFrame implements ActionListener{
 	public void registerListeners() {
 		liveChatBtn.addActionListener(this);
 		addBtn.addActionListener(this);
-		updateBtn.addActionListener(this);
 		addIssue_comboBox.addActionListener(this);
 		searchBtn.addActionListener(this);
 		removeBtn.addActionListener(this);
@@ -569,22 +475,20 @@ public class StudentMain extends JInternalFrame implements ActionListener{
 			}
 			
 		}
-	
-		if(e.getSource().equals(updateBtn)) {
-			dispose();
-			JInternalFrame currFrame = new UpdateIssue(workspace_desktopPane);
-
-			workspace_desktopPane.add(currFrame);
-			
-			//Opens JinternalFrame centered in the JDesktopPane
-			Dimension desktopSize = workspace_desktopPane.getSize();
-			Dimension jInternalFrameSize = currFrame.getSize();
-			
-			//Test if current internal frame is of class AddIssue and renders the frame with that
-			if(currFrame.getClass() == UpdateIssue.class){
-				currFrame.setLocation((desktopSize.width - jInternalFrameSize.width),
-				    (desktopSize.height- jInternalFrameSize.height)/2);
-			}
+		
+		//To remove Issue record
+		if(e.getSource().equals(removeBtn) ) {
+        	int opt = JOptionPane.showConfirmDialog(workspace_desktopPane, 
+					"Are you sure u want to Remove IssueID:"+ issueID + "? ", 
+					"REMOVE",
+					JOptionPane.YES_NO_OPTION,
+					JOptionPane.WARNING_MESSAGE);
+        	if(opt == 0)
+        		removeStudentIssue();		
+		}
+		
+		if(e.getSource().equals(searchBtn)) {
+			searchStudentIssue();
 		}
 	}
 	
@@ -652,22 +556,80 @@ public class StudentMain extends JInternalFrame implements ActionListener{
 	}
 	
 	private void searchStudentIssue() {
-//		serviceTypes
-//		searchIssueType_comboBox
-//		searchFor_lbl
-//		searchDatePicker
 		String studentID = UserLogin.currentUser.getID();
-		String searchID = searchID_txtfield.getText();
 		int serviceType = service_combobox.getSelectedIndex()+1;
 		String type = (String)searchIssueType_comboBox.getItemAt(searchIssueType_comboBox.getSelectedIndex());
+		Date issuedAt = null;
 		
-				
-		if(true) {}
+		Issue searchIssue = new Issue();
+		searchIssue.setStudentID(studentID);
+		searchIssue.setServiceID(serviceType);
+		searchIssue.setIssuedAt(issuedAt);
+		searchIssue.setType(type);
 		
+		//Checks IF type is valid
+		if(type!=null) {
+			
+			//studentIssues stores the retrieved values from the IssueController.getSearchIssuesForStudent Method
+			ArrayList<Issue> studentIssues = IssueController.getSearchIssuesForStudent(searchIssue);
+
+			//A new DefaultTableModel is created to Display records
+			DefaultTableModel model = (DefaultTableModel) issueTable.getModel();
+			
+			/**
+			 * Iterates through List of Issues relating to a specified student and displays
+			 * values in the issue table.
+			 */
+			if(studentIssues != null) {
+				model.setRowCount(0);
+				for(Issue issue: studentIssues) {
+					/**
+					 * Adds row to table with details relating to current student's issue.
+					 */
+					model.addRow(new Object[]{
+							issue.getIssueID(), 
+							issue.getType(),
+							serviceTypes.get(issue.getServiceID()-1),
+							issue.getIssuedAt(),
+							issue.getStatus(),
+							issue.getRepID()
+					});
+				}			
+			}
+		} else {
+			JOptionPane.showMessageDialog(workspace_desktopPane, 
+					"Oops.. Results WERE NOT FOUND.", 
+					"ERROR",
+					JOptionPane.ERROR_MESSAGE);
+		}	
 	}
 	
 	private void removeStudentIssue() {
+		DefaultTableModel model = (DefaultTableModel) issueTable.getModel();
 		
+		//Remove record from table on ISSUE VIEW
+		if(issueID!=null) {
+			
+			boolean issueRemoved =IssueController.removeIssue(issueID);
+			
+			if(issueRemoved == true) {
+				model.removeRow(issueTable.getSelectedRow());
+				JOptionPane.showMessageDialog(workspace_desktopPane, 
+						"ISSUE DELETED SUCCESSFULLY", 
+						"SUCCESS",
+						JOptionPane.INFORMATION_MESSAGE);	
+			}else{
+				JOptionPane.showMessageDialog(workspace_desktopPane, 
+						"Issues is already ASSIGNED, Unable to DELETE", 
+						"ERROR",
+						JOptionPane.ERROR_MESSAGE);
+			}
+		}else {
+			JOptionPane.showMessageDialog(workspace_desktopPane, 
+					"Issue Could NOT be DELETED", 
+					"ERROR",
+					JOptionPane.ERROR_MESSAGE);
+		}
 	}
 	
 	private void addStudentIssueResponse(String issueID) {

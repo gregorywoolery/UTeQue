@@ -96,7 +96,7 @@ public class StudentIssueResponse extends JInternalFrame {
 		gbc_titile_lbl.gridy = 0;
 		getContentPane().add(titile_lbl, gbc_titile_lbl);
 		
-		help_label = new JLabel("");
+		help_label = new JLabel();
 		help_label.setIcon(new ImageIcon(StudentIssueResponse.class.getResource("/img/help.png")));
 		GridBagConstraints gbc_help_label = new GridBagConstraints();
 		gbc_help_label.insets = new Insets(5, 0, 5, 0);
@@ -147,7 +147,7 @@ public class StudentIssueResponse extends JInternalFrame {
 		gbc_services_lbl.gridy = 0;
 		main_panel.add(services_lbl, gbc_services_lbl);
 		
-		type_label = new JLabel("");
+		type_label = new JLabel();
 		type_label.setForeground(new Color(255, 255, 255));
 		type_label.setBackground(new Color(255, 255, 255));
 		type_label.setHorizontalAlignment(SwingConstants.CENTER);
@@ -191,14 +191,14 @@ public class StudentIssueResponse extends JInternalFrame {
 		getContentPane().add(side_panel, gbc_side_panel);
 		side_panel.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 10));
 		
-		issueID_lbl = new JLabel("");
+		issueID_lbl = new JLabel();
 		issueID_lbl.setForeground(new Color(255, 255, 255));
 		issueID_lbl.setHorizontalAlignment(SwingConstants.CENTER);
 		issueID_lbl.setPreferredSize(new Dimension(130, 25));
 		issueID_lbl.setFont(new Font("Arial Rounded MT Bold", Font.PLAIN, 14));
 		side_panel.add(issueID_lbl);
 		
-		issuedAt_lbl = new JLabel("");
+		issuedAt_lbl = new JLabel();
 		issuedAt_lbl.setForeground(new Color(255, 255, 255));
 		side_panel.add(issuedAt_lbl);
 		issuedAt_lbl.setHorizontalAlignment(SwingConstants.CENTER);
@@ -216,28 +216,28 @@ public class StudentIssueResponse extends JInternalFrame {
 		student_lbl.setFont(new Font("Arial Rounded MT Bold", Font.PLAIN, 14));
 		side_panel.add(student_lbl);
 		
-		studentID_lbl = new JLabel("");
+		studentID_lbl = new JLabel();
 		studentID_lbl.setForeground(new Color(255, 255, 255));
 		studentID_lbl.setHorizontalAlignment(SwingConstants.CENTER);
 		studentID_lbl.setPreferredSize(new Dimension(130, 25));
 		studentID_lbl.setFont(new Font("Arial Rounded MT Bold", Font.PLAIN, 14));
 		side_panel.add(studentID_lbl);
 		
-		studentName_lbl = new JLabel("");
+		studentName_lbl = new JLabel();
 		studentName_lbl.setForeground(new Color(255, 255, 255));
 		studentName_lbl.setHorizontalAlignment(SwingConstants.CENTER);
 		studentName_lbl.setPreferredSize(new Dimension(130, 25));
 		studentName_lbl.setFont(new Font("Arial Rounded MT Bold", Font.PLAIN, 14));
 		side_panel.add(studentName_lbl);
 		
-		email_lbl = new JLabel("");
+		email_lbl = new JLabel();
 		email_lbl.setForeground(new Color(255, 255, 255));
 		email_lbl.setHorizontalAlignment(SwingConstants.CENTER);
 		email_lbl.setPreferredSize(new Dimension(130, 25));
 		email_lbl.setFont(new Font("Arial Rounded MT Bold", Font.PLAIN, 14));
 		side_panel.add(email_lbl);
 		
-		contactNo_lbl = new JLabel("");
+		contactNo_lbl = new JLabel();
 		contactNo_lbl.setForeground(new Color(255, 255, 255));
 		contactNo_lbl.setHorizontalAlignment(SwingConstants.CENTER);
 		contactNo_lbl.setPreferredSize(new Dimension(130, 25));
@@ -280,6 +280,8 @@ public class StudentIssueResponse extends JInternalFrame {
 		setVisible(true);
 	}
 	
-	private void registerListeners(){}
+	private void registerListeners(){
+		
+	}
 
 }

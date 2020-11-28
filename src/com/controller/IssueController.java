@@ -6,6 +6,7 @@ import java.io.ObjectOutputStream;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.sql.Date;
 import java.util.ArrayList;
 
 import org.apache.logging.log4j.LogManager;
@@ -192,7 +193,76 @@ public class IssueController {
 		return tableData;		
 		
 	}
+		
+	public static boolean removeIssue(String issueID) {
+		
+		boolean removeIssueSuccess = false;
+		
+		logger.info("Client Trying to connect using socket at port " + port);
+		
+		try(Socket socketConnection = new Socket(InetAddress.getLocalHost(), port);
+				ObjectOutputStream os = new ObjectOutputStream(socketConnection.getOutputStream());
+				ObjectInputStream is = new ObjectInputStream(socketConnection.getInputStream());
+		){
+			
+			logger.info("Getting JOIN from ISSUE and RESPONSE TABLES for main TABLE");		
+			logger.info("Sending ISSUE to SERVER for DELETING");			
+			
+			os.flush();
+			os.writeObject("DELETE-ISSUE");
+			os.flush();
+			os.writeObject(issueID);
+			os.flush();
+			
+			removeIssueSuccess = is.readBoolean();
 
+		} catch (UnknownHostException e) {
+			logger.error("IP ADDRESS OF HOST ERROR - " + e.getMessage()
+							+ e.getStackTrace());
+			
+		} catch (IOException e) {
+			logger.error("ERROR OCCURED - " + e.getMessage()
+							+ e.getStackTrace());
+		}
+		
+		return removeIssueSuccess;	
+	}
+	
+	@SuppressWarnings("unchecked")
+	public static ArrayList<Issue> getSearchIssuesForStudent(Issue searchIssue) {
+		ArrayList<Issue> foundStudentIssues = new ArrayList<>();
+		logger.info("Client Trying to connect using socket at port " + port);
+		
+		try(Socket socketConnection = new Socket(InetAddress.getLocalHost(), port);
+				ObjectOutputStream os = new ObjectOutputStream(socketConnection.getOutputStream());
+				ObjectInputStream is = new ObjectInputStream(socketConnection.getInputStream());
+		){
+			
+			logger.info("Getting SEARCH ISSUES for STUDENT "+ searchIssue.getStudentID() +" from SERVER");	
+			
+			os.flush();
+			os.writeObject("GET-STUDENT-SEARCH ISSUES");
+			os.flush();
+			os.writeObject(searchIssue);
+			os.flush();
+
+			foundStudentIssues =  (ArrayList<Issue>) is.readObject();
+			
+		} catch (UnknownHostException e) {
+			logger.error("IP ADDRESS OF HOST ERROR - " + e.getMessage()
+							+ e.getStackTrace());
+			
+		} catch (ClassNotFoundException e) {
+			logger.error("ERROR OCCURED - " + e.getMessage()
+							+ e.getStackTrace());
+			
+		} catch (IOException e) {
+			logger.error("ERROR OCCURED - " + e.getMessage()
+							+ e.getStackTrace());
+		}
+		
+		return foundStudentIssues;	
+	}
 	
 	/*
 	 * Students should also be able to view a specific complaint or 
@@ -228,10 +298,6 @@ public class IssueController {
 		}
 		
 		return issue;	
-	}
-
-	public void removeIssue(String issueId) {
-		
 	}
 		
 	/*

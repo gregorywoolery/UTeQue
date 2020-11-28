@@ -19,7 +19,9 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.SwingConstants;
 
+import com.controller.IssueController;
 import com.controller.UserController;
+import com.model.Issue;
 import com.model.User;
 import com.view.Dashboard;
 import com.view.UserLogin;
@@ -35,7 +37,6 @@ public class StudentDashboard extends Dashboard implements ActionListener{
 	private JLabel issuesBtn_lbl;
 	private JButton viewBtnDash;
 	private JButton removeBtnDash;
-	private JButton updateBtnDash;
 	private JButton addBtnDash;
 	private JInternalFrame currFrame;
 	private User student;
@@ -122,21 +123,6 @@ public class StudentDashboard extends Dashboard implements ActionListener{
 		addBtnDash.setFont(new Font("Arial Rounded MT Bold", Font.PLAIN, 13));
 		menu_panel.add(addBtnDash);
 		
-		updateBtnDash = new JButton("Update");
-		updateBtnDash.setToolTipText("Update a previous issue.");
-		updateBtnDash.setBackground(new Color(0, 0, 51));
-		updateBtnDash.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-		updateBtnDash.setAlignmentX(0.2f);
-		updateBtnDash.setIcon(new ImageIcon(Dashboard.class.getResource("/img/dash/update.png")));
-		updateBtnDash.setMaximumSize(new Dimension(140, 40));
-		updateBtnDash.setHorizontalTextPosition(SwingConstants.RIGHT);
-		updateBtnDash.setHorizontalAlignment(SwingConstants.LEFT);
-		updateBtnDash.setForeground(Color.WHITE);
-		updateBtnDash.setFont(new Font("Arial Rounded MT Bold", Font.PLAIN, 13));
-		updateBtnDash.setBorder(null);
-		updateBtnDash.setAlignmentY(0.0f);
-		menu_panel.add(updateBtnDash);
-		
 		removeBtnDash = new JButton("Remove");
 		removeBtnDash.setToolTipText("Remove a previous issue.");
 		removeBtnDash.setBackground(new Color(0, 0, 51));
@@ -199,7 +185,6 @@ public class StudentDashboard extends Dashboard implements ActionListener{
 	public void registerListeners() {
 		viewBtnDash.addActionListener(this);
 		addBtnDash.addActionListener(this);
-		updateBtnDash.addActionListener(this);
 		logoutBtn.addActionListener(this);
 	}
 
@@ -243,28 +228,6 @@ public class StudentDashboard extends Dashboard implements ActionListener{
 				}
 			}
 		}
-		
-		if(e.getSource().equals(updateBtnDash)) {
-			//Check if frame to remove is there(not null)
-			if(currFrame !=null) {
-				workspace_desktopPane.removeAll();
-				workspace_desktopPane.updateUI();
-				
-				currFrame = new UpdateIssue(workspace_desktopPane);
-				workspace_desktopPane.add(currFrame);
-				
-				//Opens JinternalFrame centered in the JDesktopPane
-				Dimension desktopSize = workspace_desktopPane.getSize();
-				Dimension jInternalFrameSize = currFrame.getSize();
-				
-				//Test if current internal frame is of class AddIssue and renders the frame with that
-				if(currFrame.getClass() == UpdateIssue.class){
-					currFrame.setLocation((desktopSize.width - jInternalFrameSize.width)/2,
-					    (desktopSize.height- jInternalFrameSize.height)/2);
-				}
-			}
-		}
-		
 		
 		if(e.getSource().equals(logoutBtn)) {
 			dispose();

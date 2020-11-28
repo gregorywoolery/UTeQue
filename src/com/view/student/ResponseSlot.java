@@ -10,17 +10,29 @@ import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.Dimension;
 
 import java.awt.Color;
+import javax.swing.JButton;
 
-public class ResponseSlot extends JPanel {
-
+public class ResponseSlot extends JPanel implements ActionListener {
+	public JLabel responseID_lbl; 
+	public JTextArea responseMessage_txtArea; 
+	public JLabel repName_lbl;
+	public JLabel respondDate_lbl;
+	public JCheckBox isAnswer_chckbx;
+	public JButton commentBtn;
+	public JTextArea commentMessage_textArea;
+	
+	
 	/**
-	 * Create the panel.
+	 * Create the ResponseSlot.
 	 */
 	public ResponseSlot() {
 		initializeComponent();
+		registerListeners();
 	}
 	
 	private void initializeComponent() {
@@ -34,7 +46,7 @@ public class ResponseSlot extends JPanel {
 		gbl_response.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 1.0};
 		this.setLayout(gbl_response);
 		
-		JLabel responseID_lbl = new JLabel("New label");
+		responseID_lbl = new JLabel();
 		responseID_lbl.setPreferredSize(new Dimension(100, 20));
 		responseID_lbl.setForeground(new Color(255, 255, 255));
 		responseID_lbl.setFont(new Font("Arial Rounded MT Bold", Font.PLAIN, 13));
@@ -45,8 +57,7 @@ public class ResponseSlot extends JPanel {
 		gbc_responseID_lbl.gridy = 0;
 		this.add(responseID_lbl, gbc_responseID_lbl);
 		
-		JTextArea responseMessage_txtArea = new JTextArea();
-		responseMessage_txtArea.setEnabled(false);
+		responseMessage_txtArea = new JTextArea();
 		responseMessage_txtArea.setLineWrap(true);
 		responseMessage_txtArea.setTabSize(4);
 		responseMessage_txtArea.setPreferredSize(new Dimension(330, 80));
@@ -59,7 +70,7 @@ public class ResponseSlot extends JPanel {
 		gbc_responseMessage_txtArea.gridy = 1;
 		this.add(responseMessage_txtArea, gbc_responseMessage_txtArea);
 		
-		JLabel repName_lbl = new JLabel("New label");
+		repName_lbl = new JLabel();
 		repName_lbl.setFont(new Font("Arial Rounded MT Bold", Font.PLAIN, 13));
 		repName_lbl.setForeground(new Color(255, 255, 255));
 		GridBagConstraints gbc_repName_lbl = new GridBagConstraints();
@@ -69,7 +80,7 @@ public class ResponseSlot extends JPanel {
 		gbc_repName_lbl.gridy = 2;
 		this.add(repName_lbl, gbc_repName_lbl);
 		
-		JLabel respondDate_lbl = new JLabel("New label");
+		respondDate_lbl = new JLabel();
 		respondDate_lbl.setFont(new Font("Arial Rounded MT Bold", Font.PLAIN, 13));
 		respondDate_lbl.setForeground(new Color(255, 255, 255));
 		GridBagConstraints gbc_respondDate_lbl = new GridBagConstraints();
@@ -79,7 +90,7 @@ public class ResponseSlot extends JPanel {
 		gbc_respondDate_lbl.gridy = 2;
 		this.add(respondDate_lbl, gbc_respondDate_lbl);
 		
-		JCheckBox isAnswer_chckbx = new JCheckBox("is Answer ?");
+		isAnswer_chckbx = new JCheckBox("is Answer ?");
 		isAnswer_chckbx.setBackground(new Color(0, 0, 51));
 		isAnswer_chckbx.setForeground(new Color(255, 255, 255));
 		GridBagConstraints gbc_isAnswer_chckbx = new GridBagConstraints();
@@ -89,20 +100,22 @@ public class ResponseSlot extends JPanel {
 		gbc_isAnswer_chckbx.gridy = 3;
 		this.add(isAnswer_chckbx, gbc_isAnswer_chckbx);
 		
-		JLabel comment_lbl = new JLabel("Comment:");
-		comment_lbl.setIconTextGap(25);
-		comment_lbl.setHorizontalTextPosition(SwingConstants.LEFT);
-		comment_lbl.setIcon(new ImageIcon(StudentIssueResponse.class.getResource("/img/add-comment.png")));
-		comment_lbl.setForeground(new Color(255, 255, 255));
-		comment_lbl.setFont(new Font("Arial Rounded MT Bold", Font.PLAIN, 13));
-		GridBagConstraints gbc_comment_lbl = new GridBagConstraints();
-		gbc_comment_lbl.anchor = GridBagConstraints.WEST;
-		gbc_comment_lbl.insets = new Insets(0, 20, 5, 0);
-		gbc_comment_lbl.gridx = 1;
-		gbc_comment_lbl.gridy = 3;
-		this.add(comment_lbl, gbc_comment_lbl);
+		commentBtn = new JButton("Comment");
+		commentBtn.setPreferredSize(new Dimension(100, 30));
+		commentBtn.setBorder(null);
+		commentBtn.setBackground(new Color(0, 204, 0));
+		commentBtn.setHorizontalTextPosition(SwingConstants.LEFT);
+		commentBtn.setIcon(new ImageIcon(StudentIssueResponse.class.getResource("/img/add-comment.png")));
+		commentBtn.setForeground(new Color(255, 255, 255));
+		commentBtn.setFont(new Font("Arial Rounded MT Bold", Font.PLAIN, 13));
+		GridBagConstraints gbc_commentBtn = new GridBagConstraints();
+		gbc_commentBtn.anchor = GridBagConstraints.WEST;
+		gbc_commentBtn.insets = new Insets(0, 20, 5, 0);
+		gbc_commentBtn.gridx = 1;
+		gbc_commentBtn.gridy = 3;
+		this.add(commentBtn, gbc_commentBtn);
 		
-		JTextArea commentMessage_textArea = new JTextArea();
+		commentMessage_textArea = new JTextArea();
 		commentMessage_textArea.setTabSize(4);
 		commentMessage_textArea.setPreferredSize(new Dimension(250, 22));
 		GridBagConstraints gbc_commentMessage_textArea = new GridBagConstraints();
@@ -112,6 +125,18 @@ public class ResponseSlot extends JPanel {
 		gbc_commentMessage_textArea.gridx = 0;
 		gbc_commentMessage_textArea.gridy = 4;
 		this.add(commentMessage_textArea, gbc_commentMessage_textArea);
+	}
+	
+	public void registerListeners() {
+		commentBtn.addActionListener(this);
+	}
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		if(e.getSource().equals(commentBtn)) {
+			
+		}
+		
 	}
 
 }

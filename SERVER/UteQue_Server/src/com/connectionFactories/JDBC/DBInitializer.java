@@ -225,6 +225,7 @@ public class DBInitializer {
 				+ "message VARCHAR(140) NOT NULL , "
 				+ "responseAt DATE NOT NULL , "
 				+ "isAnswer BOOLEAN DEFAULT FALSE , "
+				+ "comment VARCHAR(50) NULL , "
 				+ "PRIMARY KEY (`responseID`),"
 				+ "FOREIGN KEY(issueID) REFERENCES UTeQueDB.`Issue`(issueID)"
 				+ ") ENGINE = InnoDB";

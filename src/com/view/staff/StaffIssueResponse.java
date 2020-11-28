@@ -6,12 +6,20 @@ import java.awt.EventQueue;
 import javax.swing.JDesktopPane;
 import javax.swing.JInternalFrame;
 import javax.swing.border.LineBorder;
+
+import com.controller.UserController;
+import com.model.User;
+
 import java.awt.GridBagLayout;
 import javax.swing.JPanel;
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.BorderLayout;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+
 import java.awt.Font;
 import java.awt.Dimension;
 import javax.swing.SwingConstants;
@@ -27,7 +35,39 @@ import javax.swing.JCheckBox;
 import java.awt.Cursor;
 import javax.swing.BoxLayout;
 
-public class StaffIssueResponse extends JInternalFrame {
+public class StaffIssueResponse extends JInternalFrame implements ActionListener{
+	
+	private static final long serialVersionUID = 9161869361681829518L;
+	
+	private JLabel titile_lbl;
+	private JLabel help_label;
+	private JPanel main_panel;
+	private JTextArea issueMessage_txtArea;
+	private JLabel services_lbl;
+	private JLabel type_label;
+	private JLabel reponsesTitle_lbl;
+	private JTabbedPane tabbedPane;
+	private ResponseSlot response;
+	private JPanel reponseOption_panel; 
+	private JButton newRepsonseBtn;
+	private JButton postResponseBtn;
+	private JPanel side_panel;
+	private JLabel issueID_lbl;
+	private JLabel issuedAt_lbl;
+	private JSeparator separator;
+	private JLabel student_lbl;
+	private JLabel studentID_lbl;
+	private JLabel studentName_lbl;
+	private JLabel email_lbl;
+	private JLabel contactNo_lbl;
+	private JSeparator separator1;
+	private JLabel representative_lbl;
+	private JLabel representativeName_lbl;
+	private JSeparator separator2;
+	private JButton returnBtn;
+	private JDesktopPane workSpaceDesktop;
+	private User staff;
+	
 	
 	public StaffIssueResponse(JDesktopPane workSpaceDesktop) {
 		super("Issue-Response", 
@@ -35,6 +75,7 @@ public class StaffIssueResponse extends JInternalFrame {
 				true, 	//closable
 				false, 	//maximizable
 				true);	//iconifiable
+		this.workSpaceDesktop = workSpaceDesktop;
 		initializeComponents();
 		registerListeners();
 	}
@@ -43,6 +84,8 @@ public class StaffIssueResponse extends JInternalFrame {
 	 * Create the frame.
 	 */
 	private void initializeComponents() {
+		staff = UserController.getCurrentUser();
+		
 		//Removes top bar from internal frame
 		((javax.swing.plaf.basic.BasicInternalFrameUI)this.getUI()).setNorthPane(null);
 		
@@ -54,7 +97,7 @@ public class StaffIssueResponse extends JInternalFrame {
 		gridBagLayout.rowWeights = new double[]{0.0, 1.0};
 		getContentPane().setLayout(gridBagLayout);
 		
-		JLabel titile_lbl = new JLabel("Issue - Response");
+		titile_lbl = new JLabel("Issue - Response");
 		titile_lbl.setHorizontalTextPosition(SwingConstants.LEADING);
 		titile_lbl.setPreferredSize(new Dimension(250, 50));
 		titile_lbl.setForeground(new Color(255, 255, 255));
@@ -66,7 +109,7 @@ public class StaffIssueResponse extends JInternalFrame {
 		gbc_titile_lbl.gridy = 0;
 		getContentPane().add(titile_lbl, gbc_titile_lbl);
 		
-		JLabel help_label = new JLabel("");
+		help_label = new JLabel("");
 		help_label.setIcon(new ImageIcon(StaffIssueResponse.class.getResource("/img/help.png")));
 		GridBagConstraints gbc_help_label = new GridBagConstraints();
 		gbc_help_label.insets = new Insets(5, 0, 5, 0);
@@ -74,7 +117,7 @@ public class StaffIssueResponse extends JInternalFrame {
 		gbc_help_label.gridy = 0;
 		getContentPane().add(help_label, gbc_help_label);
 		
-		JPanel main_panel = new JPanel();
+		main_panel = new JPanel();
 		main_panel.setBackground(new Color(204, 0, 0));
 		GridBagConstraints gbc_main_panel = new GridBagConstraints();
 		gbc_main_panel.insets = new Insets(0, 0, 0, 5);
@@ -89,7 +132,7 @@ public class StaffIssueResponse extends JInternalFrame {
 		gbl_main_panel.rowWeights = new double[]{1.0, 0.0, 0.0, 0.0, 1.0};
 		main_panel.setLayout(gbl_main_panel);
 		
-		JTextArea issueMessage_txtArea = new JTextArea();
+		issueMessage_txtArea = new JTextArea();
 		issueMessage_txtArea.setBackground(new Color(255, 255, 255));
 		issueMessage_txtArea.setEnabled(false);
 		issueMessage_txtArea.setForeground(new Color(255, 255, 255));
@@ -105,7 +148,7 @@ public class StaffIssueResponse extends JInternalFrame {
 		gbc_issueMessage_txtArea.gridy = 0;
 		main_panel.add(issueMessage_txtArea, gbc_issueMessage_txtArea);
 		
-		JLabel services_lbl = new JLabel("");
+		services_lbl = new JLabel("");
 		services_lbl.setForeground(new Color(255, 255, 255));
 		services_lbl.setBackground(new Color(255, 255, 255));
 		services_lbl.setHorizontalAlignment(SwingConstants.CENTER);
@@ -117,7 +160,7 @@ public class StaffIssueResponse extends JInternalFrame {
 		gbc_services_lbl.gridy = 0;
 		main_panel.add(services_lbl, gbc_services_lbl);
 		
-		JLabel type_label = new JLabel("");
+		type_label = new JLabel("");
 		type_label.setForeground(new Color(255, 255, 255));
 		type_label.setBackground(new Color(255, 255, 255));
 		type_label.setHorizontalAlignment(SwingConstants.CENTER);
@@ -128,7 +171,7 @@ public class StaffIssueResponse extends JInternalFrame {
 		gbc_type_label.gridy = 2;
 		main_panel.add(type_label, gbc_type_label);
 		
-		JLabel reponsesTitle_lbl = new JLabel("Responses");
+		reponsesTitle_lbl = new JLabel("Responses");
 		reponsesTitle_lbl.setForeground(new Color(255, 255, 255));
 		reponsesTitle_lbl.setFont(new Font("Arial Rounded MT Bold", Font.PLAIN, 14));
 		GridBagConstraints gbc_reponsesTitle_lbl = new GridBagConstraints();
@@ -138,7 +181,7 @@ public class StaffIssueResponse extends JInternalFrame {
 		gbc_reponsesTitle_lbl.gridy = 3;
 		main_panel.add(reponsesTitle_lbl, gbc_reponsesTitle_lbl);
 		
-		JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP);
+		tabbedPane = new JTabbedPane(JTabbedPane.TOP);
 		tabbedPane.setMaximumSize(new Dimension(360, 320));
 		
 		GridBagConstraints gbc_tabbedPane = new GridBagConstraints();
@@ -148,10 +191,10 @@ public class StaffIssueResponse extends JInternalFrame {
 		gbc_tabbedPane.gridy = 4;
 		main_panel.add(tabbedPane, gbc_tabbedPane);
 		
-		ResponseSlot response = new ResponseSlot();
+		response = new ResponseSlot();
 		tabbedPane.addTab(" 1 ", response);
 		
-		JPanel reponseOption_panel = new JPanel();
+		reponseOption_panel = new JPanel();
 		reponseOption_panel.setBackground(new Color(204, 0, 0));
 		FlowLayout fl_reponseOption_panel = (FlowLayout) reponseOption_panel.getLayout();
 		fl_reponseOption_panel.setVgap(20);
@@ -162,14 +205,14 @@ public class StaffIssueResponse extends JInternalFrame {
 		gbc_reponseOption_panel.gridy = 4;
 		main_panel.add(reponseOption_panel, gbc_reponseOption_panel);
 		
-		JButton newRepsonseBtn = new JButton("New");
+		newRepsonseBtn = new JButton("New");
 		newRepsonseBtn.setPreferredSize(new Dimension(120, 30));
 		newRepsonseBtn.setFont(new Font("Arial Rounded MT Bold", Font.PLAIN, 14));
 		newRepsonseBtn.setBackground(new Color(0, 204, 0));
 		newRepsonseBtn.setBorder(null);
 		reponseOption_panel.add(newRepsonseBtn);
 		
-		JButton postResponseBtn = new JButton("Respond");
+		postResponseBtn = new JButton("Respond");
 		postResponseBtn.setPreferredSize(new Dimension(120, 30));
 		postResponseBtn.setFont(new Font("Arial Rounded MT Bold", Font.PLAIN, 14));
 		postResponseBtn.setBackground(new Color(0, 204, 0));
@@ -177,7 +220,7 @@ public class StaffIssueResponse extends JInternalFrame {
 		reponseOption_panel.add(postResponseBtn);
 
 		
-		JPanel side_panel = new JPanel();
+		side_panel = new JPanel();
 		side_panel.setBackground(new Color(204, 0, 0));
 		GridBagConstraints gbc_side_panel = new GridBagConstraints();
 		gbc_side_panel.fill = GridBagConstraints.BOTH;
@@ -186,82 +229,82 @@ public class StaffIssueResponse extends JInternalFrame {
 		getContentPane().add(side_panel, gbc_side_panel);
 		side_panel.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 10));
 		
-		JLabel issueID_lbl = new JLabel("");
+		issueID_lbl = new JLabel("");
 		issueID_lbl.setForeground(new Color(255, 255, 255));
 		issueID_lbl.setHorizontalAlignment(SwingConstants.CENTER);
 		issueID_lbl.setPreferredSize(new Dimension(130, 25));
 		issueID_lbl.setFont(new Font("Arial Rounded MT Bold", Font.PLAIN, 14));
 		side_panel.add(issueID_lbl);
 		
-		JLabel issuedAt_lbl = new JLabel("");
+		issuedAt_lbl = new JLabel("");
 		issuedAt_lbl.setForeground(new Color(255, 255, 255));
 		side_panel.add(issuedAt_lbl);
 		issuedAt_lbl.setHorizontalAlignment(SwingConstants.CENTER);
 		issuedAt_lbl.setPreferredSize(new Dimension(130, 25));
 		issuedAt_lbl.setFont(new Font("Arial Rounded MT Bold", Font.PLAIN, 13));
 		
-		JSeparator separator = new JSeparator();
+		separator = new JSeparator();
 		separator.setPreferredSize(new Dimension(110, 10));
 		side_panel.add(separator);
 		
-		JLabel student_lbl = new JLabel("Student");
+		student_lbl = new JLabel("Student");
 		student_lbl.setForeground(new Color(255, 255, 255));
 		student_lbl.setHorizontalAlignment(SwingConstants.CENTER);
 		student_lbl.setPreferredSize(new Dimension(130, 25));
 		student_lbl.setFont(new Font("Arial Rounded MT Bold", Font.PLAIN, 14));
 		side_panel.add(student_lbl);
 		
-		JLabel studentID_lbl = new JLabel("");
+		studentID_lbl = new JLabel("");
 		studentID_lbl.setForeground(new Color(255, 255, 255));
 		studentID_lbl.setHorizontalAlignment(SwingConstants.CENTER);
 		studentID_lbl.setPreferredSize(new Dimension(130, 25));
 		studentID_lbl.setFont(new Font("Arial Rounded MT Bold", Font.PLAIN, 14));
 		side_panel.add(studentID_lbl);
 		
-		JLabel studentName_lbl = new JLabel("");
+		studentName_lbl = new JLabel("");
 		studentName_lbl.setForeground(new Color(255, 255, 255));
 		studentName_lbl.setHorizontalAlignment(SwingConstants.CENTER);
 		studentName_lbl.setPreferredSize(new Dimension(130, 25));
 		studentName_lbl.setFont(new Font("Arial Rounded MT Bold", Font.PLAIN, 14));
 		side_panel.add(studentName_lbl);
 		
-		JLabel email_lbl = new JLabel("");
+		email_lbl = new JLabel("");
 		email_lbl.setForeground(new Color(255, 255, 255));
 		email_lbl.setHorizontalAlignment(SwingConstants.CENTER);
 		email_lbl.setPreferredSize(new Dimension(130, 25));
 		email_lbl.setFont(new Font("Arial Rounded MT Bold", Font.PLAIN, 14));
 		side_panel.add(email_lbl);
 		
-		JLabel contactNo_lbl = new JLabel("");
+		contactNo_lbl = new JLabel("");
 		contactNo_lbl.setForeground(new Color(255, 255, 255));
 		contactNo_lbl.setHorizontalAlignment(SwingConstants.CENTER);
 		contactNo_lbl.setPreferredSize(new Dimension(130, 25));
 		contactNo_lbl.setFont(new Font("Arial Rounded MT Bold", Font.PLAIN, 14));
 		side_panel.add(contactNo_lbl);
 		
-		JSeparator separator1 = new JSeparator();
+		separator1 = new JSeparator();
 		separator1.setPreferredSize(new Dimension(110, 10));
 		side_panel.add(separator1);
 		
-		JLabel representative_lbl = new JLabel("Representative");
+		representative_lbl = new JLabel("Representative");
 		representative_lbl.setForeground(new Color(255, 255, 255));
 		representative_lbl.setHorizontalAlignment(SwingConstants.CENTER);
 		representative_lbl.setPreferredSize(new Dimension(130, 25));
 		representative_lbl.setFont(new Font("Arial Rounded MT Bold", Font.PLAIN, 14));
 		side_panel.add(representative_lbl);
 		
-		JLabel representativeName_lbl = new JLabel("");
+		representativeName_lbl = new JLabel("");
 		representativeName_lbl.setForeground(new Color(255, 255, 255));
 		representativeName_lbl.setHorizontalAlignment(SwingConstants.CENTER);
 		representativeName_lbl.setPreferredSize(new Dimension(130, 25));
 		representativeName_lbl.setFont(new Font("Arial Rounded MT Bold", Font.PLAIN, 14));
 		side_panel.add(representativeName_lbl);
 		
-		JSeparator separator2 = new JSeparator();
+		separator2 = new JSeparator();
 		separator2.setPreferredSize(new Dimension(110, 30));
 		side_panel.add(separator2);
 		
-		JButton returnBtn = new JButton("Return");
+		returnBtn = new JButton("Return");
 		returnBtn.setPreferredSize(new Dimension(100, 35));
 		returnBtn.setIcon(new ImageIcon(StaffIssueResponse.class.getResource("/img/return.png")));
 		returnBtn.setFont(new Font("Arial Rounded MT Bold", Font.PLAIN, 14));
@@ -275,6 +318,28 @@ public class StaffIssueResponse extends JInternalFrame {
 		setVisible(true);
 	}
 	
-	private void registerListeners(){}
+	private void registerListeners(){
+		newRepsonseBtn.addActionListener(this);
+		postResponseBtn.addActionListener(this);
+		returnBtn.addActionListener(this);
+	}
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		if(e.getSource() == returnBtn) {
+			int opt = JOptionPane.showConfirmDialog(workSpaceDesktop, 
+					"You will now be returning to the Dashboard. Are you sure?", 
+					"Return Home...",
+					JOptionPane.YES_NO_CANCEL_OPTION,
+					JOptionPane.QUESTION_MESSAGE);
+			
+			switch(opt) {
+				case 0:
+					//addMainInternalFrame();
+					break;
+			}
+		}
+		
+	}
 
 }
