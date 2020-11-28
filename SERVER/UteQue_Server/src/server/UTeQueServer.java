@@ -65,9 +65,9 @@ public class UTeQueServer {
 		Date issuedAt = null;
 		boolean success = false;
 		int[] stats = new int[3];
+
 		int serviceID=0;
 		User user;
-		int serviceID;
 		
 		public ClientHandler(Socket socket) {
 			logger.info("Socket connection recieved by server thread");

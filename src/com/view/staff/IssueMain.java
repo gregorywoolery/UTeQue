@@ -4,8 +4,15 @@ import java.awt.Color;
 import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.text.ParseException;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Date;
+import java.text.SimpleDateFormat; 
 
 import javax.swing.JInternalFrame;
 import javax.swing.border.LineBorder;
@@ -22,6 +29,8 @@ import javax.swing.JCheckBox;
 import javax.swing.JTextField;
 import javax.swing.border.TitledBorder;
 import java.awt.Insets;
+import java.awt.Point;
+
 import javax.swing.JSplitPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
@@ -37,6 +46,7 @@ import java.awt.GridBagLayout;
 import java.awt.GridBagConstraints;
 import javax.swing.JButton;
 import javax.swing.SwingConstants;
+import javax.swing.ListSelectionModel;
 
 @SuppressWarnings("rawtypes")
 public class IssueMain extends JInternalFrame implements ActionListener{
@@ -146,30 +156,46 @@ public class IssueMain extends JInternalFrame implements ActionListener{
 		getContentPane().add(main_splitPane);
 		
 		studentIssues_table = new JTable();
+		studentIssues_table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		studentIssues_table.setRowSelectionAllowed(true);
+		studentIssues_table.setColumnSelectionAllowed(false);
+		
+		studentIssues_table.setRowHeight(20);
+		studentIssues_table.setFont(new Font("Times New Roman", Font.PLAIN, 14));
 		studentIssues_table.setModel(new DefaultTableModel(
 			new Object[][] {
 			},
 			new String[] {
-				"Issue ID", "Type", "Service", "Issued At", "Rep ID", "Assigned On"
+				"Issue ID", "Type", "Issued At", "Rep ID", "Assigned On"
 			}
 		) {
 			boolean[] columnEditables = new boolean[] {
-				false, false, false, false, true, true
+				false, false, false, false, false
 			};
 			public boolean isCellEditable(int row, int column) {
 				return columnEditables[column];
 			}
 		});
 		studentIssues_table.getColumnModel().getColumn(0).setResizable(false);
-		studentIssues_table.getColumnModel().getColumn(0).setPreferredWidth(95);
+		studentIssues_table.getColumnModel().getColumn(0).setPreferredWidth(100);
 		studentIssues_table.getColumnModel().getColumn(1).setResizable(false);
-		studentIssues_table.getColumnModel().getColumn(1).setPreferredWidth(80);
+		studentIssues_table.getColumnModel().getColumn(1).setPreferredWidth(90);
 		studentIssues_table.getColumnModel().getColumn(2).setResizable(false);
-		studentIssues_table.getColumnModel().getColumn(2).setPreferredWidth(120);
+		studentIssues_table.getColumnModel().getColumn(2).setPreferredWidth(90);
 		studentIssues_table.getColumnModel().getColumn(3).setResizable(false);
-		studentIssues_table.getColumnModel().getColumn(3).setPreferredWidth(90);
-		studentIssues_table.getColumnModel().getColumn(4).setPreferredWidth(95);
-		studentIssues_table.getColumnModel().getColumn(5).setPreferredWidth(96);
+		studentIssues_table.getColumnModel().getColumn(3).setPreferredWidth(110);
+		studentIssues_table.getColumnModel().getColumn(4).setResizable(false);
+		studentIssues_table.getColumnModel().getColumn(4).setPreferredWidth(110);
+		
+		studentIssues_table.addMouseListener(new MouseAdapter() {
+		    public void mousePressed(MouseEvent mouseEvent) {
+		        JTable table =(JTable) mouseEvent.getSource();
+		        
+		        if(mouseEvent.getClickCount() == 1 && table.getSelectedRow() != -1) {
+		        	assaignOptionDisplay();
+		        }
+		    }
+		});
 		
 		JScrollPane scrollPane = new JScrollPane(studentIssues_table);
 		scrollPane.setPreferredSize(new Dimension(500, 402));
@@ -358,13 +384,15 @@ public class IssueMain extends JInternalFrame implements ActionListener{
 	
 	private void updateStudentIssuesTable(String studentID, int serviceID) {
 		//"Issue ID", "Type", "Service", "Issued At", "Rep ID", "Assigned On"
+		
 		ArrayList<Issue> studentIssues = IssueController
 											.getStudentIssuesByService(studentID, serviceID);
 		
 		DefaultTableModel model = (DefaultTableModel) studentIssues_table.getModel();
-		
+		SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy");
 		int serviceInd;
 		String repAssigned;
+		String scheduledTime;
 		
 		/**
 		 * Iterates through List of Issues relating to a specified student and displays
@@ -387,28 +415,35 @@ public class IssueMain extends JInternalFrame implements ActionListener{
 				 * is shown.
 				 */
 				if(issue.getRepID() == null)
-					repAssigned = "NOT Assigned";
+					repAssigned = "NOT ASSIGNED";
 				else
 					repAssigned = issue.getRepID();
 						
-					
+				
+				if(issue.getScheduledDateTime() == null)
+					scheduledTime = "NOT ASSIGNED";
+				else
+					scheduledTime = format.format(issue.getScheduledDateTime());
+				
+				
+				String issuedAt = format.format(issue.getIssuedAt());
 				/**
 				 * Adds row to table with details relating to current student's issue.
+				 * "Issue ID", "Type", "Issued At", "Rep ID", "Assigned On"
 				 */
 				model.addRow(new Object[]{
 						issue.getIssueID(), 
 						issue.getType(),
-						serviceTypes.get(serviceInd),
-						issue.getIssuedAt(),
+						issuedAt,
 						repAssigned,
-						issue.getScheduledDateTime()
+						scheduledTime
 				});
 			}			
 		}
 	}
 	
 	private void assaignOptionDisplay() {
-		//"Issue ID", "Type", "Service", "Issued At", "Rep ID", "Assigned On"
+		//* "Issue ID", "Type", "Issued At", "Rep ID", "Assigned On"
 		
 		String repID = staff.getID();
 		String repAssigned = "NOT ASSIGNED";
@@ -422,7 +457,7 @@ public class IssueMain extends JInternalFrame implements ActionListener{
 			repSelected = null;
 		else {
 			if(studentIssues_table.getSelectedRow() != -1) {
-				int column = 4; //Rep ID Column
+				int column = 3; //Rep ID Column
 				selRow = studentIssues_table.getSelectedRow();
 				repSelected = studentIssues_table.getModel().getValueAt(selRow, column).toString();						
 			}
