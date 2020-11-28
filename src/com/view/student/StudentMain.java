@@ -608,7 +608,7 @@ public class StudentMain extends JInternalFrame implements ActionListener{
 		DefaultTableModel model = (DefaultTableModel) issueTable.getModel();
 		
 		//Remove record from table on ISSUE VIEW
-		if(issueID!=null) {
+		if(issueID != null) {
 			
 			boolean issueRemoved =IssueController.removeIssue(issueID);
 			

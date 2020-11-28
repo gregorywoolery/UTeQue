@@ -69,6 +69,7 @@ public class UserLogin extends JFrame implements ActionListener{
 	private JLabel auth_message;
 	
 	public static User currentUser = new User();
+	String userType = "";
 
 	/**
 	 * Launch the application.
@@ -389,7 +390,7 @@ public class UserLogin extends JFrame implements ActionListener{
 		if(e.getSource() == login_btn && 
 				(agent_rdbtn.isSelected() || student_rdbtn.isSelected()|| rep_rdbtn.isSelected() )
 		) {
-			String userType = "";
+			userType = "";
 			
 			if(agent_rdbtn.isSelected())
 				userType = "AGENT";

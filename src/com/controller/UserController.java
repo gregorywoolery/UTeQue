@@ -6,6 +6,7 @@ import java.io.ObjectOutputStream;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.util.ArrayList;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -18,17 +19,10 @@ public class UserController {
 	private static String userType;
 	
 	private static final Logger logger = LogManager.getLogger(IssueController.class);
-
-	public static String getUsername() {
-		return username;
-	}
-
-	public static String getUserType() {
-		return userType;
-	}
 	
 	public static void setCurrentUser(String username, String userType) {		
-		currentUser = new User(username, userType);
+		currentUser.setID(username);
+		currentUser.setType(userType);
 
 	}
 	
@@ -75,5 +69,11 @@ public class UserController {
 		} 
 		
 		return currentUser;
+	}
+	
+	public static ArrayList<User> getAllAvailableRepresentative(){
+		
+		
+		return null;
 	}
 }

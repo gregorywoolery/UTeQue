@@ -22,6 +22,8 @@ import javax.swing.JScrollPane;
 
 import java.awt.Dimension;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+
 import java.awt.Font;
 import javax.swing.JComboBox;
 import javax.swing.JDesktopPane;
@@ -40,6 +42,7 @@ import com.controller.ServiceController;
 import com.controller.UserController;
 import com.model.Issue;
 import com.model.User;
+import com.view.UserLogin;
 
 import java.awt.GridLayout;
 import java.awt.GridBagLayout;
@@ -192,6 +195,11 @@ public class IssueMain extends JInternalFrame implements ActionListener{
 		        JTable table =(JTable) mouseEvent.getSource();
 		        
 		        if(mouseEvent.getClickCount() == 1 && table.getSelectedRow() != -1) {
+//					JOptionPane.showMessageDialog(workSpaceDesktop, 
+//							"ISSUE ADDED SUCCESSFULLY", 
+//							"SUCCESS",
+//							JOptionPane.INFORMATION_MESSAGE);
+					
 		        	assaignOptionDisplay();
 		        }
 		    }
@@ -356,9 +364,7 @@ public class IssueMain extends JInternalFrame implements ActionListener{
 		moreBtn.setFont(new Font("Arial Rounded MT Bold", Font.PLAIN, 12));
 		moreBtn.setPreferredSize(new Dimension(100, 25));
 		moreBtn.setBorder(null);
-		
-		//assaignOptionDisplay();
-		
+				
 		setVisible(true);
 	}
 
@@ -439,6 +445,11 @@ public class IssueMain extends JInternalFrame implements ActionListener{
 						scheduledTime
 				});
 			}			
+		}else {
+			JOptionPane.showMessageDialog(workSpaceDesktop, 
+				"Student has not logged any issues.", 
+				"NOTHING LOGGED",
+				JOptionPane.INFORMATION_MESSAGE);
 		}
 	}
 	
@@ -456,11 +467,11 @@ public class IssueMain extends JInternalFrame implements ActionListener{
 		if(selectedItems == null || selectedItems.length < 1)
 			repSelected = null;
 		else {
-			if(studentIssues_table.getSelectedRow() != -1) {
+			//if(studentIssues_table.getSelectedRow() != -1) {
 				int column = 3; //Rep ID Column
 				selRow = studentIssues_table.getSelectedRow();
 				repSelected = studentIssues_table.getModel().getValueAt(selRow, column).toString();						
-			}
+			//}
 		}
 		
 		if(repSelected == null)
@@ -468,14 +479,36 @@ public class IssueMain extends JInternalFrame implements ActionListener{
 		else
 			repAssigned = repSelected;
 		
-		String loggedUser = staff.getType();
 		
-		if(repID != "NOT ASSINGED" && loggedUser == "REP" && staff.getID() == repSelected)
+		String loggedUser = UserLogin.currentUser.getType();
+		
+		//Updates issueOptionPanel each time an ISSUE is selected
+		issueOptions_panel.removeAll();
+		issueOptions_panel.updateUI();
+		
+		/**
+		 * Controls bottom pane to display option to STAFF for controlling an ISSUE.
+		 * If the LOGGED IN USER is the selects an ISSUE and he/she is the 
+		 * STUDENT SERVICES REPRESENTATIVE assigned to the ISSUE then display the 
+		 * RESPOND BUTTON to the USER. 
+		 * 
+		 * If the LOGGED IN USER is an AGENT then display the option to assign a 
+		 * STUDENT SERVICES REPRESENTATIVE to the issue selected if not assigned already.
+		 * 
+		 * If the LOGGED IN USER is an AGENT but the ISSUE selected is already assigned to
+		 * a STUDENT SERVICES REPRESENTATIVE then only display the MORE BUTTUN option.
+		 * 
+		 * If the USER was a STUDENT SERVICES REPRESENTATIVE and not assigned to the
+		 * selected ISSUE then only display a MORE BUTTON OPTION.
+		 */
+		
+		if(repID != "NOT ASSINGED" && loggedUser == "REP" && staff.getID().equals(repSelected))
 			issueOptions_panel.add(respondBtn);
 		else {
-			if(loggedUser == "AGENT") 
+			if(loggedUser == "AGENT") {
+
 				issueOptions_panel.add(assignRep_Panel);
-			
+			}
 			issueOptions_panel.add(moreBtn);
 		}
 	}
