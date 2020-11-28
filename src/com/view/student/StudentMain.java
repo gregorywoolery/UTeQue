@@ -689,25 +689,19 @@ public class StudentMain extends JInternalFrame implements ActionListener{
 		int serviceType = service_combobox.getSelectedIndex()+1;
 		String type = (String)searchIssueType_comboBox.getItemAt(searchIssueType_comboBox.getSelectedIndex());
 		Date issuedAt = null;
-		try {
-			issuedAt = (Date) new SimpleDateFormat("yyyy/MM/dd").parse(searchDatePicker.getText());
-		} catch (ParseException e) {
-			e.printStackTrace();
-		}
 		//issuedAt = searchDatePicker.getText();
 		Issue searchIssue = new Issue();
 		searchIssue.setStudentID(studentID);
 		searchIssue.setServiceID(serviceType);
 		searchIssue.setIssuedAt(issuedAt);
 		searchIssue.setType(type);
+		System.out.println("***" + searchIssue.getType());
 		
 		
 		if(type!=null || serviceType!=0 || issuedAt!=null) {
-			if(searchIssue.getType() == "Exclude") {
-				searchIssue.setType(null);
+			if(searchIssue.getType().equals("Exclude")) {
+				searchIssue.setType("Query");
 			}
-				
-
 			System.out.println("Student Main:" + searchIssue.toString());
 			ArrayList<Issue> studentIssues = IssueController.getSearchIssuesForStudent(searchIssue);
 			DefaultTableModel model = (DefaultTableModel) issueTable.getModel();

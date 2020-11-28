@@ -191,7 +191,6 @@ public class IssueController {
 	@SuppressWarnings("unchecked")
 	public static ArrayList<Issue> getSearchIssuesForStudent(Issue searchIssue) {
 		ArrayList<Issue> foundStudentIssues = new ArrayList<>();
-		System.out.println("Issue Controller:" + searchIssue.toString());
 		logger.info("Client Trying to connect using socket at port " + port);
 		
 		try(Socket socketConnection = new Socket(InetAddress.getLocalHost(), port);
