@@ -19,6 +19,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.font.TextAttribute;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -99,6 +100,7 @@ public class StudentMain extends JInternalFrame implements ActionListener{
 	private String currDate;
 	private ArrayList<String> serviceTypes;
 	private String issueID=null;
+	private  DatePicker searchDatePicker;
 	
 	private User student;
 	
@@ -420,7 +422,7 @@ public class StudentMain extends JInternalFrame implements ActionListener{
 		/*	Using external LGoodDatePicker
 		 *  Create a date picker with some custom settings. 
 		 */
-	    DatePicker searchDatePicker = new DatePicker();
+	    searchDatePicker = new DatePicker();
 	    searchDatePicker.getComponentToggleCalendarButton().setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 	    searchDatePicker.getComponentDateTextField().setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 	    searchDatePicker.setBackground(new Color(255, 255, 0));
@@ -686,11 +688,28 @@ public class StudentMain extends JInternalFrame implements ActionListener{
 		String searchID = searchID_txtfield.getText();
 		int serviceType = service_combobox.getSelectedIndex()+1;
 		String type = (String)searchIssueType_comboBox.getItemAt(searchIssueType_comboBox.getSelectedIndex());
-		Date issuedAt = null
-				;
+		Date issuedAt = null;
+		try {
+			issuedAt = (Date) new SimpleDateFormat("yyyy/MM/dd").parse(searchDatePicker.getText());
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+		//issuedAt = searchDatePicker.getText();
+		Issue searchIssue = new Issue();
+		searchIssue.setStudentID(studentID);
+		searchIssue.setServiceID(serviceType);
+		searchIssue.setIssuedAt(issuedAt);
+		searchIssue.setType(type);
+		
 		
 		if(type!=null || serviceType!=0 || issuedAt!=null) {
-			ArrayList<Issue> studentIssues = IssueController.getSearchIssuesForStudent(studentID, type, serviceType, issuedAt);
+			if(searchIssue.getType() == "Exclude") {
+				searchIssue.setType(null);
+			}
+				
+
+			System.out.println("Student Main:" + searchIssue.toString());
+			ArrayList<Issue> studentIssues = IssueController.getSearchIssuesForStudent(searchIssue);
 			DefaultTableModel model = (DefaultTableModel) issueTable.getModel();
 			
 			/**
@@ -698,6 +717,7 @@ public class StudentMain extends JInternalFrame implements ActionListener{
 			 * values in the issue table.
 			 */
 			if(studentIssues != null) {
+				model.setRowCount(0);
 				for(Issue issue: studentIssues) {
 					/**
 					 * Adds row to table with details relating to current student's issue.
@@ -705,7 +725,7 @@ public class StudentMain extends JInternalFrame implements ActionListener{
 					model.addRow(new Object[]{
 							issue.getIssueID(), 
 							issue.getType(),
-							issue.getServiceID(),
+							serviceTypes.get(issue.getServiceID()-1),
 							issue.getIssuedAt(),
 							issue.getStatus(),
 							issue.getRepID()

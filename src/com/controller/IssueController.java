@@ -189,8 +189,9 @@ public class IssueController {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public static ArrayList<Issue> getSearchIssuesForStudent(String studentID, String type, int serviceID, Date issuedAt) {
+	public static ArrayList<Issue> getSearchIssuesForStudent(Issue searchIssue) {
 		ArrayList<Issue> foundStudentIssues = new ArrayList<>();
+		System.out.println("Issue Controller:" + searchIssue.toString());
 		logger.info("Client Trying to connect using socket at port " + port);
 		
 		try(Socket socketConnection = new Socket(InetAddress.getLocalHost(), port);
@@ -198,21 +199,14 @@ public class IssueController {
 				ObjectInputStream is = new ObjectInputStream(socketConnection.getInputStream());
 		){
 			
-			logger.info("Getting SEARCH ISSUES for STUDENT "+ studentID +" from SERVER");			
-
-			os.flush();
-			String getString = "GET-STUDENT-SEARCH ISSUES";
-			os.writeObject(getString);
-			os.flush();
-			os.writeObject(String.valueOf(studentID));
-			os.flush();
-			os.writeObject(String.valueOf(type));
-			os.flush();
-			os.writeObject(serviceID); // FIND INT  VALUE OF
-			os.flush();
-			os.writeObject(issuedAt); // FIND SQL DATE VALUE OF
-			os.flush();
+			logger.info("Getting SEARCH ISSUES for STUDENT "+ searchIssue.getStudentID() +" from SERVER");	
 			
+			os.flush();
+			os.writeObject("GET-STUDENT-SEARCH ISSUES");
+			os.flush();
+			os.writeObject(searchIssue);
+			os.flush();
+
 			foundStudentIssues =  (ArrayList<Issue>) is.readObject();
 			
 		} catch (UnknownHostException e) {
@@ -230,7 +224,6 @@ public class IssueController {
 		
 		return foundStudentIssues;	
 	}
-	
 	
 	public void viewSpecific(String type, String id) {
 			/*
