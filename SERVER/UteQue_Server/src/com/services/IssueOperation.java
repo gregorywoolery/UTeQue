@@ -7,12 +7,18 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
+import javax.persistence.Query;
+
 import com.connectionFactories.JDBC.DBConnectorFactory;
 import com.model.Issue;
 
+import com.connectionFactories.Hibernate.SessionFactoryBuilder;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.hibernate.HibernateException;
+import org.hibernate.Session;
+import org.hibernate.Transaction;
 
 public class IssueOperation {
 	private static final Logger logger = LogManager.getLogger(IssueOperation.class);
@@ -166,5 +172,189 @@ public class IssueOperation {
 		
 		return issues;
 	}
+	public static ArrayList<Issue> getIssueByService(String studentID, int serviceID){
+		
+		ArrayList<Issue> studentIssue = new ArrayList<Issue>();
+		String hql = "FROM Issue I WHERE I.studentID = :studentID AND I.serviceID = :serviceID";
+
+		
+		Transaction transaction = null;
+		try(Session session = SessionFactoryBuilder
+				.getSessionFactory().getCurrentSession()
+		){
+			
+			transaction = session.beginTransaction();
+			
+			Query query = session.createQuery(hql);
+			query.setParameter("studentID", studentID);
+			query.setParameter("serviceID", serviceID);
+			
+			studentIssue = (ArrayList<Issue>) query.getResultList();
+			
+			transaction.commit();
+			
+		}catch(HibernateException hex) {
+			if(transaction != null) {
+				
+				transaction.rollback();
+			}
+
+		}
+		
+		return studentIssue;
+	}
+	
+	public static Issue getIssue(String issueID) {
+		
+		Issue issue = new Issue();
+		String hql = "FROM Issue I WHERE I.issueID =:issueID";
+
+		
+		Transaction transaction = null;
+		try(Session session = SessionFactoryBuilder
+				.getSessionFactory().getCurrentSession()
+		){
+			
+			transaction = session.beginTransaction();
+			
+			Query query = session.createQuery(hql);
+			query.setParameter("issueID", issueID);
+			
+			issue = (Issue) query.getResultList();
+			
+			transaction.commit();
+			
+		}catch(HibernateException hex) {
+			if(transaction != null) {
+				
+				transaction.rollback();
+			}
+
+		}
+		
+		return issue;
+	}
+
+	
+	//Delete Issue Record
+	public static boolean deleteIssue(String issueID) {
+		if(checkExistingIssue(issueID)) {
+		logger.warn("Attempting to DELETE Data FROM SQL table Issue, Error May Occur");
+		
+		String deleteSql = "DELETE from UTeQueDB.Issue WHERE issueID=?";
+		
+			try(Connection dbConn = DBConnectorFactory.getDatabaseConnection()) {
+				PreparedStatement statement = dbConn.prepareStatement(deleteSql);
+				statement.setString(1, issueID);
+				
+				logger.warn("Attempting to EXECUTE Statement, Error May Occur");
+				int rowsDeleted = statement.executeUpdate();
+				
+				if (rowsDeleted > 0) {
+				    System.out.println("---Issue was DELETED Successfully!");
+				    logger.info("SQL DELETE Statement was Successful");
+				    return true;
+				}
+			} catch (SQLException e) {
+				logger.error("SQL DELETE Statement was NOT Successful");
+				System.out.println("SQL Exception Thrown: " + e.getMessage());
+			}		
+		}else
+				System.out.println("---Issue was NOT found.");
+		return false;
+	}
+	
+	public static ArrayList<Issue> getAllSearchIssuesForStudent(Issue searchIssue){
+		
+		ArrayList<Issue> studentIssues = new ArrayList<Issue>();
+		
+		String issueID = "", type = "", status = "", message = "", repID = "", studentID = "";
+		Date issuedAt = null, scheduledDateTime = null;
+		int serviceID = 0;
+		String getStudentIssues = null;
+		try (Connection dbConn = DBConnectorFactory.getDatabaseConnection()){
+			PreparedStatement statement = null;
+			//Query String Statements
+			if(!searchIssue.getType().equals(null) && searchIssue.getServiceID()!=0 && searchIssue.getIssuedAt() !=null ) {
+				getStudentIssues = "SELECT * FROM UTeQueDB.`Issue` WHERE studentID = ? AND type = ? AND serviceID = ? AND issuedAt = ?";
+				statement = dbConn.prepareStatement(getStudentIssues);
+				statement.setString(1, searchIssue.getStudentID());
+				statement.setString(2, searchIssue.getType());
+				statement.setInt(3, searchIssue.getServiceID());
+				statement.setDate(4, new Date(searchIssue.getIssuedAt().getTime()));
+			} else if(!searchIssue.getType().equals(null) && searchIssue.getServiceID()!=0 ) {
+				getStudentIssues = "SELECT * FROM UTeQueDB.`Issue` WHERE studentID = ? AND type = ? AND serviceID = ?";
+				statement = dbConn.prepareStatement(getStudentIssues);
+				statement.setString(1, searchIssue.getStudentID());
+				statement.setString(2, searchIssue.getType());
+				statement.setInt(3, searchIssue.getServiceID());
+			}  else if(searchIssue.getType().equals(null) && searchIssue.getServiceID()!=0 && searchIssue.getIssuedAt() == null ) {
+				getStudentIssues = "SELECT * FROM UTeQueDB.`Issue` WHERE studentID = ? AND serviceID = ?";
+				statement = dbConn.prepareStatement(getStudentIssues);
+				statement.setString(1, searchIssue.getStudentID());
+				statement.setInt(2, searchIssue.getServiceID());
+			}else if(searchIssue.getType().equals(null) && searchIssue.getServiceID()!=0 && searchIssue.getIssuedAt() != null ) {
+				getStudentIssues = "SELECT * FROM UTeQueDB.`Issue` WHERE studentID = ? AND serviceID = ? AND issuedAt = ?";
+				statement = dbConn.prepareStatement(getStudentIssues);
+				statement.setString(1, searchIssue.getStudentID());
+				statement.setInt(2, searchIssue.getServiceID());
+				statement.setDate(3, new Date(searchIssue.getIssuedAt().getTime()));
+			}
+			
+			System.out.println(getStudentIssues);
+			ResultSet result = statement.executeQuery();
+			
+			while(result.next()) {
+				issueID = result.getString(1);
+				type = result.getString(2);
+				status = result.getString(3);
+				studentID = result.getString(4);
+				message = result.getString(5);
+				serviceID = result.getInt(6);
+				issuedAt = result.getDate(7);
+				scheduledDateTime = result.getDate(8);
+				repID = result.getString(9);
+				
+				studentIssues.add(new Issue(issueID, type, status, studentID, message, 
+						serviceID, issuedAt, scheduledDateTime, repID));
+			}
+			
+		} catch (SQLException e) {
+			logger.error("Error(" + e.getErrorCode() 
+					+ ") " + e.getMessage());
+		}
+		
+		return studentIssues;
+	}
+	
+	public static Boolean checkExistingIssue(String id) {
+	String selectIssue = "SELECT COUNT(*) FROM UTeQueDB.Issue WHERE issueID=?";
+	
+	try (Connection dbConn = DBConnectorFactory.getDatabaseConnection()){
+		logger.warn("Attempting to COUNT Data FROM SQL Table: Issue, Error May Occur");
+		
+		PreparedStatement statement = dbConn.prepareStatement(selectIssue);
+		statement.setString(1, id);
+		
+		logger.warn("Attempting to EXECUTE Statement, Error May Occur");
+		ResultSet result = statement.executeQuery();
+
+		while(result.next()) {
+			
+			final int count = result.getInt(1);
+			if(count == 1) {
+				logger.info("SQL COUNT Statement was Successful");
+				System.out.println("---ISSUE EXIST");
+				return true;
+			}
+		}
+
+	}catch(SQLException e){
+		logger.error("SQL COUNT Statement was NOT Successful");
+		System.out.println("SQL Exception Thrown: " + e.getMessage());
+	}
+	System.out.println("---Search Results WERE NOT FOUND");
+	return false;
+}
 	
 }
