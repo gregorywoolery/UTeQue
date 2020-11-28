@@ -176,7 +176,8 @@ public class StudentDashboard extends Dashboard implements ActionListener{
 	public void addMainInternalFrame() {
 		//Check if frame to remove is there(not null)
 		if(currFrame !=null) {
-			currFrame.dispose();
+			workspace_desktopPane.removeAll();
+			workspace_desktopPane.updateUI();
 		}
 		
 		currFrame = new StudentMain(workspace_desktopPane);

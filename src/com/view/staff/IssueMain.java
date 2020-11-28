@@ -26,7 +26,11 @@ import javax.swing.JSplitPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
+import com.controller.IssueController;
 import com.controller.ServiceController;
+import com.controller.UserController;
+import com.model.Issue;
+import com.model.User;
 
 import java.awt.GridLayout;
 import java.awt.GridBagLayout;
@@ -67,7 +71,9 @@ public class IssueMain extends JInternalFrame implements ActionListener{
 	@SuppressWarnings("unused")
 	private JDesktopPane workSpaceDesktop;
 	private JButton searchBtn;
+	private ArrayList<String> serviceTypes;
 	
+	private User staff;
 	
 	public IssueMain(JDesktopPane workSpaceDesktop) throws ParseException {
 		super("Add Issue", 
@@ -84,6 +90,8 @@ public class IssueMain extends JInternalFrame implements ActionListener{
 	 * Create the frame.
 	 */
 	private void initializeComponents() {
+		staff =  UserController.getCurrentUser();
+		
 		//Removes top bar from internal frame
 		((javax.swing.plaf.basic.BasicInternalFrameUI)this.getUI()).setNorthPane(null);
 		
@@ -104,7 +112,7 @@ public class IssueMain extends JInternalFrame implements ActionListener{
 		titleBanner_panel.add(studentIssuesTitle_lbl);
 		
 		//List of Services JComboBox
-		ArrayList<String> serviceTypes = ServiceController.getAllServies();
+		serviceTypes = ServiceController.getAllServies();
 
 		services_comboBox = new JComboBox(serviceTypes.toArray());
 		services_comboBox.setBackground(new Color(255, 255, 0));
@@ -323,7 +331,7 @@ public class IssueMain extends JInternalFrame implements ActionListener{
 		moreBtn.setPreferredSize(new Dimension(100, 25));
 		moreBtn.setBorder(null);
 		
-		assaignOptionDisplay();
+		//assaignOptionDisplay();
 		
 		setVisible(true);
 	}
@@ -339,21 +347,100 @@ public class IssueMain extends JInternalFrame implements ActionListener{
 	public void actionPerformed(ActionEvent e) {
 		if(e.getSource().equals(searchBtn)) {
 			if(studentSearchID_txtField.getText() != "") {
-				
+				updateStudentIssuesTable(
+						studentSearchID_txtField.getText(), 
+						services_comboBox.getSelectedIndex()+1
+						);
 			}
 		}
 		
 	}
 	
+	private void updateStudentIssuesTable(String studentID, int serviceID) {
+		//"Issue ID", "Type", "Service", "Issued At", "Rep ID", "Assigned On"
+		ArrayList<Issue> studentIssues = IssueController
+											.getStudentIssuesByService(studentID, serviceID);
+		
+		DefaultTableModel model = (DefaultTableModel) studentIssues_table.getModel();
+		
+		int serviceInd;
+		String repAssigned;
+		
+		/**
+		 * Iterates through List of Issues relating to a specified student and displays
+		 * values in the issue table.
+		 */
+		if(studentIssues != null) {
+			for(Issue issue: studentIssues) {
+				
+				/**
+				 * Finds STRING from SERVICETYPES that related specified SERVICEID returned
+				 * from the DATABASE.
+				 */
+				for(serviceInd = 0; serviceInd<serviceTypes.size(); serviceInd++)
+					if(serviceInd == issue.getServiceID()-1)
+						break;
+				
+				/**
+				 * Finds whether a student services representative was assigned to specified 
+				 * issue. If no representative was assigned then the string "Not assigned"
+				 * is shown.
+				 */
+				if(issue.getRepID() == null)
+					repAssigned = "NOT Assigned";
+				else
+					repAssigned = issue.getRepID();
+						
+					
+				/**
+				 * Adds row to table with details relating to current student's issue.
+				 */
+				model.addRow(new Object[]{
+						issue.getIssueID(), 
+						issue.getType(),
+						serviceTypes.get(serviceInd),
+						issue.getIssuedAt(),
+						repAssigned,
+						issue.getScheduledDateTime()
+				});
+			}			
+		}
+	}
+	
 	private void assaignOptionDisplay() {
-		String repID = "00";
-		String loggedUser = "Current Logged in user";
-		if(repID != "Not Assaignd" && loggedUser == "Rep") {
-			issueOptions_panel.add(respondBtn);
-		}else {
-			if(loggedUser == "Agent") {
-				issueOptions_panel.add(assignRep_Panel);
+		//"Issue ID", "Type", "Service", "Issued At", "Rep ID", "Assigned On"
+		
+		String repID = staff.getID();
+		String repAssigned = "NOT ASSIGNED";
+		String repSelected = null;
+		
+		int selRow = 0; 
+		
+		int []selectedItems = studentIssues_table.getSelectedColumns();
+		
+		if(selectedItems == null || selectedItems.length < 1)
+			repSelected = null;
+		else {
+			if(studentIssues_table.getSelectedRow() != -1) {
+				int column = 4; //Rep ID Column
+				selRow = studentIssues_table.getSelectedRow();
+				repSelected = studentIssues_table.getModel().getValueAt(selRow, column).toString();						
 			}
+		}
+		
+		if(repSelected == null)
+			repAssigned = "NOT ASSINGED";
+		else
+			repAssigned = repSelected;
+		
+		String loggedUser = staff.getType();
+		
+		if(repID != "NOT ASSINGED" && loggedUser == "REP" && staff.getID() == repSelected)
+			issueOptions_panel.add(respondBtn);
+		else {
+			if(loggedUser == "AGENT") 
+				issueOptions_panel.add(assignRep_Panel);
+			
 			issueOptions_panel.add(moreBtn);
 		}
 	}

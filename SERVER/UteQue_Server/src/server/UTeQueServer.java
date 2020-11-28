@@ -59,9 +59,9 @@ public class UTeQueServer {
 		}
 	}
 	
-	public static class ClientHandler implements Runnable{
+	public static class ClientHandler extends Thread implements Runnable{
 		Socket socketConnection = null;
-		String operation = "", studentID = "";
+		String operation = "", studentID = "", issueID = "";
 		boolean success = false;
 		int[] stats = new int[3];
 		User user;
@@ -97,19 +97,13 @@ public class UTeQueServer {
 							break;
 							
 						case "GET-STUDENT-ISSUE-STATS":
-							System.out.println("Before read STATS");
-							studentID = (String) is.readObject();
-							System.out.println("AfterRead " + studentID);
-							
+							studentID = (String) is.readObject();							
 							stats = IssueOperation.getUserIssueStats(studentID);
-							System.out.println("ONE" + stats[0] + " " + stats[1] + " "+ stats[2]);
 							os.writeObject(stats);
 							break;
 							
 						case "GET-STUDENT-ISSUES":
-							System.out.println("Before READ ALL");
 							studentID = (String) is.readObject();
-							System.out.println("AfterRead\n" + studentID);
 							os.writeObject(IssueOperation.getAllIssuesForStudent(studentID));
 							break;
 							
@@ -121,18 +115,26 @@ public class UTeQueServer {
 							user = (User) is.readObject();
 							os.writeObject(UserOperation.getUserInfo(user.getID(), user.getType()));
 							break;
+							
 						case "GET-ISSUE-RESPONSE-JOIN":
 							studentID = (String) is.readObject();
 //							os.writeObject(obj);
 							break;
+						
 						case "GET-STUDENT-ISSUES-BY-SERVICE":
 							studentID = (String) is.readObject();
 							serviceID = (int) is.readObject();
-							
+							os.writeObject(IssueOperation.getIssueByService(studentID, serviceID));
 							break;
+						
+						case "GET-ISSUE":
+							issueID = (String) is.readObject();
+							os.writeObject(IssueOperation.getIssue(issueID));
+							break;
+							
 					}
-					os.flush();
 					
+					os.flush();
 					socketConnection.close();
 					
 				}

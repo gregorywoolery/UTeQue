@@ -192,18 +192,47 @@ public class IssueController {
 		return tableData;		
 		
 	}
+
 	
+	/*
+	 * Students should also be able to view a specific complaint or 
+	 * query and all its associated responses.
+	 */
+	public Issue viewSpecific(String issueID) {
+		Issue issue = null;
+		logger.info("Client Trying to connect using socket at port " + port);
+		
+		try(Socket socketConnection = new Socket(InetAddress.getLocalHost(), port);
+				ObjectOutputStream os = new ObjectOutputStream(socketConnection.getOutputStream());
+				ObjectInputStream is = new ObjectInputStream(socketConnection.getInputStream());
+		){
+			
+			logger.info("Getting JOIN from ISSUE and RESPONSE TABLES for main TABLE");		
+			
+			os.writeObject("GET-ISSUE");
+			os.writeObject(issueID);
+
+			issue = (Issue) is.readObject();
+			
+		} catch (UnknownHostException e) {
+			logger.error("IP ADDRESS OF HOST ERROR - " + e.getMessage()
+							+ e.getStackTrace());
+			
+		} catch (ClassNotFoundException e) {
+			logger.error("ERROR OCCURED - " + e.getMessage()
+							+ e.getStackTrace());
+			
+		} catch (IOException e) {
+			logger.error("ERROR OCCURED - " + e.getMessage()
+							+ e.getStackTrace());
+		}
+		
+		return issue;	
+	}
+
 	public void removeIssue(String issueId) {
 		
 	}
-	
-	public void viewSpecific(String type, String id) {
-			/*
-			 * - Students should also be able to view a specific complaint or query and all its associated responses.
-			 */
-			
-	}
-	
 		
 	/*
 	 * Employees should be able to view a list of services on the dashboard 

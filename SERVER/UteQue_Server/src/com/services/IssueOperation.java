@@ -6,13 +6,13 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.List;
+
+import javax.persistence.Query;
 
 import com.connectionFactories.JDBC.DBConnectorFactory;
 import com.model.Issue;
 
 import com.connectionFactories.Hibernate.SessionFactoryBuilder;
-import com.model.Student;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -173,40 +173,67 @@ public class IssueOperation {
 		return issues;
 	}
 	
-//	public static ArrayList<Issue> getIssueByService(String studentID, int serviceID){
-//		ArrayList<Issue> studentIssue = new ArrayList<Issue>();
-//		
-//		List<Student> studentList = new ArrayList<>();
-//		
-//		Transaction transaction = null;
-//		try(Session session = SessionFactoryBuilder
-//				.getSessionFactory().getCurrentSession()
-//		){
-//			String hql = "select * from Issues I where I.studentID=:studentID and I.serviceID=:serviceID";
-//			
-//			transaction = session.beginTransaction();
-//			
-//			Query q = session.createQuery(hql);
-//
-//			Long countOfRecords = (Long)q.list().get(0);			studentList = session.createQuery("FROM Student")
-//					.getResultList();
-//
-//
-//					 
-//			transaction.commit();
-//			
-//		}catch(HibernateException hex) {
-//			if(transaction != null) {
-//				
-//				transaction.rollback();
-//			}
-//
-//		}
-//		return studentList;
-//		sessionFactory sesionfatory;
-//		ArrayList list = (ArrayList)sessionfactory.getCurruntSession().find(from table where name LIKE "xyz");
-//
-//		long size = list.get(0);
-//	}
+	public static ArrayList<Issue> getIssueByService(String studentID, int serviceID){
+		
+		ArrayList<Issue> studentIssue = new ArrayList<Issue>();
+		String hql = "FROM Issue I WHERE I.studentID = :studentID AND I.serviceID = :serviceID";
+
+		
+		Transaction transaction = null;
+		try(Session session = SessionFactoryBuilder
+				.getSessionFactory().getCurrentSession()
+		){
+			
+			transaction = session.beginTransaction();
+			
+			Query query = session.createQuery(hql);
+			query.setParameter("studentID", studentID);
+			query.setParameter("serviceID", serviceID);
+			
+			studentIssue = (ArrayList<Issue>) query.getResultList();
+			
+			transaction.commit();
+			
+		}catch(HibernateException hex) {
+			if(transaction != null) {
+				
+				transaction.rollback();
+			}
+
+		}
+		
+		return studentIssue;
+	}
+	
+	public static Issue getIssue(String issueID) {
+		
+		Issue issue = new Issue();
+		String hql = "FROM Issue I WHERE I.issueID =:issueID";
+
+		
+		Transaction transaction = null;
+		try(Session session = SessionFactoryBuilder
+				.getSessionFactory().getCurrentSession()
+		){
+			
+			transaction = session.beginTransaction();
+			
+			Query query = session.createQuery(hql);
+			query.setParameter("issueID", issueID);
+			
+			issue = (Issue) query.getResultList();
+			
+			transaction.commit();
+			
+		}catch(HibernateException hex) {
+			if(transaction != null) {
+				
+				transaction.rollback();
+			}
+
+		}
+		
+		return issue;
+	}
 
 }
