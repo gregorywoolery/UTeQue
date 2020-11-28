@@ -172,6 +172,8 @@ public class IssueOperation {
 		
 		return issues;
 	}
+	
+	
 	public static ArrayList<Issue> getIssueByService(String studentID, int serviceID){
 		
 		ArrayList<Issue> studentIssue = new ArrayList<Issue>();
@@ -236,9 +238,11 @@ public class IssueOperation {
 	}
 
 	
-	//Delete Issue Record
+	//Deletes Issue Record by issueID
 	public static boolean deleteIssue(String issueID) {
-		if(checkExistingIssue(issueID)) {
+		
+		//Checks if issueID was already assigned to a repID
+		if(checkIssueRepID(issueID)) {
 		logger.warn("Attempting to DELETE Data FROM SQL table Issue, Error May Occur");
 		
 		String deleteSql = "DELETE from UTeQueDB.Issue WHERE issueID=?";
@@ -259,11 +263,11 @@ public class IssueOperation {
 				logger.error("SQL DELETE Statement was NOT Successful");
 				System.out.println("SQL Exception Thrown: " + e.getMessage());
 			}		
-		}else
-				System.out.println("---Issue was NOT found.");
+		}
 		return false;
 	}
 	
+	//Retrieves Issues By specific type OR specific serviceID
 	public static ArrayList<Issue> getAllSearchIssuesForStudent(Issue searchIssue){
 		
 		ArrayList<Issue> studentIssues = new ArrayList<Issue>();
@@ -274,36 +278,28 @@ public class IssueOperation {
 		String getStudentIssues = null;
 		try (Connection dbConn = DBConnectorFactory.getDatabaseConnection()){
 			PreparedStatement statement = null;
-			//Query String Statements
-			if(!searchIssue.getType().equals(null) && searchIssue.getServiceID()!=0 && searchIssue.getIssuedAt() !=null ) {
-				getStudentIssues = "SELECT * FROM UTeQueDB.`Issue` WHERE studentID = ? AND type = ? AND serviceID = ? AND issuedAt = ?";
-				statement = dbConn.prepareStatement(getStudentIssues);
-				statement.setString(1, searchIssue.getStudentID());
-				statement.setString(2, searchIssue.getType());
-				statement.setInt(3, searchIssue.getServiceID());
-				statement.setDate(4, new Date(searchIssue.getIssuedAt().getTime()));
-			} else if(!searchIssue.getType().equals(null) && searchIssue.getServiceID()!=0 ) {
-				getStudentIssues = "SELECT * FROM UTeQueDB.`Issue` WHERE studentID = ? AND type = ? AND serviceID = ?";
-				statement = dbConn.prepareStatement(getStudentIssues);
-				statement.setString(1, searchIssue.getStudentID());
-				statement.setString(2, searchIssue.getType());
-				statement.setInt(3, searchIssue.getServiceID());
-			}  else if(searchIssue.getType().equals(null) && searchIssue.getServiceID()!=0 && searchIssue.getIssuedAt() == null ) {
-				getStudentIssues = "SELECT * FROM UTeQueDB.`Issue` WHERE studentID = ? AND serviceID = ?";
-				statement = dbConn.prepareStatement(getStudentIssues);
-				statement.setString(1, searchIssue.getStudentID());
-				statement.setInt(2, searchIssue.getServiceID());
-			}else if(searchIssue.getType().equals(null) && searchIssue.getServiceID()!=0 && searchIssue.getIssuedAt() != null ) {
-				getStudentIssues = "SELECT * FROM UTeQueDB.`Issue` WHERE studentID = ? AND serviceID = ? AND issuedAt = ?";
-				statement = dbConn.prepareStatement(getStudentIssues);
-				statement.setString(1, searchIssue.getStudentID());
-				statement.setInt(2, searchIssue.getServiceID());
-				statement.setDate(3, new Date(searchIssue.getIssuedAt().getTime()));
-			}
 			
-			System.out.println(getStudentIssues);
+			//Query String Statements
+			
+			//Check IF type is Equal to Exclude and returns specific records of the serviceID with all record types(Complaint/Query)
+			if(searchIssue.getType().equals("Exclude")) {
+					getStudentIssues = "SELECT * FROM UTeQueDB.`Issue` WHERE studentID = ? AND serviceID = ? ORDER BY issuedAt ASC";
+					statement = dbConn.prepareStatement(getStudentIssues);
+					statement.setString(1, searchIssue.getStudentID());
+					statement.setInt(2, searchIssue.getServiceID());
+			}
+			//Displays records based on specific type(Complaint/Query) and serviceID
+			else if(searchIssue.getType()!=null ) {
+				getStudentIssues = "SELECT * FROM UTeQueDB.`Issue` WHERE studentID = ? AND type = ? AND serviceID = ? ORDER BY issuedAt ASC";
+				statement = dbConn.prepareStatement(getStudentIssues);
+				statement.setString(1, searchIssue.getStudentID());
+				statement.setString(2, searchIssue.getType());
+				statement.setInt(3, searchIssue.getServiceID());
+			} 
+			
 			ResultSet result = statement.executeQuery();
 			
+			//Populates studentIssues Object with Values
 			while(result.next()) {
 				issueID = result.getString(1);
 				type = result.getString(2);
@@ -328,33 +324,62 @@ public class IssueOperation {
 	}
 	
 	public static Boolean checkExistingIssue(String id) {
-	String selectIssue = "SELECT COUNT(*) FROM UTeQueDB.Issue WHERE issueID=?";
-	
-	try (Connection dbConn = DBConnectorFactory.getDatabaseConnection()){
-		logger.warn("Attempting to COUNT Data FROM SQL Table: Issue, Error May Occur");
+		String selectIssue = "SELECT COUNT(*) FROM UTeQueDB.Issue WHERE issueID=?";
 		
-		PreparedStatement statement = dbConn.prepareStatement(selectIssue);
-		statement.setString(1, id);
-		
-		logger.warn("Attempting to EXECUTE Statement, Error May Occur");
-		ResultSet result = statement.executeQuery();
-
-		while(result.next()) {
+		try (Connection dbConn = DBConnectorFactory.getDatabaseConnection()){
+			logger.warn("Attempting to COUNT Data FROM SQL Table: Issue, Error May Occur");
 			
-			final int count = result.getInt(1);
-			if(count == 1) {
-				logger.info("SQL COUNT Statement was Successful");
-				System.out.println("---ISSUE EXIST");
-				return true;
+			PreparedStatement statement = dbConn.prepareStatement(selectIssue);
+			statement.setString(1, id);
+			
+			logger.warn("Attempting to EXECUTE Statement, Error May Occur");
+			ResultSet result = statement.executeQuery();
+	
+			while(result.next()) {
+				
+				final int count = result.getInt(1);
+				if(count == 1) {
+					logger.info("SQL COUNT Statement was Successful");
+					System.out.println("---ISSUE EXIST");
+					return true;
+				}
 			}
+	
+		}catch(SQLException e){
+			logger.error("SQL COUNT Statement was NOT Successful");
+			System.out.println("SQL Exception Thrown: " + e.getMessage());
 		}
-
-	}catch(SQLException e){
-		logger.error("SQL COUNT Statement was NOT Successful");
-		System.out.println("SQL Exception Thrown: " + e.getMessage());
+		System.out.println("---Search Results WERE NOT FOUND");
+		return false;
 	}
-	System.out.println("---Search Results WERE NOT FOUND");
-	return false;
-}
+	
+	//Check Whether Issue was Assigned to a repID
+	public static Boolean checkIssueRepID(String issueID) {
+		String selectIssue = "SELECT COUNT(*) FROM UTeQueDB.Issue WHERE issueID=? AND repID IS NULL";
+		
+		try (Connection dbConn = DBConnectorFactory.getDatabaseConnection()){
+			logger.warn("Attempting to COUNT Data FROM SQL Table: Issue, Error May Occur");
+			
+			PreparedStatement statement = dbConn.prepareStatement(selectIssue);
+			statement.setString(1, issueID);
+			
+			logger.warn("Attempting to EXECUTE Statement, Error May Occur");
+			ResultSet result = statement.executeQuery();
+	
+			while(result.next()) {
+				
+				final int count = result.getInt(1);
+				if(count == 1) {
+					logger.info("SQL COUNT Statement was Successful");
+					return true;
+				}
+			}
+	
+		}catch(SQLException e){
+			logger.error("SQL COUNT Statement was NOT Successful");
+			System.out.println("SQL Exception Thrown: " + e.getMessage());
+		}
+		return false;
+	}
 	
 }
