@@ -268,7 +268,7 @@ public class IssueController {
 	 * Students should also be able to view a specific complaint or 
 	 * query and all its associated responses.
 	 */
-	public Issue viewSpecific(String issueID) {
+	public static Issue viewSpecific(String issueID) {
 		Issue issue = null;
 		logger.info("Client Trying to connect using socket at port " + port);
 		
@@ -277,7 +277,7 @@ public class IssueController {
 				ObjectInputStream is = new ObjectInputStream(socketConnection.getInputStream());
 		){
 			
-			logger.info("Getting JOIN from ISSUE and RESPONSE TABLES for main TABLE");		
+			logger.info("Getting Specific ISSUE");		
 			
 			os.writeObject("GET-ISSUE");
 			os.writeObject(issueID);
@@ -335,21 +335,37 @@ public class IssueController {
 	}
 	
 		
-	/*
-	 * Employees should be able to view a list of services on the dashboard 
-	 * along with the number of resolved and outstanding queries and complaints.
-	 */
-	public int viewResolvedQueries() {
-			return 0;
-	}
-	public int viewResolvedComplaints() {
-			return 0;
-	}
-	public int viewOutstandQueries() {
-			return 0;
-	}
-	public int viewOutstandComplaints() {
-			return 0;
+	public static ArrayList<Object> getIssueRepStudent(String issueID){
+		ArrayList<Object> details = new ArrayList<Object>();
+		
+		logger.info("Client Trying to connect using socket at port " + port);
+		
+		try(Socket socketConnection = new Socket(InetAddress.getLocalHost(), port);
+				ObjectOutputStream os = new ObjectOutputStream(socketConnection.getOutputStream());
+				ObjectInputStream is = new ObjectInputStream(socketConnection.getInputStream());
+		){
+			
+			logger.info("Receiving detials for STAFF ISSUE RESPONSE");		
+			
+			os.writeObject("ISSUE-RESPONSE");
+			os.writeObject(issueID);
+
+			details = (ArrayList<Object>) is.readObject();
+			
+		} catch (UnknownHostException e) {
+			logger.error("IP ADDRESS OF HOST ERROR - " + e.getMessage()
+							+ e.getStackTrace());
+			
+		} catch (ClassNotFoundException e) {
+			logger.error("ERROR OCCURED - " + e.getMessage()
+							+ e.getStackTrace());
+			
+		} catch (IOException e) {
+			logger.error("ERROR OCCURED - " + e.getMessage()
+							+ e.getStackTrace());
+		}
+		
+		return details;
 	}
 
 

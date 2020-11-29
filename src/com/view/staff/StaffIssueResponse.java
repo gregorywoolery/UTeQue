@@ -7,7 +7,10 @@ import javax.swing.JDesktopPane;
 import javax.swing.JInternalFrame;
 import javax.swing.border.LineBorder;
 
+import com.controller.IssueController;
+import com.controller.ServiceController;
 import com.controller.UserController;
+import com.model.Issue;
 import com.model.User;
 
 import java.awt.GridBagLayout;
@@ -17,6 +20,8 @@ import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.awt.BorderLayout;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -138,12 +143,13 @@ public class StaffIssueResponse extends JInternalFrame implements ActionListener
 		main_panel.setLayout(gbl_main_panel);
 		
 		issueMessage_txtArea = new JTextArea();
+		issueMessage_txtArea.setDisabledTextColor(Color.BLACK);
 		issueMessage_txtArea.setBackground(new Color(255, 255, 255));
 		issueMessage_txtArea.setEnabled(false);
 		issueMessage_txtArea.setForeground(new Color(255, 255, 255));
 		issueMessage_txtArea.setMargin(new Insets(2, 4, 2, 4));
 		issueMessage_txtArea.setLineWrap(true);
-		issueMessage_txtArea.setFont(new Font("Times New Roman", Font.PLAIN, 14));
+		issueMessage_txtArea.setFont(new Font("Arial Rounded MT Bold", Font.PLAIN, 14));
 		issueMessage_txtArea.setTabSize(4);
 		GridBagConstraints gbc_issueMessage_txtArea = new GridBagConstraints();
 		gbc_issueMessage_txtArea.gridheight = 3;
@@ -196,8 +202,11 @@ public class StaffIssueResponse extends JInternalFrame implements ActionListener
 		gbc_tabbedPane.gridy = 4;
 		main_panel.add(tabbedPane, gbc_tabbedPane);
 		
+		
 		response = new ResponseSlot();
 		tabbedPane.addTab(" 1 ", response);
+		response.isAnswer_chckbx.setEnabled(false);
+	
 		
 		reponseOption_panel = new JPanel();
 		reponseOption_panel.setBackground(new Color(204, 0, 0));
@@ -321,6 +330,7 @@ public class StaffIssueResponse extends JInternalFrame implements ActionListener
 		setBounds(100, 100, 820, 570);
 		
 		setVisible(true);
+		updateIssueResponse();
 	}
 	
 	private void registerListeners(){
@@ -368,9 +378,40 @@ public class StaffIssueResponse extends JInternalFrame implements ActionListener
 
 			e.printStackTrace();
 		}
+	}
+	
+	public void updateIssueResponse() {
+		if(MODE == 1) {
+			reponseOption_panel.setVisible(false);
+			response.responseMessage_txtArea.setEnabled(false);
+		}
+		getIssueRepStudent();
+	}
+	
+	public void getIssueRepStudent(){
+//		ArrayList<Object> issueDetails = IssueController.getIssueRepStudent(issueID);
+		
+		Issue issue = IssueController.viewSpecific(issueID);
+		issueID_lbl.setText(issue.getIssueID());
+		issueMessage_txtArea.setText(issue.getMessage());
+		
+		ArrayList<String> serviceTypes = ServiceController.getAllServies();		
+		services_lbl.setText(serviceTypes.get(issue.getServiceID()));
+
+		type_label.setText(issue.getType());
+		
+		SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
+		String issuedAt = sdf.format(issue.getIssuedAt());
+		
+		issuedAt_lbl.setText(issuedAt);
 
 		
-
+//		Response response = IssueController.getMainIssueResponse(studentID);
+	
+	}
+	
+	public void getStudent(String issue) {
+		
 	}
 
 }

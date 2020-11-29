@@ -118,11 +118,6 @@ public class UTeQueServer {
 							user = (User) is.readObject();
 							os.writeObject(UserOperation.getUserInfo(user.getID(), user.getType()));
 							break;
-							
-						case "GET-ISSUE-RESPONSE-JOIN":
-							studentID = (String) is.readObject();
-//							os.writeObject(obj);
-							break;
 						
 						case "GET-STUDENT-ISSUES-BY-SERVICE":
 							studentID = (String) is.readObject();
@@ -155,6 +150,11 @@ public class UTeQueServer {
 							issueID = (String) is.readObject();
 							repID = (String) is.readObject();
 							os.writeObject(IssueOperation.assignRepresentative(issueID, repID));
+							break;
+							
+						case "ISSUE-RESPONSE":
+							issueID = (String) is.readObject();
+							os.writeObject(IssueOperation.getIssueRepStudent(issueID));
 							break;
 							
 					}

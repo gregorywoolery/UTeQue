@@ -496,9 +496,11 @@ public class StudentMain extends JInternalFrame implements ActionListener{
 		String studentID = student.getID();
 		ArrayList<Issue> studentIssues = IssueController.getAllIssuesForStudent(studentID);
 		DefaultTableModel model = (DefaultTableModel) issueTable.getModel();
-		
+		String issuedAt;
 		int serviceInd;
 		String repAssigned;
+		
+		getIssueStats();
 		
 		/**
 		 * Iterates through List of Issues relating to a specified student and displays
@@ -525,7 +527,9 @@ public class StudentMain extends JInternalFrame implements ActionListener{
 				else
 					repAssigned = issue.getRepID();
 						
-					
+				SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
+				issuedAt = sdf.format(issue.getIssuedAt());
+				
 				/**
 				 * Adds row to table with details relating to current student's issue.
 				 */
@@ -533,7 +537,7 @@ public class StudentMain extends JInternalFrame implements ActionListener{
 						issue.getIssueID(), 
 						issue.getType(),
 						serviceTypes.get(serviceInd),
-						issue.getIssuedAt(),
+						issuedAt,
 						issue.getStatus(),
 						repAssigned
 				});

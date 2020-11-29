@@ -9,6 +9,8 @@ import java.awt.FlowLayout;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+
 import java.awt.Dimension;
 import java.awt.Font;
 import javax.swing.JTable;
@@ -135,8 +137,44 @@ public class ViewServiceStats extends JInternalFrame implements ActionListener{
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		// TODO Auto-generated method stub
+		if(e.getSource() == returnBtn) {
+			int opt = JOptionPane.showConfirmDialog(workSpaceDesktop, 
+					"You will now be returning to the Dashboard. Are you sure?", 
+					"Return Home...",
+					JOptionPane.YES_NO_CANCEL_OPTION,
+					JOptionPane.QUESTION_MESSAGE);
+			
+			if (opt == 0)
+				openIssueMain();
+			
+		}
 		
+	}
+	
+	private void openIssueMain() {
+		workSpaceDesktop.removeAll();
+		workSpaceDesktop.updateUI();
+		
+		try {
+		
+			JInternalFrame currFrame = null;
+			currFrame = new IssueMain(workSpaceDesktop);
+			workSpaceDesktop.add(currFrame);
+		
+			//Opens JinternalFrame centered in the JDesktopPane
+			Dimension desktopSize = workSpaceDesktop.getSize();
+			Dimension jInternalFrameSize = currFrame.getSize();
+			
+			//Test if current internal frame is of class AddIssue and renders the frame with that
+			if(currFrame.getClass() == IssueMain.class){
+				currFrame.setLocation((desktopSize.width - jInternalFrameSize.width),
+				    (desktopSize.height- jInternalFrameSize.height)/2);
+			}
+			
+		} catch (ParseException e) {
+
+			e.printStackTrace();
+		}
 	}
 
 }

@@ -5,9 +5,7 @@ import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
 import javax.persistence.Query;
@@ -27,81 +25,58 @@ public class IssueOperation {
 	private static final Logger logger = LogManager.getLogger(IssueOperation.class);
 
 	public static boolean insertIssue(Issue issue) {
+		Transaction transaction = null;
 		
-		try (Connection dbConn = DBConnectorFactory.getDatabaseConnection()){
+		logger.warn("Attempting to INSERT Data INTO SQL table Issue, Error May Occur");
+		
+		try(Session session = SessionFactoryBuilder
+				.getSessionFactory().getCurrentSession()
+		){
+			issue.setScheduledDateTime(null);
+			issue.setIssuedAt(new Date(issue.getIssuedAt().getTime()));
+			transaction = session.beginTransaction();
+			session.save(issue);			
+			transaction.commit();
 			
-			logger.warn("Attempting to INSERT Data INTO SQL table Issue, Error May Occur");
-			
-			String insertSql = "INSERT INTO UTeQueDB.Issue (issueID, type, status, "
-					+ "studentID, message, serviceID, issuedAt, scheduledDateTime, repId) "
-					+ "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
-			
-			PreparedStatement statement = dbConn.prepareStatement(insertSql);
-			
-			statement.setString(1, issue.getIssueID());
-			statement.setString(2, issue.getType());
-			statement.setString(3, issue.getStatus());
-			statement.setString(4, issue.getStudentID());
-			statement.setString(5, issue.getMessage());
-			statement.setInt(6, issue.getServiceID());
-			statement.setDate(7, new Date(issue.getIssuedAt().getTime()));
-			statement.setDate(8, null);
-			statement.setString(9, issue.getRepID());
-			
-			logger.warn("Attempting to EXECUTE Statement, Error May Occur");
-			int rowsInserted = statement.executeUpdate();
-			
-			if (rowsInserted > 0) {
-			    logger.info("SQL INSERT Statement was Successful");
-			    return true;
+		    logger.info(" INSERT ISSUE was Successful");
+		    return true;
+		}catch(HibernateException hex) {
+			if(transaction != null) {
+				
+				transaction.rollback();
 			}
-			
-		} catch(SQLException e) {
-			logger.error("SQL INSERT Statement was NOT Successful" 
-					+ "Error(" + e.getErrorCode() 
-					+") " + e.getMessage());
 		}
+		
 		return false;
-	}
-	
+	}						
 	
 	public static ArrayList<Issue> getAllIssuesForStudent(String studentID){
 		
 		ArrayList<Issue> studentIssues = new ArrayList<Issue>();
 		
-		String issueID = "", type = "", status = "", message = "", repID = "";
-		Date issuedAt = null, scheduledDateTime = null;
-		int serviceID = 0;
-
-		String getStudentIssues = "SELECT * FROM UTeQueDB.`Issue` WHERE studentID = ?";
+		String getStudentIssues = "FROM Issue WHERE studentID = :student_ID";
 		
-		try (Connection dbConn = DBConnectorFactory.getDatabaseConnection()){
+		Transaction transaction = null;
+		try(Session session = SessionFactoryBuilder
+				.getSessionFactory().getCurrentSession()
+		){
 			
-			PreparedStatement statement = dbConn.prepareStatement(getStudentIssues);
-			statement.setString(1, studentID);
-			ResultSet result = statement.executeQuery();
+			transaction = session.beginTransaction();
 			
-			while(result.next()) {
-				issueID = result.getString(1);
-				type = result.getString(2);
-				status = result.getString(3);
-				studentID = result.getString(4);
-				message = result.getString(5);
-				serviceID = result.getInt(6);
-				issuedAt = result.getDate(7);
-				scheduledDateTime = result.getDate(8);
-				repID = result.getString(9);
+			Query query = session.createQuery(getStudentIssues);
+			query.setParameter("student_ID", studentID);
+			
+			studentIssues = (ArrayList<Issue>) query.getResultList();
+			
+			transaction.commit();
+			
+		}catch(HibernateException hex) {
+			if(transaction != null) {
 				
-				studentIssues.add(new Issue(issueID, type, status, studentID, message, 
-						serviceID, issuedAt, scheduledDateTime, repID));
-				
+				transaction.rollback();
 			}
-			
-		} catch (SQLException e) {
-			logger.error("Error(" + e.getErrorCode() 
-					+ ") " + e.getMessage());
+
 		}
-		
 		return studentIssues;
 	}
 	
@@ -136,41 +111,38 @@ public class IssueOperation {
 		
 	}
 	
-	//An employee should be able to view all students� enquiries by category.
+	//An employee should be able to view all students enquiries by category.
 	public static ArrayList<Issue> getIssuesByType(int serviceID) {
 		
 		ArrayList<Issue> issues = new ArrayList<Issue>();
 		Issue issueObj = new Issue();
 
-		String Sql = "SELECT * FROM UTeQueDB.Issue WHERE serviceID=?";
-		
-		try (Connection dbConn = DBConnectorFactory.getDatabaseConnection()){
-			PreparedStatement statement = dbConn.prepareStatement(Sql);
-			statement.setInt(1, serviceID);
+		String hql = "FROM Issue I WHERE I.serviceID =:service_ID";
+
+		Transaction transaction = null;
+		try(Session session = SessionFactoryBuilder
+				.getSessionFactory().getCurrentSession()
+		){
+			
 			logger.warn("Receiving results from executed Prepared Statement, Error May Occur");
 			
-			ResultSet result = statement.executeQuery(Sql);
+			transaction = session.beginTransaction();
 			
-			while(result.next()) {
-				issueObj.setIssueID(result.getString(1));
-				issueObj.setType(result.getString(2));
-				issueObj.setStatus(result.getString(3));
-				issueObj.setStudentID(result.getString(4));
-				issueObj.setMessage(result.getString(5));
-				issueObj.setServiceID(result.getInt(6));
-				issueObj.setIssuedAt(result.getDate(7));
-				issueObj.setScheduledDateTime(result.getDate(8));
-				issueObj.setRepId(result.getString(9));
+			Query query = session.createQuery(hql);
+			query.setParameter("service_ID", serviceID);
+			
+			issues = (ArrayList<Issue>) query.getResultList();
+			
+			transaction.commit();
+			
+			logger.info("ISSUES FOUND SUCCESSFUL");	
+		
+		}catch(HibernateException hex) {
+			if(transaction != null) {
 				
-				issues.add(issueObj);
+				transaction.rollback();
 			}
-			logger.info("SQL WAS  SUCCESSFUL");
-			
-		} catch (SQLException e) {
-			logger.error("SQL READ Statement NOT Successful: "
-					+ "ERROR(" + e.getErrorCode()
-					+ ") " + e.getMessage());
-			return null;
+
 		}
 		
 		return issues;
@@ -212,7 +184,7 @@ public class IssueOperation {
 	public static Issue getIssue(String issueID) {
 		
 		Issue issue = new Issue();
-		String hql = "FROM Issue I WHERE I.issueID =:issueID";
+		String hql = "FROM Issue I WHERE I.issueID = :issue_ID";
 
 		
 		Transaction transaction = null;
@@ -223,9 +195,9 @@ public class IssueOperation {
 			transaction = session.beginTransaction();
 			
 			Query query = session.createQuery(hql);
-			query.setParameter("issueID", issueID);
+			query.setParameter("issue_ID", issueID);
 			
-			issue = (Issue) query.getResultList();
+			issue = (Issue) query.getSingleResult();
 			
 			transaction.commit();
 			
@@ -422,4 +394,51 @@ public class IssueOperation {
 		
 	}
 	
+	public static ArrayList<Object> getIssueRepStudent(String issueID){
+		ArrayList<Object> details = new ArrayList<Object>();
+		
+		String hql =  "SELECT i "
+					+ "FROM Student s "
+					+ "INNER JOIN Issue i "
+						+ "ON s.studentID = i.studentID "
+					+ "INNER JOIN Response r "
+						+ "ON r.issueID = i.issueID "
+					+ "INNER JOIN StudentServicesRep rep "
+						+ "ON r.userID = rep.repID "
+					+ "WHERE I.issueID = :issue_ID ";
+		
+		
+		Transaction transaction = null;
+		try(Session session = SessionFactoryBuilder
+				.getSessionFactory().getCurrentSession()
+		){
+			
+			transaction = session.beginTransaction();
+			
+			Query query = session.createQuery(hql);
+			query.setParameter("issue_ID", issueID);
+			
+			details = (ArrayList<Object>) query.getResultList();
+			
+			transaction.commit();
+			
+		}catch(HibernateException hex) {
+			if(transaction != null) {
+				
+				transaction.rollback();
+			}
+		}
+		
+		for(Object hello: details) {
+			System.out.println(hello);
+		}
+		
+		
+		return details;
+		
+		
+	}
+
+
+
 }
