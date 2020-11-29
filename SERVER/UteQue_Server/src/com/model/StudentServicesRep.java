@@ -13,7 +13,7 @@ import javax.persistence.Table;
 @Entity
 @Table(name="studentservicesrep")
 @AttributeOverrides({
-    @AttributeOverride(name = "id", column = @Column(name = "studentservicesrep"))
+    @AttributeOverride(name = "id", column = @Column(name = "repID"))
 })
 public class StudentServicesRep extends User implements Serializable{
 

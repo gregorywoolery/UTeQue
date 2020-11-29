@@ -68,7 +68,7 @@ public class UserLogin extends JFrame implements ActionListener{
 	private JButton login_btn;
 	private JLabel auth_message;
 	
-	public static User currentUser = new User();
+	public static User currentUser;
 	String userType = "";
 
 	/**
@@ -404,8 +404,7 @@ public class UserLogin extends JFrame implements ActionListener{
 			if(LoginController.authenticate(
 					txtUsername.getText(), txtPassword.getPassword(), userType)
 			){
-				currentUser.setID(txtUsername.getText());
-				currentUser.setType(userType);
+				currentUser = new User(txtUsername.getText(), userType);
 				UserController.setCurrentUser(txtUsername.getText(), userType);
 				
 				chooseDashboard(userType);

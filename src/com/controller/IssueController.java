@@ -299,6 +299,41 @@ public class IssueController {
 		
 		return issue;	
 	}
+	
+	public static boolean assignRepresentative(String issueID, String repID){
+		boolean success = false;
+		
+		logger.info("Client Trying to connect using socket at port " + port);
+		
+		try(Socket socketConnection = new Socket(InetAddress.getLocalHost(), port);
+				ObjectOutputStream os = new ObjectOutputStream(socketConnection.getOutputStream());
+				ObjectInputStream is = new ObjectInputStream(socketConnection.getInputStream());
+		){
+			
+			logger.info("Assigning REPRESENTATIVE to ISSUE");		
+			
+			os.writeObject("ASSIGN-REP");
+			os.writeObject(issueID);
+			os.writeObject(repID);
+
+			success = (boolean) is.readObject();
+			
+		} catch (UnknownHostException e) {
+			logger.error("IP ADDRESS OF HOST ERROR - " + e.getMessage()
+							+ e.getStackTrace());
+			
+		} catch (ClassNotFoundException e) {
+			logger.error("ERROR OCCURED - " + e.getMessage()
+							+ e.getStackTrace());
+			
+		} catch (IOException e) {
+			logger.error("ERROR OCCURED - " + e.getMessage()
+							+ e.getStackTrace());
+		}
+		
+		return success;
+	}
+	
 		
 	/*
 	 * Employees should be able to view a list of services on the dashboard 

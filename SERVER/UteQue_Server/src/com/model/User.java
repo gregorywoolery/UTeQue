@@ -5,6 +5,7 @@ import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
+import javax.persistence.Transient;
 
 @MappedSuperclass
 public class User implements Serializable{
@@ -31,7 +32,8 @@ public class User implements Serializable{
 
 	@Column(name="phone")
 	protected String phone;
-
+	
+	@Transient
 	private String type;
 	
 	//Default Constructor

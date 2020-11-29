@@ -4,12 +4,20 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
+import javax.persistence.Query;
+
+import com.connectionFactories.Hibernate.SessionFactoryBuilder;
 import com.connectionFactories.JDBC.DBConnectorFactory;
+import com.model.StudentServicesRep;
 import com.model.User;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.hibernate.HibernateException;
+import org.hibernate.Session;
+import org.hibernate.Transaction;
 
 public class UserOperation {
 	private static final Logger logger = LogManager.getLogger(UserOperation.class);
@@ -58,4 +66,41 @@ public class UserOperation {
 		
 		return null;
 	}	
+	
+	
+	@SuppressWarnings("unchecked")
+	public static ArrayList<String> getStudentServiceReps(){
+		ArrayList<StudentServicesRep> representatives = new ArrayList<StudentServicesRep>();
+		
+		String hql = "FROM StudentServicesRep S";
+		
+		Transaction transaction = null;
+		try(Session session = SessionFactoryBuilder
+				.getSessionFactory().getCurrentSession()
+		){
+			
+			transaction = session.beginTransaction();
+			
+			Query query = session.createQuery(hql);
+			query.setMaxResults(5);
+			
+			representatives = (ArrayList<StudentServicesRep>) query.getResultList();
+			
+			transaction.commit();
+			
+		}catch(HibernateException hex) {
+			if(transaction != null) {
+				
+				transaction.rollback();
+			}
+
+		}
+		
+		ArrayList<String> repNames = new ArrayList<String>();
+		for(StudentServicesRep rep: representatives)
+			repNames.add(rep.getID() + " - " + rep.getFirstname() + " " + rep.getLastname());
+		
+		
+		return repNames;
+	}
 }

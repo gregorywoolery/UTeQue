@@ -41,6 +41,7 @@ import com.controller.IssueController;
 import com.controller.ServiceController;
 import com.controller.UserController;
 import com.model.Issue;
+import com.model.StudentServicesRep;
 import com.model.User;
 import com.view.UserLogin;
 
@@ -81,10 +82,10 @@ public class IssueMain extends JInternalFrame implements ActionListener{
 	private JButton assignRepBtn;
 	private JButton respondBtn;
 	private JButton moreBtn;
-	@SuppressWarnings("unused")
 	private JDesktopPane workSpaceDesktop;
 	private JButton searchBtn;
 	private ArrayList<String> serviceTypes;
+	private ArrayList<String> representatives;
 	
 	private User staff;
 	
@@ -194,14 +195,9 @@ public class IssueMain extends JInternalFrame implements ActionListener{
 		    public void mousePressed(MouseEvent mouseEvent) {
 		        JTable table =(JTable) mouseEvent.getSource();
 		        
-		        if(mouseEvent.getClickCount() == 1 && table.getSelectedRow() != -1) {
-//					JOptionPane.showMessageDialog(workSpaceDesktop, 
-//							"ISSUE ADDED SUCCESSFULLY", 
-//							"SUCCESS",
-//							JOptionPane.INFORMATION_MESSAGE);
-					
+		        if(mouseEvent.getClickCount() == 1 && table.getSelectedRow() != -1)
 		        	assaignOptionDisplay();
-		        }
+		      
 		    }
 		});
 		
@@ -344,7 +340,8 @@ public class IssueMain extends JInternalFrame implements ActionListener{
 		assignRepTitle_lbl.setPreferredSize(new Dimension(100, 15));
 		assignRep_Panel.add(assignRepTitle_lbl);
 		
-		selectRep_comboBox = new JComboBox();
+		representatives = UserController.getAllAvailableRepresentative();
+		selectRep_comboBox = new JComboBox(representatives.toArray());
 		selectRep_comboBox.setForeground(new Color(255, 255, 255));
 		selectRep_comboBox.setBackground(new Color(0, 0, 51));
 		selectRep_comboBox.setPreferredSize(new Dimension(200, 30));
@@ -386,6 +383,38 @@ public class IssueMain extends JInternalFrame implements ActionListener{
 			}
 		}
 		
+		if(e.getSource().equals(assignRepBtn)) {
+			int opt = JOptionPane.showConfirmDialog(workSpaceDesktop, 
+					"Are you sure you assaign .. to the Issue ?", 
+					"Assaign Rep",
+					JOptionPane.YES_NO_OPTION,
+					JOptionPane.QUESTION_MESSAGE);
+			if (opt == 0) {
+				boolean success = assignRepToIssue();
+				if(success)
+					JOptionPane.showMessageDialog(workSpaceDesktop, 
+						"REP ADDED TO ISSUE SUCCESSFULLY", 
+						"SUCCESS",
+						JOptionPane.INFORMATION_MESSAGE);
+				else
+					JOptionPane.showMessageDialog(workSpaceDesktop, 
+							"Oops.. There was a problem when assigning Rep. We'll work to solve this.", 
+							"ERROR",
+							JOptionPane.ERROR_MESSAGE);
+					
+			}
+		}
+
+		if(e.getSource().equals(moreBtn)) {
+			workSpaceDesktop.removeAll();
+			workSpaceDesktop.updateUI();
+		}
+		
+		if(e.getSource().equals(respondBtn)) {
+			workSpaceDesktop.removeAll();
+			workSpaceDesktop.updateUI();
+		}
+		
 	}
 	
 	private void updateStudentIssuesTable(String studentID, int serviceID) {
@@ -405,6 +434,7 @@ public class IssueMain extends JInternalFrame implements ActionListener{
 		 * values in the issue table.
 		 */
 		if(studentIssues != null) {
+			model.setRowCount(0);
 			for(Issue issue: studentIssues) {
 				
 				/**
@@ -456,35 +486,28 @@ public class IssueMain extends JInternalFrame implements ActionListener{
 	private void assaignOptionDisplay() {
 		//* "Issue ID", "Type", "Issued At", "Rep ID", "Assigned On"
 		
-		String repID = staff.getID();
-		String repAssigned = "NOT ASSIGNED";
-		String repSelected = null;
+		String repAssigned = null;
 		
 		int selRow = 0; 
 		
 		int []selectedItems = studentIssues_table.getSelectedColumns();
 		
 		if(selectedItems == null || selectedItems.length < 1)
-			repSelected = null;
+			repAssigned = null;
 		else {
-			//if(studentIssues_table.getSelectedRow() != -1) {
-				int column = 3; //Rep ID Column
-				selRow = studentIssues_table.getSelectedRow();
-				repSelected = studentIssues_table.getModel().getValueAt(selRow, column).toString();						
-			//}
+			int column = 3; //Rep ID Column
+			selRow = studentIssues_table.getSelectedRow();
+			repAssigned = studentIssues_table.getModel().getValueAt(selRow, column).toString();						
 		}
 		
-		if(repSelected == null)
-			repAssigned = "NOT ASSINGED";
-		else
-			repAssigned = repSelected;
-		
-		
-		String loggedUser = UserLogin.currentUser.getType();
+		String loggedUser = staff.getType();
 		
 		//Updates issueOptionPanel each time an ISSUE is selected
 		issueOptions_panel.removeAll();
 		issueOptions_panel.updateUI();
+		
+		System.out.println(loggedUser);
+		System.out.println(repAssigned);
 		
 		/**
 		 * Controls bottom pane to display option to STAFF for controlling an ISSUE.
@@ -502,15 +525,43 @@ public class IssueMain extends JInternalFrame implements ActionListener{
 		 * selected ISSUE then only display a MORE BUTTON OPTION.
 		 */
 		
-		if(repID != "NOT ASSINGED" && loggedUser == "REP" && staff.getID().equals(repSelected))
+		if(repAssigned != "NOT ASSIGNED" && loggedUser == "REP" && staff.getID().equals(repAssigned))
 			issueOptions_panel.add(respondBtn);
 		else {
-			if(loggedUser == "AGENT") {
-
+			if(loggedUser.equals("AGENT") && repAssigned.equals("NOT ASSIGNED"))
 				issueOptions_panel.add(assignRep_Panel);
-			}
+
 			issueOptions_panel.add(moreBtn);
 		}
+		
+		issueOptions_panel.updateUI();
+	}
+
+	private boolean assignRepToIssue() {
+		boolean success = false;
+		
+		String representative = selectRep_comboBox.getItemAt(selectRep_comboBox.getSelectedIndex()).toString();
+		String repID = "";
+		
+		for(int i =0; i < representative.length(); i++)
+			if(Character.compare(representative.charAt(i),'-') == 0)
+				break;
+			else
+				repID += representative.charAt(i); 
+		
+		int selRow = studentIssues_table.getSelectedRow();
+		String issueID = studentIssues_table.getModel().getValueAt(selRow, 0).toString();	
+		
+		success = IssueController.assignRepresentative(issueID, repID.trim());
+		
+		if(success)
+			updateStudentIssuesTable(
+					studentSearchID_txtField.getText(), 
+					services_comboBox.getSelectedIndex()+1
+					);
+		
+		return success;
+		
 	}
 
 }

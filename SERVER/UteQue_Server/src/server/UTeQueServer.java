@@ -14,6 +14,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.model.Issue;
+import com.model.StudentServicesRep;
 import com.model.User;
 import com.services.IssueOperation;
 import com.services.LoginAuthentication;
@@ -61,11 +62,11 @@ public class UTeQueServer {
 	
 	public static class ClientHandler extends Thread implements Runnable{
 		Socket socketConnection = null;
-		String operation = "", studentID = "", issueID= "", type= "";
+		String operation = "", studentID = "", issueID= "", type= "", repID = "";
 		Date issuedAt = null;
 		boolean success = false;
 		int[] stats = new int[3];
-
+		StudentServicesRep studentServicesRep = null;
 		int serviceID=0;
 		User user;
 		
@@ -132,15 +133,28 @@ public class UTeQueServer {
 						case "GET-ISSUE":
 							issueID = (String) is.readObject();
 							os.writeObject(IssueOperation.getIssue(issueID));
+							break;
+							
 						case "DELETE-ISSUE":
 							issueID = (String) is.readObject();
 							success =  IssueOperation.deleteIssue(issueID);
 							os.writeBoolean(success);
 							break;
+							
 						case "GET-STUDENT-SEARCH ISSUES":
 							Issue searchIssue = (Issue) is.readObject();
 							System.out.println("UTeQueServer:" + searchIssue.toString());
 							os.writeObject(IssueOperation.getAllSearchIssuesForStudent(searchIssue));
+							break;
+						
+						case "GET-REPS":
+							os.writeObject(UserOperation.getStudentServiceReps());
+							break;
+							
+						case "ASSIGN-REP":
+							issueID = (String) is.readObject();
+							repID = (String) is.readObject();
+							os.writeObject(IssueOperation.assignRepresentative(issueID, repID));
 							break;
 							
 					}
