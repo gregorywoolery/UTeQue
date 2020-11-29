@@ -16,6 +16,7 @@ import java.awt.GridBagConstraints;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.text.ParseException;
 import java.awt.BorderLayout;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -67,15 +68,19 @@ public class StaffIssueResponse extends JInternalFrame implements ActionListener
 	private JButton returnBtn;
 	private JDesktopPane workSpaceDesktop;
 	private User staff;
+	private String issueID;
+	private int MODE;
 	
-	
-	public StaffIssueResponse(JDesktopPane workSpaceDesktop) {
+	public StaffIssueResponse(JDesktopPane workSpaceDesktop, String issueID, int MODE) {
 		super("Issue-Response", 
 				false, 	//resizable
 				true, 	//closable
 				false, 	//maximizable
 				true);	//iconifiable
+		
 		this.workSpaceDesktop = workSpaceDesktop;
+		this.issueID = issueID;
+		this.MODE = MODE;
 		initializeComponents();
 		registerListeners();
 	}
@@ -109,7 +114,7 @@ public class StaffIssueResponse extends JInternalFrame implements ActionListener
 		gbc_titile_lbl.gridy = 0;
 		getContentPane().add(titile_lbl, gbc_titile_lbl);
 		
-		help_label = new JLabel("");
+		help_label = new JLabel();
 		help_label.setIcon(new ImageIcon(StaffIssueResponse.class.getResource("/img/help.png")));
 		GridBagConstraints gbc_help_label = new GridBagConstraints();
 		gbc_help_label.insets = new Insets(5, 0, 5, 0);
@@ -148,7 +153,7 @@ public class StaffIssueResponse extends JInternalFrame implements ActionListener
 		gbc_issueMessage_txtArea.gridy = 0;
 		main_panel.add(issueMessage_txtArea, gbc_issueMessage_txtArea);
 		
-		services_lbl = new JLabel("");
+		services_lbl = new JLabel();
 		services_lbl.setForeground(new Color(255, 255, 255));
 		services_lbl.setBackground(new Color(255, 255, 255));
 		services_lbl.setHorizontalAlignment(SwingConstants.CENTER);
@@ -160,7 +165,7 @@ public class StaffIssueResponse extends JInternalFrame implements ActionListener
 		gbc_services_lbl.gridy = 0;
 		main_panel.add(services_lbl, gbc_services_lbl);
 		
-		type_label = new JLabel("");
+		type_label = new JLabel();
 		type_label.setForeground(new Color(255, 255, 255));
 		type_label.setBackground(new Color(255, 255, 255));
 		type_label.setHorizontalAlignment(SwingConstants.CENTER);
@@ -229,14 +234,14 @@ public class StaffIssueResponse extends JInternalFrame implements ActionListener
 		getContentPane().add(side_panel, gbc_side_panel);
 		side_panel.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 10));
 		
-		issueID_lbl = new JLabel("");
+		issueID_lbl = new JLabel();
 		issueID_lbl.setForeground(new Color(255, 255, 255));
 		issueID_lbl.setHorizontalAlignment(SwingConstants.CENTER);
 		issueID_lbl.setPreferredSize(new Dimension(130, 25));
 		issueID_lbl.setFont(new Font("Arial Rounded MT Bold", Font.PLAIN, 14));
 		side_panel.add(issueID_lbl);
 		
-		issuedAt_lbl = new JLabel("");
+		issuedAt_lbl = new JLabel();
 		issuedAt_lbl.setForeground(new Color(255, 255, 255));
 		side_panel.add(issuedAt_lbl);
 		issuedAt_lbl.setHorizontalAlignment(SwingConstants.CENTER);
@@ -254,28 +259,28 @@ public class StaffIssueResponse extends JInternalFrame implements ActionListener
 		student_lbl.setFont(new Font("Arial Rounded MT Bold", Font.PLAIN, 14));
 		side_panel.add(student_lbl);
 		
-		studentID_lbl = new JLabel("");
+		studentID_lbl = new JLabel();
 		studentID_lbl.setForeground(new Color(255, 255, 255));
 		studentID_lbl.setHorizontalAlignment(SwingConstants.CENTER);
 		studentID_lbl.setPreferredSize(new Dimension(130, 25));
 		studentID_lbl.setFont(new Font("Arial Rounded MT Bold", Font.PLAIN, 14));
 		side_panel.add(studentID_lbl);
 		
-		studentName_lbl = new JLabel("");
+		studentName_lbl = new JLabel();
 		studentName_lbl.setForeground(new Color(255, 255, 255));
 		studentName_lbl.setHorizontalAlignment(SwingConstants.CENTER);
 		studentName_lbl.setPreferredSize(new Dimension(130, 25));
 		studentName_lbl.setFont(new Font("Arial Rounded MT Bold", Font.PLAIN, 14));
 		side_panel.add(studentName_lbl);
 		
-		email_lbl = new JLabel("");
+		email_lbl = new JLabel();
 		email_lbl.setForeground(new Color(255, 255, 255));
 		email_lbl.setHorizontalAlignment(SwingConstants.CENTER);
 		email_lbl.setPreferredSize(new Dimension(130, 25));
 		email_lbl.setFont(new Font("Arial Rounded MT Bold", Font.PLAIN, 14));
 		side_panel.add(email_lbl);
 		
-		contactNo_lbl = new JLabel("");
+		contactNo_lbl = new JLabel();
 		contactNo_lbl.setForeground(new Color(255, 255, 255));
 		contactNo_lbl.setHorizontalAlignment(SwingConstants.CENTER);
 		contactNo_lbl.setPreferredSize(new Dimension(130, 25));
@@ -293,7 +298,7 @@ public class StaffIssueResponse extends JInternalFrame implements ActionListener
 		representative_lbl.setFont(new Font("Arial Rounded MT Bold", Font.PLAIN, 14));
 		side_panel.add(representative_lbl);
 		
-		representativeName_lbl = new JLabel("");
+		representativeName_lbl = new JLabel();
 		representativeName_lbl.setForeground(new Color(255, 255, 255));
 		representativeName_lbl.setHorizontalAlignment(SwingConstants.CENTER);
 		representativeName_lbl.setPreferredSize(new Dimension(130, 25));
@@ -333,13 +338,39 @@ public class StaffIssueResponse extends JInternalFrame implements ActionListener
 					JOptionPane.YES_NO_CANCEL_OPTION,
 					JOptionPane.QUESTION_MESSAGE);
 			
-			switch(opt) {
-				case 0:
-					//addMainInternalFrame();
-					break;
-			}
+			if (opt == 0)
+				openIssueMain();
+			
 		}
+	}
+	
+	private void openIssueMain() {
+		workSpaceDesktop.removeAll();
+		workSpaceDesktop.updateUI();
 		
+		try {
+		
+			JInternalFrame currFrame = null;
+			currFrame = new IssueMain(workSpaceDesktop);
+			workSpaceDesktop.add(currFrame);
+		
+			//Opens JinternalFrame centered in the JDesktopPane
+			Dimension desktopSize = workSpaceDesktop.getSize();
+			Dimension jInternalFrameSize = currFrame.getSize();
+			
+			//Test if current internal frame is of class AddIssue and renders the frame with that
+			if(currFrame.getClass() == IssueMain.class){
+				currFrame.setLocation((desktopSize.width - jInternalFrameSize.width),
+				    (desktopSize.height- jInternalFrameSize.height)/2);
+			}
+			
+		} catch (ParseException e) {
+
+			e.printStackTrace();
+		}
+
+		
+
 	}
 
 }

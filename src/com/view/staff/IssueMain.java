@@ -44,6 +44,7 @@ import com.model.Issue;
 import com.model.StudentServicesRep;
 import com.model.User;
 import com.view.UserLogin;
+import com.view.student.StudentIssueResponse;
 
 import java.awt.GridLayout;
 import java.awt.GridBagLayout;
@@ -406,13 +407,11 @@ public class IssueMain extends JInternalFrame implements ActionListener{
 		}
 
 		if(e.getSource().equals(moreBtn)) {
-			workSpaceDesktop.removeAll();
-			workSpaceDesktop.updateUI();
+			openIssueRespondScreen(1);
 		}
 		
 		if(e.getSource().equals(respondBtn)) {
-			workSpaceDesktop.removeAll();
-			workSpaceDesktop.updateUI();
+			openIssueRespondScreen(0);
 		}
 		
 	}
@@ -562,6 +561,28 @@ public class IssueMain extends JInternalFrame implements ActionListener{
 		
 		return success;
 		
+	}
+
+	private void openIssueRespondScreen(int MODE) {
+		int selRow = studentIssues_table.getSelectedRow();
+		String issueID = studentIssues_table.getModel().getValueAt(selRow, 0).toString();	
+		
+		workSpaceDesktop.removeAll();
+		workSpaceDesktop.updateUI();
+		
+		JInternalFrame currFrame = null;
+		currFrame = new StaffIssueResponse(workSpaceDesktop, issueID, MODE);
+		workSpaceDesktop.add(currFrame);
+		
+		//Opens JinternalFrame centered in the JDesktopPane
+		Dimension desktopSize = workSpaceDesktop.getSize();
+		Dimension jInternalFrameSize = currFrame.getSize();
+		
+		//Test if current internal frame is of class AddIssue and renders the frame with that
+		if(currFrame.getClass() == StaffIssueResponse.class){
+			currFrame.setLocation((desktopSize.width - jInternalFrameSize.width),
+			    (desktopSize.height- jInternalFrameSize.height)/2);
+		}
 	}
 
 }
