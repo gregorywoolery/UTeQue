@@ -16,6 +16,7 @@ import com.model.Response;
 import com.model.Student;
 import com.model.StudentServicesRep;
 import com.model.User;
+import com.services.Identification;
 
 import java.awt.GridBagLayout;
 import javax.swing.JPanel;
@@ -25,7 +26,10 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Date;
 import java.awt.BorderLayout;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -346,7 +350,28 @@ public class StaffIssueResponse extends JInternalFrame implements ActionListener
 			
 			if (opt == 0)
 				openIssueMain();
+		}
+		
+		if(e.getSource().equals(postResponseBtn)) {
+			int opt = JOptionPane.showConfirmDialog(workSpaceDesktop, 
+					"Are you sure you want to post this reponse?", 
+					"POST RESPONSE",
+					JOptionPane.YES_NO_CANCEL_OPTION,
+					JOptionPane.QUESTION_MESSAGE);			
 			
+			if(opt == 0)
+				if(isPostResponse()) {
+					JOptionPane.showMessageDialog(workSpaceDesktop, 
+							"RESPONSE POSTED", 
+							"SUCCESS",
+							JOptionPane.INFORMATION_MESSAGE);
+				}else {
+					JOptionPane.showMessageDialog(workSpaceDesktop, 
+							"Oops.. Problem occured posting your reponse. "
+									+ "We'll get back to you shortly.", 
+							"ERROR",
+							JOptionPane.ERROR_MESSAGE);
+				}
 		}
 	}
 	
@@ -389,11 +414,9 @@ public class StaffIssueResponse extends JInternalFrame implements ActionListener
 		
 		String studentID = issueDetails.getStudentID();
 		Student student = UserController.getStudent(studentID);
-
-		Response issueResponse = ResponseController.getResponseUsingIssue(issueID);
-		StudentServicesRep rep = UserController.getRep(issueDetails.getRepID());
 		
-		//ISSUE Information
+
+		//Updates View with information for specific ISSUE
 		issueID_lbl.setText(issueDetails.getIssueID());
 		issueMessage_txtArea.setText(issueDetails.getMessage());
 		
@@ -408,29 +431,72 @@ public class StaffIssueResponse extends JInternalFrame implements ActionListener
 		issuedAt_lbl.setText(issuedAt);
 
 
-		//STUDENT Information
+		//Updates View with information for specific STUDENT Information relating to ISSUE
 		studentID_lbl.setText(student.getID());
 		studentName_lbl.setText(student.getFirstname() + " " + student.getLastname());
 		email_lbl.setText(student.getEmail());
 		contactNo_lbl.setText(student.getPhone());
 		
 		
-		//RESPONSE Information
-		response.isAnswer_chckbx.setSelected(issueResponse.isAnswer());
-		response.repName_lbl.setText(rep.getFirstname() + " " + rep.getLastname());
-		
-		String respondedOn = sdf.format(issueResponse.getResponseAt());
-		response.respondDate_lbl.setText(respondedOn);
-		response.responseID_lbl.setText(issueResponse.getResponseID());
-		response.responseMessage_txtArea.setText(issueResponse.getMessage());
-		
-		if(issueResponse.getComment() != null)
-			response.commentMessage_textArea.setText(issueResponse.getComment());
+		//IF REPRESENTATIVE was assigned then update necessary fields
+		if(issueDetails.getRepID() != null) {
+			StudentServicesRep rep = UserController.getRep(issueDetails.getRepID());
+			Response issueResponse = ResponseController.getResponseUsingIssue(issueID);
 
-		
-		//REPRESENTATIVE Information
-		representativeName_lbl.setText(rep.getFirstname() + " " + rep.getLastname());
+			response.repName_lbl.setText(rep.getFirstname() + " " + rep.getLastname());
 			
+			//REPRESENTATIVE Information
+			representativeName_lbl.setText(rep.getID());
+
+			if(issueResponse != null) {			
+				//RESPONSE Information
+				response.isAnswer_chckbx.setSelected(issueResponse.isAnswer());
+				
+				String respondedOn = sdf.format(issueResponse.getResponseAt());
+				response.respondDate_lbl.setText(respondedOn);
+				response.responseID_lbl.setText(issueResponse.getResponseID());
+				response.responseMessage_txtArea.setText(issueResponse.getMessage());
+				
+				if(issueResponse.getComment() != null)
+					response.commentMessage_textArea.setText(issueResponse.getComment());
+					
+				response.responseMessage_txtArea.setEnabled(false);
+				postResponseBtn.setEnabled(false);
+			
+			}else {
+				if(MODE == 0) {
+					LocalDate date = LocalDate.now(); // Gets the current date
+					DateTimeFormatter currentDateFormat = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+					
+					response.respondDate_lbl.setText(date.format(currentDateFormat));
+					response.responseID_lbl.setText(Identification.responseID());					
+			
+				}
+			}{
+				JOptionPane.showMessageDialog(workSpaceDesktop, 
+						"THERE ARE NO RESPONSE POSTED FOR THIS ISSUE", 
+						"NO RECORDS FOUND",
+						JOptionPane.INFORMATION_MESSAGE);
+			}
+		}
+	}
+
+	public boolean isPostResponse() {
+		LocalDate date = LocalDate.now(); // Gets the current date
+		DateTimeFormatter currentDateFormat = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+		
+		Response postResponse = new Response(
+				response.responseID_lbl.getText(),
+				issueID,
+				response.repName_lbl.getText(),
+				response.responseMessage_txtArea.getText(),
+				new Date(date.format(currentDateFormat)),
+				false,
+				null
+				); 
+		
+		boolean isPosted = ResponseController.postResponse(postResponse);
+		return isPosted;
 	}
 
 }

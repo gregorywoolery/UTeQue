@@ -5,13 +5,18 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class Identification {
-	private static String generatedIssueID;
+	private static String generatedIssueID, generatedResponseID;
 	
 	public static String getIssueId() {
 		DateFormat issueFormat = new SimpleDateFormat("yyMMddhhmmss");
-		String dateString = issueFormat.format(new Date()).toString();	
-		generatedIssueID  = dateString;
+		generatedIssueID = issueFormat.format(new Date()).toString();	
 		return generatedIssueID;
+	}
+	
+	public static String responseID() {
+		DateFormat issueFormat = new SimpleDateFormat("ssmmddMMyy");
+		generatedResponseID = issueFormat.format(new Date()).toString();	
+		return generatedResponseID;
 	}
 
 }

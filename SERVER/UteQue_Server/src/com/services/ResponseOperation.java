@@ -67,7 +67,7 @@ public class ResponseOperation {
 			Query query = session.createQuery(getStudentIssues);
 			query.setParameter("issue_ID", issueID);
 			
-			response = (Response) query.getSingleResult();
+			response = (Response) query.getResultList().stream().findFirst().orElse(null);
 			
 			transaction.commit();
 			
@@ -80,4 +80,33 @@ public class ResponseOperation {
 		
 		return response;
 	}
+	
+	public static boolean postResponse(Response response) {
+		Transaction transaction = null;
+		
+		logger.warn("Attempting to POST RESPONSE FOR ISSUE, Error May Occur");
+		
+		try(Session session = SessionFactoryBuilder
+				.getSessionFactory().getCurrentSession()
+		){
+			transaction = session.beginTransaction();
+			
+			session.save(response);			
+			transaction.commit();
+			
+		    logger.info(" RESPONSE POSTED SUCCESSFULLY");
+		    return true;
+		    
+		}catch(HibernateException hex) {
+			if(transaction != null) {
+				
+				transaction.rollback();
+			}
+		}
+
+		return false;
+	}
+	
+	
+	
 }

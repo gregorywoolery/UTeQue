@@ -14,6 +14,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.model.Issue;
+import com.model.Response;
 import com.model.Student;
 import com.model.StudentServicesRep;
 import com.model.User;
@@ -71,6 +72,7 @@ public class UTeQueServer {
 		StudentServicesRep studentServicesRep = null;
 		int serviceID=0;
 		User user;
+		Response response;
 		
 		public ClientHandler(Socket socket) {
 			logger.info("Socket connection recieved by server thread");
@@ -166,6 +168,10 @@ public class UTeQueServer {
 						case "GET-REP":
 							userID = (String) is.readObject();
 							os.writeObject(UserOperation.getRep(userID));
+							break;
+						case "POST-RESPONSE":
+							response = (Response) is.readObject();
+							os.writeObject(ResponseOperation.postResponse(response));
 							break;
 					}
 					

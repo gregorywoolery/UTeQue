@@ -40,13 +40,43 @@ public class ResponseController {
 			
 		} catch (ClassNotFoundException e) {
 			logger.error("ERROR OCCURED - " + e.getMessage()
-			+ e.getStackTrace());			
+							+ e.getStackTrace());			
 		} catch (IOException e) {
 			logger.error("ERROR OCCURED - " + e.getMessage()
 							+ e.getStackTrace());
 		}
 		
 		return response;
+	}
+	
+	public static boolean postResponse(Response response) {
+		boolean isPosted = false;
+		try(Socket socketConnection = new Socket(InetAddress.getLocalHost(), 3309);
+				ObjectOutputStream os = new ObjectOutputStream(socketConnection.getOutputStream());
+				ObjectInputStream is = new ObjectInputStream(socketConnection.getInputStream());
+		){
+			
+			logger.info("POSTING RESPONSE TO ISSUE");			
+			
+			os.writeObject("POST-RESPONSE");
+			os.flush();
+			os.writeObject(response);
+			
+			response = (Response) is.readObject();
+			
+		} catch (UnknownHostException e) {
+			logger.error("IP ADDRESS OF HOST ERROR - " + e.getMessage()
+							+ e.getStackTrace());
+			
+		} catch (ClassNotFoundException e) {
+			logger.error("ERROR OCCURED - " + e.getMessage()
+							+ e.getStackTrace());			
+		} catch (IOException e) {
+			logger.error("ERROR OCCURED - " + e.getMessage()
+							+ e.getStackTrace());
+		}
+		
+		return isPosted;
 	}
 
 }

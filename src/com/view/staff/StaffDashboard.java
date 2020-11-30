@@ -12,17 +12,24 @@ import com.controller.UserController;
 import com.model.User;
 import com.view.Dashboard;
 import com.view.UserLogin;
-import com.view.student.StudentMain;
 
 import javax.swing.JLabel;
 import javax.swing.JButton;
 import java.awt.Font;
 import java.awt.Color;
 import javax.swing.SwingConstants;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import java.awt.Dimension;
 import java.awt.Component;
 
 public class StaffDashboard extends Dashboard implements ActionListener {
+
+	private static final long serialVersionUID = 8747060055776800514L;
+	private static final Logger logger = LogManager.getLogger(StaffDashboard.class);
+	
 	private JButton joinMeetingBtn;
 	private JButton newMeetingBtn;
 	private JButton studentIssuesBtn;
@@ -274,6 +281,23 @@ public class StaffDashboard extends Dashboard implements ActionListener {
 					    (desktopSize.height- jInternalFrameSize.height)/2);
 				}
 			}
+		}
+		
+		if(e.getSource().equals(logoutBtn)) {
+			dispose();
+			EventQueue.invokeLater(new Runnable() {
+				public void run() {
+					try {
+						UserController.setCurrentUserNull();
+
+						UserLogin userLoginFrame = new UserLogin();
+						userLoginFrame.setVisible(true);
+					} catch (Exception e) {
+						logger.error("ERROR OCCURED - " + e.getMessage()
+										+ e.getStackTrace());
+					}
+				}
+			});
 		}
 		
 	}
