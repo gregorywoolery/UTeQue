@@ -1,5 +1,6 @@
 package com.services;
 
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.Date;
 import java.sql.PreparedStatement;
@@ -12,7 +13,8 @@ import javax.persistence.Query;
 
 import com.connectionFactories.JDBC.DBConnectorFactory;
 import com.model.Issue;
-
+import com.model.Response;
+import com.model.Student;
 import com.connectionFactories.Hibernate.SessionFactoryBuilder;
 
 import org.apache.logging.log4j.LogManager;
@@ -393,52 +395,5 @@ public class IssueOperation {
 		
 		
 	}
-	
-	public static ArrayList<Object> getIssueRepStudent(String issueID){
-		ArrayList<Object> details = new ArrayList<Object>();
-		
-		String hql =  "SELECT i "
-					+ "FROM Student s "
-					+ "INNER JOIN Issue i "
-						+ "ON s.studentID = i.studentID "
-					+ "INNER JOIN Response r "
-						+ "ON r.issueID = i.issueID "
-					+ "INNER JOIN StudentServicesRep rep "
-						+ "ON r.userID = rep.repID "
-					+ "WHERE I.issueID = :issue_ID ";
-		
-		
-		Transaction transaction = null;
-		try(Session session = SessionFactoryBuilder
-				.getSessionFactory().getCurrentSession()
-		){
-			
-			transaction = session.beginTransaction();
-			
-			Query query = session.createQuery(hql);
-			query.setParameter("issue_ID", issueID);
-			
-			details = (ArrayList<Object>) query.getResultList();
-			
-			transaction.commit();
-			
-		}catch(HibernateException hex) {
-			if(transaction != null) {
-				
-				transaction.rollback();
-			}
-		}
-		
-		for(Object hello: details) {
-			System.out.println(hello);
-		}
-		
-		
-		return details;
-		
-		
-	}
-
-
 
 }

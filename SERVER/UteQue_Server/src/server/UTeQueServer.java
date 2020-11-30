@@ -14,10 +14,12 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.model.Issue;
+import com.model.Student;
 import com.model.StudentServicesRep;
 import com.model.User;
 import com.services.IssueOperation;
 import com.services.LoginAuthentication;
+import com.services.ResponseOperation;
 import com.services.ServiceOperation;
 import com.services.UserOperation;
 
@@ -62,7 +64,7 @@ public class UTeQueServer {
 	
 	public static class ClientHandler extends Thread implements Runnable{
 		Socket socketConnection = null;
-		String operation = "", studentID = "", issueID= "", type= "", repID = "";
+		String operation = "", userID = "", issueID= "", type= "";
 		Date issuedAt = null;
 		boolean success = false;
 		int[] stats = new int[3];
@@ -85,7 +87,7 @@ public class UTeQueServer {
 				while(!socketConnection.isClosed()) {
 					
 					operation = (String) is.readObject();
-					
+										
 					switch(operation) {						
 						case "AUTHENTICATE":
 							User userAuth = (User) is.readObject();
@@ -100,14 +102,14 @@ public class UTeQueServer {
 							break;
 							
 						case "GET-STUDENT-ISSUE-STATS":
-							studentID = (String) is.readObject();							
-							stats = IssueOperation.getUserIssueStats(studentID);
+							userID = (String) is.readObject();							
+							stats = IssueOperation.getUserIssueStats(userID);
 							os.writeObject(stats);
 							break;
 							
 						case "GET-STUDENT-ISSUES":
-							studentID = (String) is.readObject();
-							os.writeObject(IssueOperation.getAllIssuesForStudent(studentID));
+							userID = (String) is.readObject();
+							os.writeObject(IssueOperation.getAllIssuesForStudent(userID));
 							break;
 							
 						case "GET-ALL-SERVICES":
@@ -120,9 +122,9 @@ public class UTeQueServer {
 							break;
 						
 						case "GET-STUDENT-ISSUES-BY-SERVICE":
-							studentID = (String) is.readObject();
+							userID = (String) is.readObject();
 							serviceID = (int) is.readObject();
-							os.writeObject(IssueOperation.getIssueByService(studentID, serviceID));
+							os.writeObject(IssueOperation.getIssueByService(userID, serviceID));
 							break;
 						
 						case "GET-ISSUE":
@@ -148,15 +150,23 @@ public class UTeQueServer {
 							
 						case "ASSIGN-REP":
 							issueID = (String) is.readObject();
-							repID = (String) is.readObject();
-							os.writeObject(IssueOperation.assignRepresentative(issueID, repID));
+							userID = (String) is.readObject();
+							os.writeObject(IssueOperation.assignRepresentative(issueID, userID));
 							break;
 							
-						case "ISSUE-RESPONSE":
+						case "GET-STUDENT":
+							userID = (String) is.readObject();
+							os.writeObject(UserOperation.getStudent(userID));
+							break;
+							
+						case "GET-RESPONSE":
 							issueID = (String) is.readObject();
-							os.writeObject(IssueOperation.getIssueRepStudent(issueID));
+							os.writeObject(ResponseOperation.getResponseUsingIssue(issueID));
 							break;
-							
+						case "GET-REP":
+							userID = (String) is.readObject();
+							os.writeObject(UserOperation.getRep(userID));
+							break;
 					}
 					
 					os.flush();

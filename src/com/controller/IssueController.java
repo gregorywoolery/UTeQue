@@ -335,8 +335,8 @@ public class IssueController {
 	}
 	
 		
-	public static ArrayList<Object> getIssueRepStudent(String issueID){
-		ArrayList<Object> details = new ArrayList<Object>();
+	public static Object[] getIssueRepStudent(String issueID){
+		Object[] details = new Object[5];
 		
 		logger.info("Client Trying to connect using socket at port " + port);
 		
@@ -350,7 +350,7 @@ public class IssueController {
 			os.writeObject("ISSUE-RESPONSE");
 			os.writeObject(issueID);
 
-			details = (ArrayList<Object>) is.readObject();
+			details = (Object[]) is.readObject();
 			
 		} catch (UnknownHostException e) {
 			logger.error("IP ADDRESS OF HOST ERROR - " + e.getMessage()

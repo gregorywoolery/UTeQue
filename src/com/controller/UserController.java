@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.model.Student;
 import com.model.StudentServicesRep;
 import com.model.User;
 import com.view.UserLogin;
@@ -107,5 +108,78 @@ public class UserController {
 		}
 		
 		return representative;
+	}
+	
+	public static Student getStudent(String studentID) {
+		Student student = new Student();
+		
+		logger.info("Client Trying to connect using socket at port " + 3309);
+		
+		try(Socket socketConnection = new Socket(InetAddress.getLocalHost(), 3309);
+				ObjectOutputStream os = new ObjectOutputStream(socketConnection.getOutputStream());
+				ObjectInputStream is = new ObjectInputStream(socketConnection.getInputStream());
+		){
+			
+			logger.info("Receving List of STUDENT from SERVER");			
+			
+			System.out.print("IN GET STUDENT\n");
+			
+			os.writeObject("GET-STUDENT");
+			os.flush();
+			os.writeObject(studentID);
+			
+			student = (Student) is.readObject();
+
+			System.out.print("STUDENT REVIEVED\n");
+			
+		} catch (UnknownHostException e) {
+			logger.error("IP ADDRESS OF HOST ERROR - " + e.getMessage()
+							+ e.getStackTrace());
+			
+		} catch (ClassNotFoundException e) {
+			logger.error("ERROR OCCURED - " + e.getMessage()
+			+ e.getStackTrace());			
+		} catch (IOException e) {
+			logger.error("ERROR OCCURED - " + e.getMessage()
+							+ e.getStackTrace());
+		}
+		
+		return student;
+	}
+	
+	public static StudentServicesRep getRep(String repID) {
+		StudentServicesRep rep = new StudentServicesRep();
+		logger.info("Client Trying to connect using socket at port " + 3309);
+		
+		try(Socket socketConnection = new Socket(InetAddress.getLocalHost(), 3309);
+				ObjectOutputStream os = new ObjectOutputStream(socketConnection.getOutputStream());
+				ObjectInputStream is = new ObjectInputStream(socketConnection.getInputStream());
+		){
+			
+			logger.info("Receving List of STUDENT from SERVER");			
+			
+			System.out.print("IN GET STUDENT\n");
+			
+			os.writeObject("GET-REP");
+			os.flush();
+			os.writeObject(repID);
+			
+			rep = (StudentServicesRep) is.readObject();
+
+			System.out.print("STUDENT REVIEVED\n");
+			
+		} catch (UnknownHostException e) {
+			logger.error("IP ADDRESS OF HOST ERROR - " + e.getMessage()
+							+ e.getStackTrace());
+			
+		} catch (ClassNotFoundException e) {
+			logger.error("ERROR OCCURED - " + e.getMessage()
+			+ e.getStackTrace());			
+		} catch (IOException e) {
+			logger.error("ERROR OCCURED - " + e.getMessage()
+							+ e.getStackTrace());
+		}
+		
+		return rep;
 	}
 }

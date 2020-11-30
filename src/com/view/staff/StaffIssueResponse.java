@@ -8,9 +8,13 @@ import javax.swing.JInternalFrame;
 import javax.swing.border.LineBorder;
 
 import com.controller.IssueController;
+import com.controller.ResponseController;
 import com.controller.ServiceController;
 import com.controller.UserController;
 import com.model.Issue;
+import com.model.Response;
+import com.model.Student;
+import com.model.StudentServicesRep;
 import com.model.User;
 
 import java.awt.GridBagLayout;
@@ -55,7 +59,6 @@ public class StaffIssueResponse extends JInternalFrame implements ActionListener
 	private JTabbedPane tabbedPane;
 	private ResponseSlot response;
 	private JPanel reponseOption_panel; 
-	private JButton newRepsonseBtn;
 	private JButton postResponseBtn;
 	private JPanel side_panel;
 	private JLabel issueID_lbl;
@@ -219,13 +222,6 @@ public class StaffIssueResponse extends JInternalFrame implements ActionListener
 		gbc_reponseOption_panel.gridy = 4;
 		main_panel.add(reponseOption_panel, gbc_reponseOption_panel);
 		
-		newRepsonseBtn = new JButton("New");
-		newRepsonseBtn.setPreferredSize(new Dimension(120, 30));
-		newRepsonseBtn.setFont(new Font("Arial Rounded MT Bold", Font.PLAIN, 14));
-		newRepsonseBtn.setBackground(new Color(0, 204, 0));
-		newRepsonseBtn.setBorder(null);
-		reponseOption_panel.add(newRepsonseBtn);
-		
 		postResponseBtn = new JButton("Respond");
 		postResponseBtn.setPreferredSize(new Dimension(120, 30));
 		postResponseBtn.setFont(new Font("Arial Rounded MT Bold", Font.PLAIN, 14));
@@ -329,12 +325,12 @@ public class StaffIssueResponse extends JInternalFrame implements ActionListener
 		setBorder(new LineBorder(new Color(0, 0, 51), 10));
 		setBounds(100, 100, 820, 570);
 		
-		setVisible(true);
 		updateIssueResponse();
+		
+		setVisible(true);
 	}
 	
 	private void registerListeners(){
-		newRepsonseBtn.addActionListener(this);
 		postResponseBtn.addActionListener(this);
 		returnBtn.addActionListener(this);
 	}
@@ -389,29 +385,52 @@ public class StaffIssueResponse extends JInternalFrame implements ActionListener
 	}
 	
 	public void getIssueRepStudent(){
-//		ArrayList<Object> issueDetails = IssueController.getIssueRepStudent(issueID);
+		Issue issueDetails = IssueController.viewSpecific(issueID);
 		
-		Issue issue = IssueController.viewSpecific(issueID);
-		issueID_lbl.setText(issue.getIssueID());
-		issueMessage_txtArea.setText(issue.getMessage());
+		String studentID = issueDetails.getStudentID();
+		Student student = UserController.getStudent(studentID);
+
+		Response issueResponse = ResponseController.getResponseUsingIssue(issueID);
+		StudentServicesRep rep = UserController.getRep(issueDetails.getRepID());
+		
+		//ISSUE Information
+		issueID_lbl.setText(issueDetails.getIssueID());
+		issueMessage_txtArea.setText(issueDetails.getMessage());
 		
 		ArrayList<String> serviceTypes = ServiceController.getAllServies();		
-		services_lbl.setText(serviceTypes.get(issue.getServiceID()));
+		services_lbl.setText(serviceTypes.get(issueDetails.getServiceID()));
 
-		type_label.setText(issue.getType());
+		type_label.setText(issueDetails.getType());
 		
 		SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
-		String issuedAt = sdf.format(issue.getIssuedAt());
+		String issuedAt = sdf.format(issueDetails.getIssuedAt());
 		
 		issuedAt_lbl.setText(issuedAt);
 
+
+		//STUDENT Information
+		studentID_lbl.setText(student.getID());
+		studentName_lbl.setText(student.getFirstname() + " " + student.getLastname());
+		email_lbl.setText(student.getEmail());
+		contactNo_lbl.setText(student.getPhone());
 		
-//		Response response = IssueController.getMainIssueResponse(studentID);
-	
-	}
-	
-	public void getStudent(String issue) {
 		
+		//RESPONSE Information
+		response.isAnswer_chckbx.setSelected(issueResponse.isAnswer());
+		response.repName_lbl.setText(rep.getFirstname() + " " + rep.getLastname());
+		
+		String respondedOn = sdf.format(issueResponse.getResponseAt());
+		response.respondDate_lbl.setText(respondedOn);
+		response.responseID_lbl.setText(issueResponse.getResponseID());
+		response.responseMessage_txtArea.setText(issueResponse.getMessage());
+		
+		if(issueResponse.getComment() != null)
+			response.commentMessage_textArea.setText(issueResponse.getComment());
+
+		
+		//REPRESENTATIVE Information
+		representativeName_lbl.setText(rep.getFirstname() + " " + rep.getLastname());
+			
 	}
 
 }

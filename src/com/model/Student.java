@@ -8,6 +8,10 @@ public class Student extends User implements Serializable{
 	private static final long serialVersionUID = 3935091312256888891L;
 
 	private Date dob ;
+
+	public Student() {
+		super();
+	}
 	
 	public Student(String studentID, String password, 
 			String fname, String lname, String gender,
@@ -18,8 +22,6 @@ public class Student extends User implements Serializable{
 		
 		this.dob = dob;
 	}
-	
-
 	
 	public Date getDOB() {
 		return dob;

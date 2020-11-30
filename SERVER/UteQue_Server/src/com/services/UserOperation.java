@@ -10,6 +10,8 @@ import javax.persistence.Query;
 
 import com.connectionFactories.Hibernate.SessionFactoryBuilder;
 import com.connectionFactories.JDBC.DBConnectorFactory;
+import com.model.Issue;
+import com.model.Student;
 import com.model.StudentServicesRep;
 import com.model.User;
 
@@ -103,4 +105,72 @@ public class UserOperation {
 		
 		return repNames;
 	}
+	
+	
+	public static Student getStudent(String studentID) {
+		Student student = new Student();
+		
+		String sql = "SELECT studentID, firstname, lastname, gender, email, phone "
+				+ "FROM UTeQueDB.`Student` WHERE studentID = ?";
+
+		try (Connection dbConn = DBConnectorFactory.getDatabaseConnection()){
+			
+			PreparedStatement statement = dbConn.prepareStatement(sql);
+			statement.setString(1, studentID);
+			
+			logger.warn("Receiving results from executed Prepared Statement, Error May Occur");
+			ResultSet result = statement.executeQuery();
+			
+			while(result.next()) {
+				student.setID(result.getString(1));
+				student.setFirstname(result.getString(2));
+				student.setLastname(result.getString(3));
+				student.setGender(result.getString(4));
+				student.setEmail(result.getString(5));
+				student.setPhone(result.getString(6));
+
+				break;
+			}
+			
+		} catch (SQLException e) {
+			logger.error("Error(" + e.getErrorCode() 
+					+ ") " + e.getMessage());
+		}
+		
+		return student;
+	}
+	
+	public static StudentServicesRep getRep(String repID) {
+		StudentServicesRep rep = new StudentServicesRep();
+		
+		String sql = "SELECT repID, firstname, lastname, gender, email, phone "
+				+ "FROM UTeQueDB.`StudentServicesRep` WHERE repID = ?";
+
+		try (Connection dbConn = DBConnectorFactory.getDatabaseConnection()){
+			
+			PreparedStatement statement = dbConn.prepareStatement(sql);
+			statement.setString(1, repID);
+			
+			logger.warn("Receiving results from executed Prepared Statement, Error May Occur");
+			ResultSet result = statement.executeQuery();
+			
+			while(result.next()) {
+				rep.setID(result.getString(1));
+				rep.setFirstname(result.getString(2));
+				rep.setLastname(result.getString(3));
+				rep.setGender(result.getString(4));
+				rep.setEmail(result.getString(5));
+				rep.setPhone(result.getString(6));
+
+				break;
+			}
+			
+		} catch (SQLException e) {
+			logger.error("Error(" + e.getErrorCode() 
+					+ ") " + e.getMessage());
+		}
+		
+		return rep;
+	}
+	
 }

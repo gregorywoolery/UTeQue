@@ -4,12 +4,20 @@ import java.sql.Connection;
 import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
+import javax.persistence.Query;
+
+import com.connectionFactories.Hibernate.SessionFactoryBuilder;
 import com.connectionFactories.JDBC.DBConnectorFactory;
+import com.model.Issue;
 import com.model.Response;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.hibernate.HibernateException;
+import org.hibernate.Session;
+import org.hibernate.Transaction;
 
 
 public class ResponseOperation {
@@ -41,5 +49,35 @@ public class ResponseOperation {
 		} catch(SQLException e) {
 			logger.error("SQL INSERT Statement was NOT Successful");
 		}
+	}
+	
+	
+	public static Response getResponseUsingIssue(String issueID) {
+		Response response = new Response();
+		
+		String getStudentIssues = "FROM Response R WHERE R.issueID = :issue_ID";
+		
+		Transaction transaction = null;
+		try(Session session = SessionFactoryBuilder
+				.getSessionFactory().getCurrentSession()
+		){
+			
+			transaction = session.beginTransaction();
+			
+			Query query = session.createQuery(getStudentIssues);
+			query.setParameter("issue_ID", issueID);
+			
+			response = (Response) query.getSingleResult();
+			
+			transaction.commit();
+			
+		}catch(HibernateException hex) {
+			if(transaction != null) {
+				
+				transaction.rollback();
+			}
+		}
+		
+		return response;
 	}
 }

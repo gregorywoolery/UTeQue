@@ -23,7 +23,7 @@ public class ResponseSlot extends JPanel implements ActionListener {
 	public JLabel repName_lbl;
 	public JLabel respondDate_lbl;
 	public JCheckBox isAnswer_chckbx;
-	public JButton commentBtn;
+	public JLabel commentBtn;
 	public JTextArea commentMessage_textArea;
 	
 	
@@ -100,12 +100,11 @@ public class ResponseSlot extends JPanel implements ActionListener {
 		gbc_isAnswer_chckbx.gridy = 3;
 		this.add(isAnswer_chckbx, gbc_isAnswer_chckbx);
 		
-		commentBtn = new JButton("Comment");
+		commentBtn = new JLabel("Comment");
 		commentBtn.setPreferredSize(new Dimension(100, 30));
 		commentBtn.setBorder(null);
 		commentBtn.setBackground(new Color(0, 204, 0));
 		commentBtn.setHorizontalTextPosition(SwingConstants.LEFT);
-		commentBtn.setIcon(new ImageIcon(StaffIssueResponse.class.getResource("/img/add-comment.png")));
 		commentBtn.setForeground(new Color(255, 255, 255));
 		commentBtn.setFont(new Font("Arial Rounded MT Bold", Font.PLAIN, 13));
 		GridBagConstraints gbc_commentBtn = new GridBagConstraints();
@@ -118,6 +117,7 @@ public class ResponseSlot extends JPanel implements ActionListener {
 		commentMessage_textArea = new JTextArea();
 		commentMessage_textArea.setTabSize(4);
 		commentMessage_textArea.setPreferredSize(new Dimension(250, 22));
+		commentMessage_textArea.setEnabled(false);
 		GridBagConstraints gbc_commentMessage_textArea = new GridBagConstraints();
 		gbc_commentMessage_textArea.insets = new Insets(0, 0, 0, 20);
 		gbc_commentMessage_textArea.anchor = GridBagConstraints.NORTHEAST;
