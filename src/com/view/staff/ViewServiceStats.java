@@ -15,6 +15,12 @@ import java.awt.Dimension;
 import java.awt.Font;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
+
+import com.controller.IssueController;
+import com.controller.ServiceController;
+import com.model.Issue;
+import com.model.Service;
+
 import javax.swing.JButton;
 import javax.swing.JDesktopPane;
 import javax.swing.ImageIcon;
@@ -24,6 +30,8 @@ import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 
 public class ViewServiceStats extends JInternalFrame implements ActionListener{
 	private JPanel serviceStatsTitle_panel;
@@ -42,6 +50,7 @@ public class ViewServiceStats extends JInternalFrame implements ActionListener{
 				true);	//iconifiable
 		initializeComponents();
 		registerListeners();
+		updateServiceTable();
 		this.workSpaceDesktop =  workSpaceDesktop;
 	}
 	
@@ -85,7 +94,7 @@ public class ViewServiceStats extends JInternalFrame implements ActionListener{
 			new Object[][] {
 			},
 			new String[] {
-				"#", "Service", "Resolved Count", "Oustanding Count"
+				"#", "Service", "Resolved Count", "Unresolved Count"
 			}
 		) {
 			boolean[] columnEditables = new boolean[] {
@@ -150,7 +159,30 @@ public class ViewServiceStats extends JInternalFrame implements ActionListener{
 		}
 		
 	}
-	
+	private void updateServiceTable() {
+		ArrayList<String> serviceTypes ;
+		//Service service = new Service();
+		serviceTypes = ServiceController.getAllServies();
+		DefaultTableModel model = (DefaultTableModel) serviceStats_table.getModel();
+		String issuedAt;
+		int serviceInd;
+
+			for(serviceInd = 0; serviceInd<serviceTypes.size(); serviceInd++) {
+				/**
+				 * Adds row to table with details relating to current service table
+				 * "#", "Service", "Resolved Count", "Unresolved Count"
+				 */
+				model.addRow(new Object[]{
+						serviceInd+1, 
+						serviceTypes.get(serviceInd +1),
+						ServiceController.getServiceResolvedCount(serviceInd +1 ),
+						ServiceController.getServiceUnresolvedCount(serviceInd +1 )
+				});
+			}
+			
+
+			}			
+	 
 	private void openIssueMain() {
 		workSpaceDesktop.removeAll();
 		workSpaceDesktop.updateUI();

@@ -70,7 +70,7 @@ public class UTeQueServer {
 		boolean success = false;
 		int[] stats = new int[3];
 		StudentServicesRep studentServicesRep = null;
-		int serviceID=0;
+		int serviceID=0, count =0;
 		User user;
 		Response response;
 		
@@ -173,8 +173,16 @@ public class UTeQueServer {
 							response = (Response) is.readObject();
 							os.writeObject(ResponseOperation.postResponse(response));
 							break;
+						case "GET-COUNT-RESOLVED-SERVICEID":
+							serviceID = (int) is.readObject();
+							os.writeObject(IssueOperation.getServiceResolvedCount(serviceID));
+							break;
+						case "GET-COUNT-UNRESOLVED-SERVICEID":
+							serviceID = (int) is.readObject();
+							os.writeObject(IssueOperation.getServiceUnresolvedCount(serviceID));
+							break;
 					}
-					
+							
 					os.flush();
 					socketConnection.close();
 					

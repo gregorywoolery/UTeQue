@@ -396,4 +396,46 @@ public class IssueOperation {
 		
 	}
 
+	public static int getServiceResolvedCount(int serviceId) {
+		int count = 0;
+		
+		String countSQL = "SELECT COUNT(UTeQueDB.issue.issueID) FROM UTeQueDB.issue WHERE UTeQueDB.issue.serviceID = ? AND UTeQueDB.issue.status= 'Resolved'";
+		
+		try (Connection dbConn = DBConnectorFactory.getDatabaseConnection()){
+			PreparedStatement statement = dbConn.prepareStatement(countSQL);
+			statement.setInt(1, serviceId);
+			ResultSet result = statement.executeQuery();
+
+			while(result.next()) {
+				count = result.getInt(1);
+			}	
+			
+		}catch(SQLException e){
+			logger.error("Error(" + e.getErrorCode()
+								+ ") Occured. " + e.getMessage());
+		}
+		return count;
+	}
+
+	public static int getServiceUnresolvedCount(int serviceId) {
+		int count = 0;
+		
+		String countSQL = "SELECT COUNT(UTeQueDB.issue.issueID) FROM UTeQueDB.issue WHERE UTeQueDB.issue.serviceID = ? AND UTeQueDB.issue.status= 'Unresolved'";
+		
+		try (Connection dbConn = DBConnectorFactory.getDatabaseConnection()){
+			PreparedStatement statement = dbConn.prepareStatement(countSQL);
+			statement.setInt(1, serviceId);
+			ResultSet result = statement.executeQuery();
+
+			while(result.next()) {
+				count = result.getInt(1);
+			}	
+			
+		}catch(SQLException e){
+			logger.error("Error(" + e.getErrorCode()
+								+ ") Occured. " + e.getMessage());
+		}
+		return count;
+	}
+
 }
