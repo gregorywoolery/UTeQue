@@ -168,7 +168,8 @@ public class StaffDashboard extends Dashboard implements ActionListener {
 	}
 	
 	private void registerListeners(){
-		
+		logoutBtn.addActionListener(this);
+		//serviceAssistBtn.addActionListener(this);
 	}
 	
 	@Override
