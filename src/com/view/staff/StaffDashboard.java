@@ -155,6 +155,7 @@ public class StaffDashboard extends Dashboard implements ActionListener {
 		newMeetingBtn.addActionListener(this);
 		studentIssuesBtn.addActionListener(this);
 		serviceAssistBtn.addActionListener(this);
+		logoutBtn.addActionListener(this);
 	}
 	
 	@Override
