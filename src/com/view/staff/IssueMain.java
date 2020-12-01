@@ -197,8 +197,8 @@ public class IssueMain extends JInternalFrame implements ActionListener{
 		        if(mouseEvent.getClickCount() == 1 && table.getSelectedRow() != -1) {
 		        	int selRow = table.getSelectedRow();
 		        	assaignOptionDisplay();
-		        	String issueID = table.getModel().getValueAt(selRow, 0).toString();
-		        	displayStudentDetails(issueID);
+		        	//String issueID = table.getModel().getValueAt(selRow, 0).toString();
+		        	//displayStudentDetails(issueID);
 		        }
 		    }
 		});
@@ -382,6 +382,7 @@ public class IssueMain extends JInternalFrame implements ActionListener{
 						studentSearchID_txtField.getText(), 
 						services_comboBox.getSelectedIndex()+1
 						);
+				displayStudentDetails( studentSearchID_txtField.getText() );
 			}
 		}
 		
@@ -586,17 +587,17 @@ public class IssueMain extends JInternalFrame implements ActionListener{
 		}
 	}
 	
-	public void displayStudentDetails(String issueID) {
-		if(issueID!=null) {
+	public void displayStudentDetails(String studentID) {
+		if(studentID!=null) {
 			//studentDetails stores the retrieved values from the IssueController.getStudentDetailsByIssueID Method
-			Student studentDetails = UserController.getStudentDetailsByIssueID(issueID);
+			Student student = UserController.getStudent(studentID);
 			
-			if(studentDetails!=null) {
-				studentID_txtField.setText(studentDetails.getID());
-				studentName_textField.setText(studentDetails.getFirstname() + " " + studentDetails.getLastname());
-				studentEmail_textField.setText(studentDetails.getEmail());
-				studentContact_txtField.setText(studentDetails.getPhone());
-				getStudntGender_lbl.setText(studentDetails.getGender());
+			if(student!=null) {
+				studentID_txtField.setText(student.getID());
+				studentName_textField.setText(student.getFirstname() + " " + student.getLastname());
+				studentEmail_textField.setText(student.getEmail());
+				studentContact_txtField.setText(student.getPhone());
+				getStudntGender_lbl.setText(student.getGender());
 			}  else {
 				JOptionPane.showMessageDialog(getDesktopPane(), // getDesktopPane????
 						"Oops.. Student Details could NOT be Found.", 
