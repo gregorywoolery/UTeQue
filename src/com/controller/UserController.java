@@ -39,6 +39,7 @@ public class UserController {
 	}
 	
 	public static void setCurrentUserNull() {
+		logger.info("Removing current User");
 		currentUser = null;
 		found = false;
 	}
@@ -61,7 +62,8 @@ public class UserController {
 			os.flush();
 			
 			currentUser = (User) is.readObject();
-
+			
+			
 		} catch (UnknownHostException e) {
 			logger.error("IP ADDRESS OF HOST ERROR - " + e.getMessage()
 							+ e.getStackTrace());

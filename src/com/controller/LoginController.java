@@ -40,6 +40,7 @@ public class LoginController {
 			os.flush();
 			
 			authenticateSuccess = (boolean) is.readObject();		
+			logger.info("AUTHENTICATION RECIEVED BASED ON USER CREDENTIALS");
 			
 		} catch (UnknownHostException e) {
 			logger.error("IP ADDRESS OF HOST ERROR - " + e.getMessage()
