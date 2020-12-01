@@ -22,19 +22,26 @@ public class Client {
 	
 	public Client(InetAddress hostName) {
 		this.hostName = hostName;
+		if(connect()) {
+			logger.info("Connection established.");
+		}else
+			logger.error("CONNECTION FAILURE..");
 	}
 	
-	private void connect() {
+	private boolean connect() {
 		try {
-			socketConnection = new Socket(hostName, serverPort);
+			this.socketConnection = new Socket(hostName, serverPort);
+			this.os = new ObjectOutputStream(socketConnection.getOutputStream());
+			this.is = new ObjectInputStream(socketConnection.getInputStream());
 			
-			
-			
+			return true;
 			
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			logger.error("ERROR establishing I/O Connection. - " + e.getMessage()
+								+ "AT- " + e.getStackTrace());
 		}
+		
+		return false;
 		
 	}
 	
