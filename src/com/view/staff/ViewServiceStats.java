@@ -160,7 +160,7 @@ public class ViewServiceStats extends JInternalFrame implements ActionListener{
 		
 	}
 	private void updateServiceTable() {
-		ArrayList<String> serviceTypes ;
+		ArrayList<String> serviceTypes;
 		//Service service = new Service();
 		serviceTypes = ServiceController.getAllServies();
 		DefaultTableModel model = (DefaultTableModel) serviceStats_table.getModel();
@@ -174,7 +174,7 @@ public class ViewServiceStats extends JInternalFrame implements ActionListener{
 				 */
 				model.addRow(new Object[]{
 						serviceInd+1, 
-						serviceTypes.get(serviceInd +1),
+						serviceTypes.get(serviceInd + 1),
 						ServiceController.getServiceResolvedCount(serviceInd +1 ),
 						ServiceController.getServiceUnresolvedCount(serviceInd +1 )
 				});
