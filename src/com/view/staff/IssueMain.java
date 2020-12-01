@@ -48,6 +48,8 @@ import javax.swing.JButton;
 import javax.swing.SwingConstants;
 import javax.swing.ListSelectionModel;
 
+import com.model.Student;
+
 @SuppressWarnings("rawtypes")
 public class IssueMain extends JInternalFrame implements ActionListener{
 
@@ -84,6 +86,7 @@ public class IssueMain extends JInternalFrame implements ActionListener{
 	private ArrayList<String> representatives;
 	
 	private User staff;
+
 	
 	public IssueMain(JDesktopPane workSpaceDesktop) throws ParseException {
 		super("Add Issue", 
@@ -191,9 +194,12 @@ public class IssueMain extends JInternalFrame implements ActionListener{
 		    public void mousePressed(MouseEvent mouseEvent) {
 		        JTable table =(JTable) mouseEvent.getSource();
 		        
-		        if(mouseEvent.getClickCount() == 1 && table.getSelectedRow() != -1)
+		        if(mouseEvent.getClickCount() == 1 && table.getSelectedRow() != -1) {
+		        	int selRow = table.getSelectedRow();
 		        	assaignOptionDisplay();
-		      
+		        	String issueID = table.getModel().getValueAt(selRow, 0).toString();
+		        	displayStudentDetails(issueID);
+		        }
 		    }
 		});
 		
@@ -577,6 +583,27 @@ public class IssueMain extends JInternalFrame implements ActionListener{
 		if(currFrame.getClass() == StaffIssueResponse.class){
 			currFrame.setLocation((desktopSize.width - jInternalFrameSize.width),
 			    (desktopSize.height- jInternalFrameSize.height)/2);
+		}
+	}
+	
+	public void displayStudentDetails(String issueID) {
+		if(issueID!=null) {
+			//studentDetails stores the retrieved values from the IssueController.getStudentDetailsByIssueID Method
+			Student studentDetails = UserController.getStudentDetailsByIssueID(issueID);
+			
+			if(studentDetails!=null) {
+				studentID_txtField.setText(studentDetails.getID());
+				studentName_textField.setText(studentDetails.getFirstname() + " " + studentDetails.getLastname());
+				studentEmail_textField.setText(studentDetails.getEmail());
+				studentContact_txtField.setText(studentDetails.getPhone());
+				getStudntGender_lbl.setText(studentDetails.getGender());
+			}  else {
+				JOptionPane.showMessageDialog(getDesktopPane(), // getDesktopPane????
+						"Oops.. Student Details could NOT be Found.", 
+						"ERROR",
+						JOptionPane.ERROR_MESSAGE);
+			}	
+			
 		}
 	}
 

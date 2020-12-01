@@ -20,6 +20,7 @@ public class UserController {
 	private static User currentUser = new User();
 	private static boolean found = false;
 	private static final Logger logger = LogManager.getLogger(IssueController.class);
+	private static final int port = 3309;
 	
 	public static void setCurrentUser(String username, String userType) {		
 		currentUser.setID(username);
@@ -182,4 +183,40 @@ public class UserController {
 		
 		return rep;
 	}
+
+	//Retrieves the Student Details by IssueID
+	public static Student getStudentDetailsByIssueID(String issueID) {
+			Student studentDetails = new Student();
+			
+			logger.info("Client Trying to connect using socket at port " + port);
+			
+			try(Socket socketConnection = new Socket(InetAddress.getLocalHost(), port);
+					ObjectOutputStream os = new ObjectOutputStream(socketConnection.getOutputStream());
+					ObjectInputStream is = new ObjectInputStream(socketConnection.getInputStream());
+			){
+				
+				logger.info("Getting Student RECORD for Student Details Panel");		
+				System.out.println("User Controller TEST****");
+				os.writeObject("GET-STUDENT-DETAILS");
+				os.flush();
+				os.writeObject(issueID);
+	
+				studentDetails = (Student) is.readObject();
+				
+			} catch (UnknownHostException e) {
+				logger.error("IP ADDRESS OF HOST ERROR - " + e.getMessage()
+								+ e.getStackTrace());
+				
+			} catch (ClassNotFoundException e) {
+				logger.error("ERROR OCCURED - " + e.getMessage()
+								+ e.getStackTrace());
+				
+			} catch (IOException e) {
+				logger.error("ERROR OCCURED - " + e.getMessage()
+								+ e.getStackTrace());
+			}
+			
+			return studentDetails;		
+	}
+
 }
