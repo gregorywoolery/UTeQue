@@ -173,7 +173,7 @@ public class ViewServiceStats extends JInternalFrame implements ActionListener{
 				 * "#", "Service", "Resolved Count", "Unresolved Count"
 				 */
 				model.addRow(new Object[]{
-						serviceInd, 
+						serviceInd + 1, 
 						serviceTypes.get(serviceInd),
 						ServiceController.getServiceResolvedCount(serviceInd +1 ),
 						ServiceController.getServiceUnresolvedCount(serviceInd  +1)
