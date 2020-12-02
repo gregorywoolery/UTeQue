@@ -30,6 +30,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Date;
+//import java.sql.Date;
 import java.awt.BorderLayout;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -212,7 +213,7 @@ public class StaffIssueResponse extends JInternalFrame implements ActionListener
 		
 		response = new ResponseSlot();
 		tabbedPane.addTab(" 1 ", response);
-		response.isAnswer_chckbx.setEnabled(false);
+		response.isAnswer_chckbx.setEnabled(true);
 	
 		
 		reponseOption_panel = new JPanel();
@@ -482,21 +483,27 @@ public class StaffIssueResponse extends JInternalFrame implements ActionListener
 	}
 
 	public boolean isPostResponse() {
+		boolean isPosted = false;
+		boolean updateIssueSuccess = false;
 		LocalDate date = LocalDate.now(); // Gets the current date
 		DateTimeFormatter currentDateFormat = DateTimeFormatter.ofPattern("dd-MM-yyyy");
-		
-		Response postResponse = new Response(
+		java.sql.Date sqlDate = java.sql.Date.valueOf( date );
+		Response postResponse = new Response(	
 				response.responseID_lbl.getText(),
 				issueID,
-				response.repName_lbl.getText(),
+				representativeName_lbl.getText(),
 				response.responseMessage_txtArea.getText(),
-				new Date(date.format(currentDateFormat)),
-				false,
+				sqlDate,
+				true,
 				null
 				); 
-		
-		boolean isPosted = ResponseController.postResponse(postResponse);
-		return isPosted;
+		updateIssueSuccess = IssueController.updateStatus(issueID);
+		if(updateIssueSuccess) {
+			 isPosted = ResponseController.postResponse(postResponse);
+			 return true;
+		} 
+
+		return false;
 	}
 
 }

@@ -62,7 +62,7 @@ public class ResponseController {
 			os.flush();
 			os.writeObject(response);
 			
-			response = (Response) is.readObject();
+			 isPosted  =  (boolean) is.readObject();
 			
 		} catch (UnknownHostException e) {
 			logger.error("IP ADDRESS OF HOST ERROR - " + e.getMessage()
@@ -70,7 +70,8 @@ public class ResponseController {
 			
 		} catch (ClassNotFoundException e) {
 			logger.error("ERROR OCCURED - " + e.getMessage()
-							+ e.getStackTrace());			
+							+ e.getStackTrace());
+			
 		} catch (IOException e) {
 			logger.error("ERROR OCCURED - " + e.getMessage()
 							+ e.getStackTrace());

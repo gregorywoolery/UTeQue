@@ -336,23 +336,25 @@ public class IssueController {
 	}
 	
 		
-	public static Object[] getIssueRepStudent(String issueID){
-		Object[] details = new Object[5];
+	public static boolean updateStatus(String issueID) {
 		
-		logger.info("Client Trying to connect using socket at port " + port);
+		boolean updateIssueSuccess = false;
 		
-		try(Socket socketConnection = new Socket(InetAddress.getLocalHost(), port);
+		logger.info("Client Trying to connect using socket at port " + 3309);
+		
+		try(Socket socketConnection = new Socket(InetAddress.getLocalHost(), 3309);
 				ObjectOutputStream os = new ObjectOutputStream(socketConnection.getOutputStream());
 				ObjectInputStream is = new ObjectInputStream(socketConnection.getInputStream());
 		){
 			
-			logger.info("Receiving detials for STAFF ISSUE RESPONSE");		
+			logger.info("UPDATING STATUS OF ISSUE RECORD");		
 			
-			os.writeObject("ISSUE-RESPONSE");
+			os.writeObject("UPDATE-ISSUE-STATUS");
+			os.flush();
 			os.writeObject(issueID);
-
-			details = (Object[]) is.readObject();
 			
+			updateIssueSuccess =  (boolean) is.readObject();
+
 		} catch (UnknownHostException e) {
 			logger.error("IP ADDRESS OF HOST ERROR - " + e.getMessage()
 							+ e.getStackTrace());
@@ -366,9 +368,9 @@ public class IssueController {
 							+ e.getStackTrace());
 		}
 		
-		return details;
+		return updateIssueSuccess;	
 	}
-
+ 
 
 
 
