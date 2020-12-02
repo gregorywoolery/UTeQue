@@ -183,8 +183,13 @@ public class UTeQueServer {
 							break;
 						case "UPDATE-ISSUE-STATUS":
 							issueID = (String) is.readObject();
-							System.out.println("Client Handler TEST****");
 							os.writeObject(IssueOperation.updateStatus(issueID));
+							break;
+						case "UPDATE-RESPONSE-COMMENT":
+							issueID = (String) is.readObject();
+							String comment = (String) is.readObject();
+
+							os.writeObject(ResponseOperation.updateComment(issueID, comment));
 							break;
 					}
 							

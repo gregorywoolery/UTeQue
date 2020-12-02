@@ -105,7 +105,6 @@ public class ResponseSlot extends JPanel implements ActionListener {
 		commentBtn.setBorder(null);
 		commentBtn.setBackground(new Color(0, 204, 0));
 		commentBtn.setHorizontalTextPosition(SwingConstants.LEFT);
-		commentBtn.setIcon(new ImageIcon(StudentIssueResponse.class.getResource("/img/add-comment.png")));
 		commentBtn.setForeground(new Color(255, 255, 255));
 		commentBtn.setFont(new Font("Arial Rounded MT Bold", Font.PLAIN, 13));
 		GridBagConstraints gbc_commentBtn = new GridBagConstraints();
@@ -118,6 +117,7 @@ public class ResponseSlot extends JPanel implements ActionListener {
 		commentMessage_textArea = new JTextArea();
 		commentMessage_textArea.setTabSize(4);
 		commentMessage_textArea.setPreferredSize(new Dimension(250, 22));
+		commentMessage_textArea.setEnabled(false);
 		GridBagConstraints gbc_commentMessage_textArea = new GridBagConstraints();
 		gbc_commentMessage_textArea.insets = new Insets(0, 0, 0, 20);
 		gbc_commentMessage_textArea.anchor = GridBagConstraints.NORTHEAST;
@@ -128,14 +128,11 @@ public class ResponseSlot extends JPanel implements ActionListener {
 	}
 	
 	public void registerListeners() {
-		commentBtn.addActionListener(this);
 	}
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		if(e.getSource().equals(commentBtn)) {
-			
-		}
+		// TODO Auto-generated method stub
 		
 	}
 

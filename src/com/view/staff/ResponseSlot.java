@@ -1,4 +1,4 @@
-package com.view.staff;
+ package com.view.staff;
 
 import javax.swing.JPanel;
 import javax.swing.JLabel;

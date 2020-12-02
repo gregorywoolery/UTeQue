@@ -390,7 +390,7 @@ public class StaffIssueResponse extends JInternalFrame implements ActionListener
 			Dimension desktopSize = workSpaceDesktop.getSize();
 			Dimension jInternalFrameSize = currFrame.getSize();
 			
-			//Test if current internal frame is of class AddIssue and renders the frame with that
+			//Test if current internal frame is of class IssueMain and renders the frame with that
 			if(currFrame.getClass() == IssueMain.class){
 				currFrame.setLocation((desktopSize.width - jInternalFrameSize.width),
 				    (desktopSize.height- jInternalFrameSize.height)/2);

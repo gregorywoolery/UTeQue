@@ -80,4 +80,37 @@ public class ResponseController {
 		return isPosted;
 	}
 
+	public static boolean updateComment(String issueID, String comment) {
+		boolean isPosted = false;
+		try(Socket socketConnection = new Socket(InetAddress.getLocalHost(), 3309);
+				ObjectOutputStream os = new ObjectOutputStream(socketConnection.getOutputStream());
+				ObjectInputStream is = new ObjectInputStream(socketConnection.getInputStream());
+		){
+			
+			logger.info("UPDATING COMMENT TO RESPONSE");			
+			
+			os.writeObject("UPDATE-RESPONSE-COMMENT");
+			os.flush();
+			os.writeObject(issueID);
+			os.writeObject(comment);
+			os.flush();
+			
+			 isPosted  =  (boolean) is.readObject();
+			
+		} catch (UnknownHostException e) {
+			logger.error("IP ADDRESS OF HOST ERROR - " + e.getMessage()
+							+ e.getStackTrace());
+			
+		} catch (ClassNotFoundException e) {
+			logger.error("ERROR OCCURED - " + e.getMessage()
+							+ e.getStackTrace());
+			
+		} catch (IOException e) {
+			logger.error("ERROR OCCURED - " + e.getMessage()
+							+ e.getStackTrace());
+		}
+		
+		return isPosted;
+	}
+
 }
