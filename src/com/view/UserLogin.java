@@ -4,6 +4,7 @@ package com.view;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.client.Client;
 import com.controller.LoginController;
 import com.controller.UserController;
 import com.model.User;
@@ -68,16 +69,19 @@ public class UserLogin extends JFrame implements ActionListener{
 	private JButton login_btn;
 	private JLabel auth_message;
 	
+	private Client client;
 	public static User currentUser;
 	String userType = "";
 	
 	/**
 	 * Create the frame.
 	 */
-	public UserLogin() {
+	public UserLogin(Client client) {
 		logger.info("Starting Login Interface");
 		initializeComponents();
 		registerListeners();
+		
+		this.client = client;
 		logger.info("Finished initailizing Login interface");
 	}
 	
@@ -386,8 +390,9 @@ public class UserLogin extends JFrame implements ActionListener{
 				
 			else if (rep_rdbtn.isSelected())
 				userType = "REP";
-				
-			if(LoginController.authenticate(
+			
+			
+			if(LoginController.authenticate(client,
 					txtUsername.getText(), txtPassword.getPassword(), userType)
 			){
 				currentUser = new User(txtUsername.getText(), userType);
@@ -396,8 +401,9 @@ public class UserLogin extends JFrame implements ActionListener{
 				chooseDashboard(userType);
 				disposeFrame();
 			}
-			else
+			else {
 				loginErrorMessage();
+			}
 		}
 		
 	}
@@ -405,13 +411,13 @@ public class UserLogin extends JFrame implements ActionListener{
 	private void chooseDashboard(String userType) {
 		switch(userType) {
 		case "STUDENT":
-			StudentDashboard studentDash = new StudentDashboard();
+			StudentDashboard studentDash = new StudentDashboard(client);
 			studentDash.setVisible(true);
 			break;
 			
 		case "REP":
 		case "AGENT":
-			StaffDashboard staffDash = new StaffDashboard();
+			StaffDashboard staffDash = new StaffDashboard(client);
 			staffDash.setVisible(true);
 			break;
 		}

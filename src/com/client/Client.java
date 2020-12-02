@@ -5,7 +5,7 @@ import java.io.ObjectOutputStream;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.Socket;
-
+import java.util.ArrayList;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -17,22 +17,38 @@ public class Client {
 	private final int serverPort = 3309;
 	private InetAddress hostName;
 	private Socket socketConnection;
-	private ObjectOutputStream os;
-	private ObjectInputStream is;
+	private ObjectOutputStream serverOut;
+	private ObjectInputStream serverIn;
 	
 	public Client(InetAddress hostName) {
 		this.hostName = hostName;
-		if(connect()) {
-			logger.info("Connection established.");
-		}else
-			logger.error("CONNECTION FAILURE..");
 	}
 	
-	private boolean connect() {
+	public Object doOperation(ArrayList<Object> operand) {
+		Object result = null;		
+		String operation = null;
+		
+		try {
+			serverOut.writeObject(operand);
+			result = serverIn.readObject();	
+			
+		}catch(IOException ioex) {
+			logger.error("ERROR establishing I/O Connection. - " + ioex.getMessage()
+				+ "AT- " + ioex.getStackTrace());			
+		} catch (ClassNotFoundException e) {
+			logger.error("ERROR - " + e.getMessage()
+				+ "AT- " + e.getStackTrace());
+		}
+		
+		return result;
+		
+	}
+
+	public boolean connect() {
 		try {
 			this.socketConnection = new Socket(hostName, serverPort);
-			this.os = new ObjectOutputStream(socketConnection.getOutputStream());
-			this.is = new ObjectInputStream(socketConnection.getInputStream());
+			this.serverOut = new ObjectOutputStream(socketConnection.getOutputStream());
+			this.serverIn = new ObjectInputStream(socketConnection.getInputStream());
 			
 			return true;
 			
@@ -43,11 +59,7 @@ public class Client {
 		
 		return false;
 		
-	}
-	
-	
-	
-	
+	}	
 	
 	
 }

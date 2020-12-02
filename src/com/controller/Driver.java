@@ -1,9 +1,34 @@
 package com.controller;
 
-import com.view.UserLogin;
-public class Driver {
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import com.client.Client;
+import com.view.UserLogin;
+
+public class Driver {
+	private static final Logger logger = LogManager.getLogger(Driver.class);
 	public static void main(String[] args) {
-		new UserLogin();
+		try {
+			Client client = new Client(InetAddress.getLocalHost());
+			
+			if(client.connect()) {
+
+				logger.info("Connection established successfully");
+				
+				@SuppressWarnings("unused")
+				UserLogin userlogin = new UserLogin(client);			
+					
+			}else 
+				logger.error("Connection NOT established successfully");
+		
+		} catch (UnknownHostException e) {
+			logger.error("HOST IP ERROR DETECTED. " + e.getMessage() 
+			+ " AT-" + e.getStackTrace());
+		}
+
 	}
 }

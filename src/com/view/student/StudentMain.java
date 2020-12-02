@@ -99,7 +99,7 @@ public class StudentMain extends JInternalFrame implements ActionListener{
 	 * Create the frame.
 	 */
 
-	public StudentMain(JDesktopPane workspace_desktopPane) {
+	public StudentMain(JDesktopPane workspace_desktopPane, Client client) {
 		super("Main",
 				false, 	//resizable
 				true, 	//closable

@@ -19,6 +19,7 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.SwingConstants;
 
+import com.client.Client;
 import com.controller.UserController;
 import com.model.User;
 import com.view.Dashboard;
@@ -39,17 +40,19 @@ public class StudentDashboard extends Dashboard implements ActionListener{
 	private JInternalFrame currFrame;
 	private User student;
 	
-
+	private Client client;
+	
 	/**
 	 * Create the frame.
 	 */
-	public StudentDashboard() {
+	public StudentDashboard(Client client) {
 		initializeComponents();
 		registerListeners();
+		this.client = client;
 	}
 	
 	public void initializeComponents(){
-		student =  UserController.getCurrentUser();
+		student =  UserController.getCurrentUser(client);
 		username_lbl.setText(student.getFirstname() + " " + student.getLastname());
 	
 		//For resource variables
@@ -149,7 +152,7 @@ public class StudentDashboard extends Dashboard implements ActionListener{
 			workspace_desktopPane.updateUI();
 		}
 		
-		currFrame = new StudentMain(workspace_desktopPane);
+		currFrame = new StudentMain(client, workspace_desktopPane);
 		workspace_desktopPane.add(currFrame);
 		
 		//Opens JinternalFrame centered in the JDesktopPane
@@ -194,7 +197,7 @@ public class StudentDashboard extends Dashboard implements ActionListener{
 				workspace_desktopPane.updateUI();
 
 				try {
-					currFrame = new AddIssue(workspace_desktopPane);
+					currFrame = new AddIssue(client, workspace_desktopPane);
 				} catch (ParseException e1) {
 					e1.printStackTrace();
 				}
@@ -219,7 +222,7 @@ public class StudentDashboard extends Dashboard implements ActionListener{
 					try {
 						UserController.setCurrentUserNull();
 
-						UserLogin userLoginFrame = new UserLogin();
+						UserLogin userLoginFrame = new UserLogin(client);
 						userLoginFrame.setVisible(true);
 					} catch (Exception e) {
 						logger.error("ERROR OCCURED - " + e.getMessage()
