@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="WARN" name="XMLConfigTest">
+  <Properties>
+		<Property name="filename">./log</Property>
+		<Property name="LOG_PATTERN">[%-5level] %d{dd-MM-yyyy HH:mm:ss.SSS} [%t] %c{1} - %msg%n</Property>
+  </Properties>
+
+  <Appenders>
+    <Console name="STDOUT" target="SYSTEM_OUT">
+      <PatternLayout pattern="${LOG_PATTERN}"/>
+    </Console>
+	
+	<RollingFile name="ROLLFILE" filename="${filename}/eventslog-${date:dd-MM-yyyy}.log"
+					filePattern="${filename}/${date:dd-MM-yyyy}-DATA/eventsLog-%d{dd-MM-yyyy HH}-%i.log">
+      <ThresholdFilter level="ERROR" onMatch="DENY" onMismatch="ACCEPT"/>
+	  <PatternLayout>
+        <Pattern>${LOG_PATTERN}</Pattern>
+      </PatternLayout>
+	  
+	  <Policies>
+		<TimeBasedTriggeringPolicy/>
+		<SizeBasedTriggeringPolicy size="1KB"/>
+	  </Policies>
+	  
+	  <DefaultRolloverStrategy max="3" fileIndex="max" compressionLevel="5"/>
+	  
+	</RollingFile>
+		<RollingFile name="ERROR_ROLLFILE" filename="${filename}/ERROR-eventsLog-${date:dd-MM-yyyy}.log"
+					filePattern="${filename}/ERROR-${date:dd-MM-yyyy}/ERROR-eventsLog-%d{dd-MM-yyyy HH}-%i.log">
+      <ThresholdFilter level="ERROR" onMatch="ACCEPT" onMismatch="DENY"/>
+	  <PatternLayout>
+        <Pattern>${LOG_PATTERN}</Pattern>
+      </PatternLayout>
+	  
+	  <Policies>
+		<TimeBasedTriggeringPolicy/>
+		<SizeBasedTriggeringPolicy size="5KB"/>
+	  </Policies>
+	  
+	  <DefaultRolloverStrategy max="3" fileIndex="max" compressionLevel="5"/>
+	  
+	</RollingFile>
+	
+  </Appenders>
+
+  <Loggers>	
+	
+  <Root level="trace">
+	  <AppenderRef ref="ERROR_ROLLFILE"/>
+	  <AppenderRef ref="ROLLFILE"/>
+      <AppenderRef ref="STDOUT"/>
+    </Root>
+  </Loggers>
+  
+</Configuration>

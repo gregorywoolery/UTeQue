@@ -438,4 +438,24 @@ public class IssueOperation {
 		return count;
 	}
 
+	public static boolean updateStatus(String issueID) {
+		boolean updateIssueSuccess = false;
+
+		logger.warn("Attempting to UPDATE Data FROM SQL table Issue, Error May Occur");
+		
+		String updateSql = "UPDATE UTeQueDB.Issue SET  UTeQueDB.Issue.status = 'Resolved' WHERE issueID=?";
+		
+			try(Connection dbConn = DBConnectorFactory.getDatabaseConnection()) {
+				PreparedStatement statement = dbConn.prepareStatement(updateSql);
+				statement.setString(1, issueID);
+				logger.warn("Attempting to EXECUTE Statement, Error May Occur");
+				statement.executeUpdate();
+				return true;
+			} catch (SQLException e) {
+				logger.error("SQL UPDATE Statement was NOT Successful");
+				System.out.println("SQL Exception Thrown: " + e.getMessage());
+			}		
+		return updateIssueSuccess;
+	}
+
 }
