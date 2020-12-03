@@ -26,6 +26,8 @@ public class ClientHandler extends Thread{
 	
 	private final Server server;
 	private final Socket socketConnection;
+	ObjectOutputStream os;
+	ObjectInputStream is;
 	private User account = null;
 	
 	public ClientHandler(Server server, Socket socket) {
@@ -42,10 +44,10 @@ public class ClientHandler extends Thread{
 	public void run() {
 		
 		logger.info("Executing server thread");
-		try(
-				ObjectOutputStream os = new ObjectOutputStream(socketConnection.getOutputStream());
-				ObjectInputStream is = new ObjectInputStream(socketConnection.getInputStream())
-		){
+		try{
+			os = new ObjectOutputStream(socketConnection.getOutputStream());
+			is = new ObjectInputStream(socketConnection.getInputStream());
+					
 			while(!socketConnection.isClosed()) {
 				logger.info("Request recieved from CLIENT");
 				Object operand = is.readObject();
@@ -56,7 +58,7 @@ public class ClientHandler extends Thread{
 				if(operand instanceof LogEvent)
 					logEvent(operand);
 				else 
-					doOperation(os, is, operand);
+					doOperation(operand);
 				
 				os.flush();
 			}
@@ -91,32 +93,10 @@ public class ClientHandler extends Thread{
 		}
 	}
 	
-	public void handleLogin(ObjectOutputStream os, ObjectInputStream is, User userAuth) 
-			throws ClassNotFoundException, IOException{
-		boolean success = false;
-		logger.info("Handling login information.");
-		success = LoginAuthentication.authLoginUser(userAuth);
-		os.writeObject(success);
-		
-		logger.info(success +" Access results sent to user.");
-		if(success) {
-			account = UserOperation.getUserInfo(userAuth.getID(), userAuth.getType());
-		}
-	}
-	
-	public void sendLoggedInBroadCast(ObjectOutputStream os) throws IOException {
-		for(ClientHandler client: server.getClients()) {
-			if(!client.getAccount().getID().equals(account.getID()) && client.getAccount() != null) {
-				os.writeObject("WHO-IS-LOGGED-ON");
-				os.writeObject(client.getAccount());
-			}
-		}
-	}
-	
 	/**
 	 * Accepts Command from ObjectInputStream socket's Connection and executes as stated
 	 */
-	public void doOperation(ObjectOutputStream os, ObjectInputStream is, Object operand) 
+	public void doOperation(Object operand) 
 			throws IOException, ClassNotFoundException{
 		
 		ArrayList<Object> receivedOp = new ArrayList<>();
@@ -136,15 +116,15 @@ public class ClientHandler extends Thread{
 		
 		switch(operation) {						
 			case "AUTHENTICATE":
-				handleLogin(os, is, (User) receivedOp.get(1));
+				handleLogin((User) receivedOp.get(1));
 				break;
 				
 			case "LOG-OFF":
-				handleLogOff(os);
+				handleLogOff();
 				break;
 				
 			case "DISCONNECT":
-				handleLogOff(os);
+				handleLogOff();
 				break;
 				
 			case "ADD-ISSUE":
@@ -229,7 +209,7 @@ public class ClientHandler extends Thread{
 			case "RECIEVE-MSG":
 				toUserID = (String) receivedOp.get(1);	
 				message = (String) receivedOp.get(2);	
-				handleMessage(os, toUserID, message);
+				handleMessage(toUserID, message);
 				break;
 
 			case "UPDATE-ISSUE-STATUS":
@@ -242,14 +222,24 @@ public class ClientHandler extends Thread{
 				String comment = (String) receivedOp.get(2);	
 				os.writeObject(ResponseOperation.updateComment(issueID, comment));
 				break;
+
+			case "GET-COUNT-RESOLVED-SERVICEID":
+				serviceID = (int) receivedOp.get(1);
+				os.writeObject(IssueOperation.getServiceResolvedCount(serviceID));
+				break;
+			
+			case "GET-COUNT-UNRESOLVED-SERVICEID":
+				serviceID = (int) receivedOp.get(1);
+				os.writeObject(IssueOperation.getServiceUnresolvedCount(serviceID));
+				break;
 				
 			case "GET-ONLINE-STUDENTS":
-				os.writeObject(getOnlineStudents());				
+				sendOnlineStudents();				
 				break;
 		}
 	}
 	
-	private void handleMessage(ObjectOutputStream os, String toUserID, String message) 
+	private void handleMessage(String toUserID, String message) 
 			throws IOException{
 		
 		List<ClientHandler> clients = server.getClients();
@@ -267,7 +257,7 @@ public class ClientHandler extends Thread{
 	}
 
 	
-	public void handleLogOff(ObjectOutputStream os) throws IOException {
+	public void handleLogOff() throws IOException {
 		List<ClientHandler> clients = server.getClients();
 		ArrayList<Object> sendDetails = new ArrayList<>();
 
@@ -282,6 +272,8 @@ public class ClientHandler extends Thread{
 		
 		try {
 			socketConnection.close();
+			os.close();
+			is.close();
 		} catch (IOException ioex) {
 			logger.error("SERVER ERROR - " + ioex.getMessage() 
 						+ "\nAT: " + ioex.getStackTrace());
@@ -289,7 +281,7 @@ public class ClientHandler extends Thread{
 	}
 	
 	
-	public ArrayList<Object> getOnlineStudents(){
+	public void sendOnlineStudents() throws IOException{
 		ArrayList<Object> onlineStudents = new ArrayList<>();
 		
 		for(int userCount = 0; userCount < server.getClients().size(); userCount++ )
@@ -298,7 +290,31 @@ public class ClientHandler extends Thread{
 					onlineStudents.add(server.getClients().get(userCount));
 		
 		
-		return onlineStudents;
+
+		os.writeObject(onlineStudents);
+		
+	}
+	
+	public void handleLogin(User userAuth) 
+			throws ClassNotFoundException, IOException{
+		boolean success = false;
+		logger.info("Handling login information.");
+		success = LoginAuthentication.authLoginUser(userAuth);
+		os.writeObject(success);
+		
+		logger.info(success +" Access results sent to user.");
+		if(success) {
+			account = UserOperation.getUserInfo(userAuth.getID(), userAuth.getType());
+		}
+	}
+	
+	public void sendLoggedInBroadCast() throws IOException {
+		for(ClientHandler client: server.getClients()) {
+			if(!client.getAccount().getID().equals(account.getID()) && client.getAccount() != null) {
+				os.writeObject("WHO-IS-LOGGED-ON");
+				os.writeObject(client.getAccount());
+			}
+		}
 	}
 	
 	

@@ -39,67 +39,32 @@ public class ServiceController {
 	}
 
 	public static int getServiceUnresolvedCount(int serviceID) {
+		ArrayList<Object> sendDetails = new ArrayList<>();
 		int count =0;
 		
 		logger.info("Client Trying to connect using socket at port " + 3309);
-	
-		try(Socket socketConnection = new Socket(InetAddress.getLocalHost(), 3309);
-				ObjectOutputStream os = new ObjectOutputStream(socketConnection.getOutputStream());
-				ObjectInputStream is = new ObjectInputStream(socketConnection.getInputStream());
-		){
+		logger.info("Receiving COUNT for ServiceID from SERVER");			
 			
-			logger.info("Receiving COUNT for ServiceID from SERVER");			
+		sendDetails.add("GET-COUNT-UNRESOLVED-SERVICEID");
+		sendDetails.add(serviceID);
 			
-			os.writeObject("GET-COUNT-UNRESOLVED-SERVICEID");
-			os.flush();
-			os.writeObject(serviceID);
-			
-			count = (int) is.readObject();
-			
-		} catch (UnknownHostException e) {
-			logger.error("IP ADDRESS OF HOST ERROR - " + e.getMessage()
-							+ e.getStackTrace());
-			
-		} catch (ClassNotFoundException e) {
-			logger.error("ERROR OCCURED - " + e.getMessage()
-							+ e.getStackTrace());			
-		} catch (IOException e) {
-			logger.error("ERROR OCCURED - " + e.getMessage()
-							+ e.getStackTrace());
-		}
+		
+		count = (int) UserLogin.client.doOperation(sendDetails);
 		
 		return count;
 	}
 
 	public static int getServiceResolvedCount(int serviceID) {
+		ArrayList<Object> sendDetails = new ArrayList<>();
 		int count =0;
 		
 		logger.info("Client Trying to connect using socket at port " + 3309);
+		logger.info("Receiving COUNT for ServiceID from SERVER");			
 	
-		try(Socket socketConnection = new Socket(InetAddress.getLocalHost(), 3309);
-				ObjectOutputStream os = new ObjectOutputStream(socketConnection.getOutputStream());
-				ObjectInputStream is = new ObjectInputStream(socketConnection.getInputStream());
-		){
+		sendDetails.add("GET-COUNT-RESOLVED-SERVICEID");
+		sendDetails.add(serviceID);
 			
-			logger.info("Receiving COUNT for ServiceID from SERVER");			
-			
-			os.writeObject("GET-COUNT-RESOLVED-SERVICEID");
-			os.flush();
-			os.writeObject(serviceID);
-			
-			count = (int) is.readObject();
-			
-		} catch (UnknownHostException e) {
-			logger.error("IP ADDRESS OF HOST ERROR - " + e.getMessage()
-							+ e.getStackTrace());
-			
-		} catch (ClassNotFoundException e) {
-			logger.error("ERROR OCCURED - " + e.getMessage()
-							+ e.getStackTrace());			
-		} catch (IOException e) {
-			logger.error("ERROR OCCURED - " + e.getMessage()
-							+ e.getStackTrace());
-		}
+		count = (int) UserLogin.client.doOperation(sendDetails);
 		
 		return count;
 	} 

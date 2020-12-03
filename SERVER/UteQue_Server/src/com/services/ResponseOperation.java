@@ -106,28 +106,6 @@ public class ResponseOperation {
 
 		return false;
 	}
-
-
-	public static boolean updateComment(String issueID, String comment) {
-		boolean updateCommentSuccess = false;
-
-		logger.warn("Attempting to UPDATE Data FROM SQL table Response, Error May Occur");
-		
-		String updateSql = "UPDATE UTeQueDB.Response SET  UTeQueDB.Response.comment = ? WHERE issueID=?";
-		
-			try(Connection dbConn = DBConnectorFactory.getDatabaseConnection()) {
-				PreparedStatement statement = dbConn.prepareStatement(updateSql);
-				statement.setString(1, comment);
-				statement.setString(2, issueID);
-				logger.warn("Attempting to EXECUTE Statement, Error May Occur");
-				statement.executeUpdate();
-				return true;
-			} catch (SQLException e) {
-				logger.error("SQL UPDATE Statement was NOT Successful");
-				System.out.println("SQL Exception Thrown: " + e.getMessage());
-			}		
-		return updateCommentSuccess;
-	}
 	
 	public static boolean updateComment(String issueID, String comment) {
 		boolean updateCommentSuccess = false;

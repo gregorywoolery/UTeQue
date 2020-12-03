@@ -209,7 +209,7 @@ public class IssueController {
 	}
 
 	public static boolean updateStatus(String issueID) {
-		
+		ArrayList<Object> sendDetails = new ArrayList<>();
 		boolean updateIssueSuccess = false;
 		
 		logger.info("Client Trying to connect using socket at port " + 3309);

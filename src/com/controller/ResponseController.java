@@ -48,7 +48,9 @@ public class ResponseController {
 	}
 
 
-	public static boolean updateComment(String issueID, String comment) {
+	public static boolean updateComment(String issueID, String comment) {		
+		ArrayList<Object> sendDetails = new ArrayList<>();
+
 		boolean isPosted = false;
 		logger.info("UPDATING COMMENT TO RESPONSE");			
 			
@@ -61,4 +63,5 @@ public class ResponseController {
 		isPosted = (boolean) UserLogin.client.doOperation(sendDetails);
 
 		return isPosted;
+	}
 }

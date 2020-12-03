@@ -13,17 +13,5 @@ public class UTeQueServer {
 	    Server server = new Server(port);
 	    server.start();
 	}
-
-
-
-	// case "GET-COUNT-RESOLVED-SERVICEID":
-	// 	serviceID = (int) is.readObject();
-	// 	os.writeObject(IssueOperation.getServiceResolvedCount(serviceID));
-	// 	break;
-	// case "GET-COUNT-UNRESOLVED-SERVICEID":
-	// 	serviceID = (int) is.readObject();
-	// 	os.writeObject(IssueOperation.getServiceUnresolvedCount(serviceID));
-	// 	break;
-
 }
 
