@@ -232,6 +232,21 @@ public class ClientHandler extends Thread{
 				message = (String) receivedOp.get(2);	
 				handleMessage(os, toUserID, message);
 				break;
+
+			case "UPDATE-ISSUE-STATUS":
+				issueID = (String) receivedOp.get(1);	
+				os.writeObject(IssueOperation.updateStatus(issueID));
+				break;
+				
+			case "UPDATE-RESPONSE-COMMENT":
+				issueID = (String) receivedOp.get(1);
+				String comment = (String) receivedOp.get(2);	
+				os.writeObject(ResponseOperation.updateComment(issueID, comment));
+				break;
+				
+			case "GET-ONLINE-STUDENTS":
+				os.writeObject(getOnlineStudents());				
+				break;
 		}
 	}
 	
@@ -273,4 +288,19 @@ public class ClientHandler extends Thread{
 						+ "\nAT: " + ioex.getStackTrace());
 		}
 	}
+	
+	
+	public ArrayList<Object> getOnlineStudents(){
+		ArrayList<Object> onlineStudents = new ArrayList<>();
+		
+		for(int userCount = 0; userCount < server.getClients().size(); userCount++ )
+			if(!server.getClients().get(userCount).account.equals(account))
+				if(server.getClients().get(userCount).account.getType() == "STUDENT")
+					onlineStudents.add(server.getClients().get(userCount));
+		
+		
+		return onlineStudents;
+	}
+	
+	
 }

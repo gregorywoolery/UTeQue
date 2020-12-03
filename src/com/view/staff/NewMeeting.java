@@ -5,12 +5,14 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.ArrayList;
 
 import javax.swing.JDesktopPane;
 import javax.swing.JInternalFrame;
 import javax.swing.border.LineBorder;
 
 import com.controller.UserController;
+import com.model.Issue;
 import com.model.User;
 import java.awt.FlowLayout;
 import javax.swing.JPanel;
@@ -120,6 +122,8 @@ public class NewMeeting extends JInternalFrame implements ActionListener {
 		onlineStudents_table.setRowSelectionAllowed(true);
 		onlineStudents_table.setColumnSelectionAllowed(false);
 		
+		updateOnlineStudentsTable();
+		
 		onlineStudents_table.addMouseListener(new MouseAdapter() {
 		    public void mousePressed(MouseEvent mouseEvent) {
 		        JTable table =(JTable) mouseEvent.getSource();
@@ -163,6 +167,32 @@ public class NewMeeting extends JInternalFrame implements ActionListener {
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		// TODO Auto-generated method stub
+		
+	}
+	
+	public void updateOnlineStudentsTable() {
+		ArrayList<User> onlineStudents = new ArrayList<>();
+		
+		onlineStudents = UserController.getOnlineStudents();
+		DefaultTableModel model = (DefaultTableModel) onlineStudents_table.getModel();		
+		
+		if(onlineStudents != null) {
+			model.setRowCount(0);
+			for(User student: onlineStudents) {
+				model.addRow(new Object[]{
+						student.getID(), 
+						student.getFirstname(),
+						student.getLastname(),
+						student.getGender()
+				});
+			}			
+		}else {
+			JOptionPane.showMessageDialog(workSpaceDesktop, 
+				"No students have not logged on.", 
+				"Nobody online",
+				JOptionPane.INFORMATION_MESSAGE);
+		}
+		
 		
 	}
 	

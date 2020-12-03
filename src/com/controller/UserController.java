@@ -106,4 +106,21 @@ public class UserController {
 		
 		return rep;
 	}
+	
+	
+	public static ArrayList<User> getOnlineStudents(){
+		ArrayList<Object> sendDetails = new ArrayList<>();
+		ArrayList<User> onlineStudents = new ArrayList<>();
+		
+		logger.info("Client Trying to connect using socket at port " + 3309);
+		logger.info("Receving List of STUDENT from SERVER");			
+		
+		String cmd = "GET-ONLINE-STUDENTS";
+
+		sendDetails.add(cmd);
+		
+		onlineStudents = (ArrayList<User>) UserLogin.client.doOperation(sendDetails);
+		
+		return onlineStudents;
+	}
 }
