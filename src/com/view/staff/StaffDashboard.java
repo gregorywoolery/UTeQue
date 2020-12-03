@@ -122,7 +122,7 @@ public class StaffDashboard extends Dashboard implements ActionListener {
 		services_lbl.setFont(new Font("Arial Rounded MT Bold", Font.PLAIN, 13));
 		menu_panel.add(services_lbl);
 		
-		serviceAssistBtn = new JButton("Service Info.");
+		serviceAssistBtn = new JButton("Service Stats");
 		serviceAssistBtn.setAlignmentX(0.2f);
 		serviceAssistBtn.setMaximumSize(new Dimension(99, 30));
 		serviceAssistBtn.setHorizontalTextPosition(SwingConstants.RIGHT);

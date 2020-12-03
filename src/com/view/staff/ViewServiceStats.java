@@ -1,7 +1,6 @@
 package com.view.staff;
 
 import java.awt.Color;
-import java.awt.EventQueue;
 
 import javax.swing.JInternalFrame;
 import javax.swing.border.LineBorder;
@@ -16,10 +15,7 @@ import java.awt.Font;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
-import com.controller.IssueController;
 import com.controller.ServiceController;
-import com.model.Issue;
-import com.model.Service;
 
 import javax.swing.JButton;
 import javax.swing.JDesktopPane;
@@ -30,10 +26,12 @@ import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import javax.swing.ListSelectionModel;
 
 public class ViewServiceStats extends JInternalFrame implements ActionListener{
+	private static final long serialVersionUID = 1623151102325198483L;
+
 	private JPanel serviceStatsTitle_panel;
 	private JLabel serviceStatsTitle_lbl;
 	private JPanel serviceStats_panel;
@@ -89,6 +87,13 @@ public class ViewServiceStats extends JInternalFrame implements ActionListener{
 		serviceStats_panel.setLayout(gbl_serviceStats_panel);
 		
 		serviceStats_table = new JTable();
+		serviceStats_table.setFont(new Font("Arial Rounded MT Bold", Font.PLAIN, 13));
+		serviceStats_table.setSelectionBackground(new Color(255, 153, 102));
+		serviceStats_table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		serviceStats_table.setRowSelectionAllowed(true);
+		serviceStats_table.setColumnSelectionAllowed(false);
+		
+		serviceStats_table.setRowHeight(25);
 		serviceStats_table.setPreferredSize(new Dimension(610, 430));
 		serviceStats_table.setModel(new DefaultTableModel(
 			new Object[][] {
@@ -164,7 +169,6 @@ public class ViewServiceStats extends JInternalFrame implements ActionListener{
 		//Service service = new Service();
 		serviceTypes = ServiceController.getAllServies();
 		DefaultTableModel model = (DefaultTableModel) serviceStats_table.getModel();
-		String issuedAt;
 		int serviceInd;
 
 			for(serviceInd = 0; serviceInd<serviceTypes.size(); serviceInd++) {
