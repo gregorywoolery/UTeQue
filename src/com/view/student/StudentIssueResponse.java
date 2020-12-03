@@ -7,15 +7,30 @@ import javax.swing.JDesktopPane;
 import javax.swing.JInternalFrame;
 import javax.swing.border.LineBorder;
 
+import com.controller.IssueController;
+import com.controller.ResponseController;
+import com.controller.ServiceController;
 import com.controller.UserController;
+import com.model.Issue;
+import com.model.Response;
+import com.model.Student;
+import com.model.StudentServicesRep;
 import com.model.User;
+import com.view.staff.IssueMain;
 
 import java.awt.GridBagLayout;
 import javax.swing.JPanel;
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.awt.BorderLayout;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+
 import java.awt.Font;
 import java.awt.Dimension;
 import javax.swing.SwingConstants;
@@ -31,7 +46,9 @@ import javax.swing.JCheckBox;
 import java.awt.Cursor;
 import javax.swing.BoxLayout;
 
-public class StudentIssueResponse extends JInternalFrame {
+public class StudentIssueResponse extends JInternalFrame  implements ActionListener{
+	private static final long serialVersionUID = 9161869361681829518L;
+	
 	private JLabel titile_lbl;
 	private JLabel help_label;
 	private JPanel main_panel;
@@ -55,7 +72,14 @@ public class StudentIssueResponse extends JInternalFrame {
 	private JLabel representativeName_lbl;
 	private JSeparator separator2;
 	private JButton returnBtn;
+	private JDesktopPane workSpaceDesktop;
 	private User student;
+	private ArrayList<String> serviceTypes;
+	public String issueID = null;
+	public Issue issueDetails = null;
+	public Response  issueResponse = null;
+	public StudentServicesRep rep = null;
+	private int MODE;
 	
 	public StudentIssueResponse(JDesktopPane workSpaceDesktop, String issueID) {
 		super("Issue-Response", 
@@ -63,6 +87,9 @@ public class StudentIssueResponse extends JInternalFrame {
 				true, 	//closable
 				false, 	//maximizable
 				true);	//iconifiable
+		this.workSpaceDesktop = workSpaceDesktop;
+		this.issueID = issueID;
+		
 		initializeComponents();
 		registerListeners();
 	}
@@ -72,7 +99,7 @@ public class StudentIssueResponse extends JInternalFrame {
 	 */
 	private void initializeComponents() {
 		student =  UserController.getCurrentUser();
-		
+		serviceTypes = ServiceController.getAllServies();
 		//Removes top bar from internal frame
 		((javax.swing.plaf.basic.BasicInternalFrameUI)this.getUI()).setNorthPane(null);
 		
@@ -120,12 +147,13 @@ public class StudentIssueResponse extends JInternalFrame {
 		main_panel.setLayout(gbl_main_panel);
 		
 		issueMessage_txtArea = new JTextArea();
+		issueMessage_txtArea.setDisabledTextColor(Color.BLACK);
 		issueMessage_txtArea.setBackground(new Color(255, 255, 255));
 		issueMessage_txtArea.setEnabled(false);
 		issueMessage_txtArea.setForeground(new Color(255, 255, 255));
 		issueMessage_txtArea.setMargin(new Insets(2, 4, 2, 4));
 		issueMessage_txtArea.setLineWrap(true);
-		issueMessage_txtArea.setFont(new Font("Times New Roman", Font.PLAIN, 14));
+		issueMessage_txtArea.setFont(new Font("Arial Rounded MT Bold", Font.PLAIN, 14));
 		issueMessage_txtArea.setTabSize(4);
 		GridBagConstraints gbc_issueMessage_txtArea = new GridBagConstraints();
 		gbc_issueMessage_txtArea.gridheight = 3;
@@ -177,11 +205,7 @@ public class StudentIssueResponse extends JInternalFrame {
 		gbc_tabbedPane.gridx = 0;
 		gbc_tabbedPane.gridy = 4;
 		main_panel.add(tabbedPane, gbc_tabbedPane);
-		
-		ResponseSlot response = new ResponseSlot();
-		tabbedPane.addTab(" 1 ", response);
 
-		
 		side_panel = new JPanel();
 		side_panel.setBackground(new Color(204, 0, 0));
 		GridBagConstraints gbc_side_panel = new GridBagConstraints();
@@ -277,11 +301,120 @@ public class StudentIssueResponse extends JInternalFrame {
 		setBorder(new LineBorder(new Color(0, 0, 51), 10));
 		setBounds(100, 100, 820, 570);
 		
-		setVisible(true);
+		response = new ResponseSlot();
+		response.isAnswer_chckbx.setEnabled(true);
+		response.commentMessage_textArea.setEnabled(true);
+
+		getInformation();
+		 setVisible(true);
+	}
+	private void registerListeners(){
+		response.commentBtn.addActionListener(this);
+		returnBtn.addActionListener(this);
+	}
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		if(e.getSource() == returnBtn) {
+			int opt = JOptionPane.showConfirmDialog(workSpaceDesktop, 
+					"You will now be returning to the Dashboard. Are you sure?", 
+					"Return Home...",
+					JOptionPane.YES_NO_CANCEL_OPTION,
+					JOptionPane.QUESTION_MESSAGE);
+			
+			if (opt == 0)
+				openStudentMain();
+		}
+		
+		if(e.getSource().equals(response.commentBtn)) {
+			int opt = JOptionPane.showConfirmDialog(workSpaceDesktop, 
+					"Are you sure you want to post this comment?", 
+					"POST RESPONSE",
+					JOptionPane.YES_NO_CANCEL_OPTION,
+					JOptionPane.QUESTION_MESSAGE);			
+			
+			if(opt == 0)
+				if(isPostComment()) {
+					JOptionPane.showMessageDialog(workSpaceDesktop, 
+							"COMMENT POSTED", 
+							"SUCCESS",
+							JOptionPane.INFORMATION_MESSAGE);
+				}else {
+					JOptionPane.showMessageDialog(workSpaceDesktop, 
+							"Oops.. Problem occured posting your comment. "
+									+ "We'll get back to you shortly.", 
+							"ERROR",
+							JOptionPane.ERROR_MESSAGE);
+				}
+		}
+		
 	}
 	
-	private void registerListeners(){
+	private void openStudentMain() {
+		workSpaceDesktop.removeAll();
+		workSpaceDesktop.updateUI();
 		
+		JInternalFrame currFrame = null;
+		currFrame = new StudentMain(workSpaceDesktop);
+		workSpaceDesktop.add(currFrame);
+
+		//Opens JinternalFrame centered in the JDesktopPane
+		Dimension desktopSize = workSpaceDesktop.getSize();
+		Dimension jInternalFrameSize = currFrame.getSize();
+		
+		//Test if current internal frame is of class AddIssue and renders the frame with that
+		if(currFrame.getClass() == StudentMain.class){
+			currFrame.setLocation((desktopSize.width - jInternalFrameSize.width),
+			    (desktopSize.height- jInternalFrameSize.height)/2);
+		}
+	}
+	
+	public void getInformation() {
+		issueID_lbl.setText(issueID);
+		studentID_lbl.setText(student.getID());
+		studentName_lbl.setText(student.getFirstname() + " " + student.getLastname());
+		email_lbl.setText(student.getEmail());
+		contactNo_lbl.setText(student.getPhone());
+		
+		issueDetails = IssueController.viewSpecific(issueID);
+		SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
+		String issuedAt = sdf.format(issueDetails.getIssuedAt());
+		StudentServicesRep rep = UserController.getRep(issueDetails.getRepID());
+		representativeName_lbl.setText(rep.getFirstname() + " " + rep.getLastname());
+		
+		if(issueDetails!=null) {
+			type_label.setText("Type: "+ issueDetails.getType());
+			services_lbl.setText("Service: "+ serviceTypes.get(issueDetails.getServiceID()-1) );
+			issueMessage_txtArea.setText( issueDetails.getMessage());
+			issuedAt_lbl.setText( new SimpleDateFormat("dd-MM-yyyy").format(issueDetails.getIssuedAt()) );
+		}
+		rep = UserController.getRep(issueDetails.getRepID());
+		issueResponse = ResponseController.getResponseUsingIssue(issueID);
+		if(issueResponse != null) {
+			//RESPONSE Information
+			response.isAnswer_chckbx.setSelected(issueResponse.isAnswer() );
+	
+			String respondedOn = sdf.format(issueResponse.getResponseAt());
+			response.respondDate_lbl.setText(respondedOn);
+			response.responseMessage_txtArea.setText(issueResponse.getMessage());
+			response.commentMessage_textArea.setText(issueResponse.getComment());
+			tabbedPane.addTab(issueResponse.getResponseID(), response);
+			response.isAnswer_chckbx.setEnabled(true);
+		}else{
+			JOptionPane.showMessageDialog(workSpaceDesktop, 
+					"THERE ARE NO RESPONSE POSTED FOR THIS ISSUE", 
+					"NO RECORDS FOUND",
+					JOptionPane.INFORMATION_MESSAGE);
+		}
+	}
+	
+	public boolean  isPostComment() {
+		boolean updatedResponseSuccess = false;
+		
+		updatedResponseSuccess = ResponseController.updateComment(issueID, response.commentMessage_textArea.getText()  );
+		if(updatedResponseSuccess) 
+			return true;
+		
+		return false;
 	}
 
 }

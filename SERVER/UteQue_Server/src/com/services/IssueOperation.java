@@ -417,4 +417,66 @@ public class IssueOperation {
 		return updateIssueSuccess;
 	}
 
+	public static int getServiceResolvedCount(int serviceId) {
+		int count = 0;
+		
+		String countSQL = "SELECT COUNT(UTeQueDB.issue.issueID) FROM UTeQueDB.issue WHERE UTeQueDB.issue.serviceID = ? AND UTeQueDB.issue.status= 'Resolved'";
+		
+		try (Connection dbConn = DBConnectorFactory.getDatabaseConnection()){
+			PreparedStatement statement = dbConn.prepareStatement(countSQL);
+			statement.setInt(1, serviceId);
+			ResultSet result = statement.executeQuery();
+
+			while(result.next()) {
+				count = result.getInt(1);
+			}	
+			
+		}catch(SQLException e){
+			logger.error("Error(" + e.getErrorCode()
+								+ ") Occured. " + e.getMessage());
+		}
+		return count;
+	}
+
+	public static int getServiceUnresolvedCount(int serviceId) {
+		int count = 0;
+		
+		String countSQL = "SELECT COUNT(UTeQueDB.issue.issueID) FROM UTeQueDB.issue WHERE UTeQueDB.issue.serviceID = ? AND UTeQueDB.issue.status= 'Unresolved'";
+		
+		try (Connection dbConn = DBConnectorFactory.getDatabaseConnection()){
+			PreparedStatement statement = dbConn.prepareStatement(countSQL);
+			statement.setInt(1, serviceId);
+			ResultSet result = statement.executeQuery();
+
+			while(result.next()) {
+				count = result.getInt(1);
+			}	
+			
+		}catch(SQLException e){
+			logger.error("Error(" + e.getErrorCode()
+								+ ") Occured. " + e.getMessage());
+		}
+		return count;
+	}
+
+	public static boolean updateStatus(String issueID) {
+		boolean updateIssueSuccess = false;
+
+		logger.warn("Attempting to UPDATE Data FROM SQL table Issue, Error May Occur");
+		
+		String updateSql = "UPDATE UTeQueDB.Issue SET  UTeQueDB.Issue.status = 'Resolved' WHERE issueID=?";
+		
+			try(Connection dbConn = DBConnectorFactory.getDatabaseConnection()) {
+				PreparedStatement statement = dbConn.prepareStatement(updateSql);
+				statement.setString(1, issueID);
+				logger.warn("Attempting to EXECUTE Statement, Error May Occur");
+				statement.executeUpdate();
+				return true;
+			} catch (SQLException e) {
+				logger.error("SQL UPDATE Statement was NOT Successful");
+				System.out.println("SQL Exception Thrown: " + e.getMessage());
+			}		
+		return updateIssueSuccess;
+	}
+
 }

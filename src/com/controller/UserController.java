@@ -14,6 +14,7 @@ public class UserController {
 	private static User currentUser = new User();
 	private static boolean found = false;
 	private static final Logger logger = LogManager.getLogger(IssueController.class);
+	private static final int port = 3309;
 	
 	public static void setCurrentUser(String username, String userType) {		
 		currentUser.setID(username);
@@ -107,7 +108,6 @@ public class UserController {
 		return rep;
 	}
 	
-	
 	public static ArrayList<User> getOnlineStudents(){
 		ArrayList<Object> sendDetails = new ArrayList<>();
 		ArrayList<User> onlineStudents = new ArrayList<>();
@@ -123,4 +123,23 @@ public class UserController {
 		
 		return onlineStudents;
 	}
+
+	//Retrieves the Student Details by IssueID
+	public static Student getStudentDetailsByIssueID(String issueID) {
+		ArrayList<Object> sendDetails = new ArrayList<>();
+		Student studentDetails = new Student();
+		
+		logger.info("Client Trying to connect using socket at port " + port);
+		logger.info("Getting Student RECORD for Student Details Panel");		
+
+		String cmd = "GET-STUDENT-DETAILS";
+
+		sendDetails.add(cmd);
+		sendDetails.add(issueID);
+
+		studentDetails = (Student) UserLogin.client.doOperation(sendDetails);
+
+		return studentDetails;		
+	}
+
 }

@@ -208,6 +208,26 @@ public class IssueController {
 		return details;
 	}
 
+	public static boolean updateStatus(String issueID) {
+		
+		boolean updateIssueSuccess = false;
+		
+		logger.info("Client Trying to connect using socket at port " + 3309);
+		
+		logger.info("UPDATING STATUS OF ISSUE RECORD");		
+			
+		String cmd = "UPDATE-ISSUE-STATUS";
+
+		sendDetails.add(cmd);
+		sendDetails.add(issueID);
+			
+		updateIssueSuccess = (boolean) UserLogin.client.doOperation(sendDetails);	
+		
+		return updateIssueSuccess;	
+	}
+ 
+
+
 
 
 	

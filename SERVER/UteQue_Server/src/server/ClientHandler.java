@@ -150,7 +150,6 @@ public class ClientHandler extends Thread{
 			case "ADD-ISSUE":
 				Issue issue = (Issue) receivedOp.get(1);
 				success = IssueOperation.insertIssue(issue);
-				logger.info(success + "Inside add issue");
 				os.writeObject(success);
 				break;
 				

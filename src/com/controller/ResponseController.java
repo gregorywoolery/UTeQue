@@ -47,4 +47,18 @@ public class ResponseController {
 		return isPosted;
 	}
 
+
+	public static boolean updateComment(String issueID, String comment) {
+		boolean isPosted = false;
+		logger.info("UPDATING COMMENT TO RESPONSE");			
+			
+		String cmd = "UPDATE-RESPONSE-COMMENT";
+		
+		sendDetails.add(cmd);
+		sendDetails.add(issueID);
+		sendDetails.add(comment);
+			
+		isPosted = (boolean) UserLogin.client.doOperation(sendDetails);
+
+		return isPosted;
 }

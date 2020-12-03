@@ -172,5 +172,44 @@ public class UserOperation {
 		
 		return rep;
 	}
+
+
+	public static Student getStudentDetail(String issueID) {
+		Student student = new Student();
+		
+		String sql = "SELECT studentID, firstname, lastname, gender, email, phone "
+				+ "FROM UTeQueDB.student"
+				+ "INNER JOIN UTeQueDB.issue"
+				+ "ON UTeQueDB.issue.studentID = UTeQueDB.student.studentID"
+				+ "WHERE issueID = ?";
+		System.out.println("UserOperation TEST****");
+		try (Connection dbConn = DBConnectorFactory.getDatabaseConnection()){
+			
+			PreparedStatement statement = dbConn.prepareStatement(sql);
+			statement.setString(1, issueID);
+			
+			logger.warn("Receiving results from executed Prepared Statement, Error May Occur");
+			ResultSet result = statement.executeQuery();
+			
+			while(result.next()) {
+				student.setID(result.getString(1));
+				student.setFirstname(result.getString(2));
+				student.setLastname(result.getString(3));
+				student.setGender(result.getString(4));
+				student.setEmail(result.getString(5));
+				student.setPhone(result.getString(6));
+				
+				System.out.println("UserOperation" + student.toString());
+
+				return student;
+			}
+			
+		} catch (SQLException e) {
+			logger.error("Error(" + e.getErrorCode() 
+					+ ") " + e.getMessage());
+		}
+		
+		return student;
+	}
 	
 }
