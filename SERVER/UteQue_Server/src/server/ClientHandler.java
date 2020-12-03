@@ -285,11 +285,10 @@ public class ClientHandler extends Thread{
 		ArrayList<Object> onlineStudents = new ArrayList<>();
 		
 		for(int userCount = 0; userCount < server.getClients().size(); userCount++ )
-			if(!server.getClients().get(userCount).account.equals(account))
-				if(server.getClients().get(userCount).account.getType() == "STUDENT")
-					onlineStudents.add(server.getClients().get(userCount));
-		
-		
+			if(!server.getClients().get(userCount).account.equals(null))
+				if(!server.getClients().get(userCount).account.equals(account))
+					if(server.getClients().get(userCount).account.getType() == "STUDENT")
+						onlineStudents.add(server.getClients().get(userCount));		
 
 		os.writeObject(onlineStudents);
 		

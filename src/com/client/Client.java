@@ -10,6 +10,8 @@ import java.util.ArrayList;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.model.Message;
+
 
 public class Client {
 	private static final Logger logger = LogManager.getLogger(Client.class);
@@ -43,10 +45,14 @@ public class Client {
 	
 	public Object doOperation(ArrayList<Object> operand) {
 		Object result = null;		
+		String testMsg;
 		
 		try {
 			serverOut.writeObject(operand);
+			
 			result = serverIn.readObject();	
+			
+			
 			
 		}catch(IOException ioex) {
 			logger.error("ERROR establishing I/O Connection. - " + ioex.getMessage()
@@ -72,6 +78,16 @@ public class Client {
 					+ "AT- " + e.getStackTrace());
 		}
 		
+	}
+	
+	public void sendNotification(Message message) {
+		try {
+			serverOut.writeObject(message);
+			
+		} catch (IOException e) {
+			logger.error("ERROR - " + e.getMessage()
+					+ "AT- " + e.getStackTrace());
+		}
 	}
 	
 }

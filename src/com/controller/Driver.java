@@ -23,6 +23,5 @@ public class Driver {
 			logger.error("HOST IP ERROR DETECTED. " + e.getMessage() 
 			+ " AT-" + e.getStackTrace());
 		}
-
 	}
 }

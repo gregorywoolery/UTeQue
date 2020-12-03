@@ -410,7 +410,7 @@ public class UserLogin extends JFrame implements ActionListener{
 				JOptionPane.showMessageDialog(this, 
 						"SEEMS THERE IS A CONNECTION ERROR", 
 						"CONNECTION ERROR",
-						JOptionPane.INFORMATION_MESSAGE);
+						JOptionPane.ERROR_MESSAGE);
 				client.disconnect();
 				dispose();
 			}

@@ -1,6 +1,5 @@
 package com.view.staff;
 
-import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.text.ParseException;
@@ -74,27 +73,30 @@ public class StaffDashboard extends Dashboard implements ActionListener {
 		livechatTitle_lbl.setFont(new Font("Arial Rounded MT Bold", Font.PLAIN, 13));
 		menu_panel.add(livechatTitle_lbl);
 		
-		joinMeetingBtn = new JButton("Join Meeting");
-		joinMeetingBtn.setAlignmentX(0.2f);
+		joinMeetingBtn = new JButton("Join");
+		joinMeetingBtn.setIcon(new ImageIcon(StaffDashboard.class.getResource("/img/dash/new-live-chat.png")));
+		joinMeetingBtn.setAlignmentX(0.3f);
 		joinMeetingBtn.setMaximumSize(new Dimension(99, 30));
 		joinMeetingBtn.setHorizontalTextPosition(SwingConstants.RIGHT);
 		joinMeetingBtn.setBorder(null);
 		joinMeetingBtn.setBackground(new Color(0, 0, 51));
 		joinMeetingBtn.setForeground(new Color(255, 255, 255));
-		joinMeetingBtn.setFont(new Font("Arial Rounded MT Bold", Font.PLAIN, 13));
+		joinMeetingBtn.setFont(new Font("Arial Rounded MT Bold", Font.PLAIN, 12));
 		menu_panel.add(joinMeetingBtn);
 		
-		newMeetingBtn = new JButton("New Meeting");
-		newMeetingBtn.setAlignmentX(0.2f);
+		newMeetingBtn = new JButton("New");
+		newMeetingBtn.setIcon(new ImageIcon(StaffDashboard.class.getResource("/img/dash/schedule-live-chat.png")));
+		newMeetingBtn.setAlignmentX(0.3f);
 		newMeetingBtn.setMaximumSize(new Dimension(99, 30));
 		newMeetingBtn.setHorizontalTextPosition(SwingConstants.RIGHT);
 		newMeetingBtn.setBorder(null);
 		newMeetingBtn.setBackground(new Color(0, 0, 51));
 		newMeetingBtn.setForeground(new Color(255, 255, 255));
-		newMeetingBtn.setFont(new Font("Arial Rounded MT Bold", Font.PLAIN, 13));
+		newMeetingBtn.setFont(new Font("Arial Rounded MT Bold", Font.PLAIN, 12));
 		menu_panel.add(newMeetingBtn);
 		
 		Issues_lbl = new JLabel("Issues");
+		Issues_lbl.setIcon(new ImageIcon(StaffDashboard.class.getResource("/img/dash/issue.png")));
 		Issues_lbl.setMaximumSize(new Dimension(99, 30));
 		Issues_lbl.setHorizontalTextPosition(SwingConstants.RIGHT);
 		Issues_lbl.setAlignmentY(Component.TOP_ALIGNMENT);
@@ -103,7 +105,8 @@ public class StaffDashboard extends Dashboard implements ActionListener {
 		Issues_lbl.setFont(new Font("Arial Rounded MT Bold", Font.PLAIN, 13));
 		menu_panel.add(Issues_lbl);
 		
-		studentIssuesBtn = new JButton("Student Issues");
+		studentIssuesBtn = new JButton("<html>Student <br> Issues</html>");
+		studentIssuesBtn.setIcon(new ImageIcon(StaffDashboard.class.getResource("/img/dash/student-issues.png")));
 		studentIssuesBtn.setAlignmentX(0.2f);
 		studentIssuesBtn.setMaximumSize(new Dimension(99, 30));
 		studentIssuesBtn.setHorizontalTextPosition(SwingConstants.RIGHT);
@@ -114,6 +117,7 @@ public class StaffDashboard extends Dashboard implements ActionListener {
 		menu_panel.add(studentIssuesBtn);
 		
 		services_lbl = new JLabel("Services");
+		services_lbl.setIcon(new ImageIcon(StaffDashboard.class.getResource("/img/dash/service.png")));
 		services_lbl.setMaximumSize(new Dimension(99, 30));
 		services_lbl.setHorizontalTextPosition(SwingConstants.RIGHT);
 		services_lbl.setAlignmentY(Component.TOP_ALIGNMENT);
@@ -122,7 +126,8 @@ public class StaffDashboard extends Dashboard implements ActionListener {
 		services_lbl.setFont(new Font("Arial Rounded MT Bold", Font.PLAIN, 13));
 		menu_panel.add(services_lbl);
 		
-		serviceAssistBtn = new JButton("Service Stats");
+		serviceAssistBtn = new JButton("<html>Service<br> Stats</html>");
+		serviceAssistBtn.setIcon(new ImageIcon(StaffDashboard.class.getResource("/img/dash/stats.png")));
 		serviceAssistBtn.setAlignmentX(0.2f);
 		serviceAssistBtn.setMaximumSize(new Dimension(99, 30));
 		serviceAssistBtn.setHorizontalTextPosition(SwingConstants.RIGHT);

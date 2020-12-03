@@ -11,6 +11,7 @@ import javax.swing.JDesktopPane;
 import javax.swing.JInternalFrame;
 import javax.swing.border.LineBorder;
 
+import com.controller.ChatController;
 import com.controller.UserController;
 import com.model.Issue;
 import com.model.User;
@@ -55,7 +56,6 @@ public class NewMeeting extends JInternalFrame implements ActionListener {
 		
 		this.workSpaceDesktop =  workSpaceDesktop;
 		initializeComponents();
-		registerListeners();
 	}
 	
 	
@@ -156,12 +156,7 @@ public class NewMeeting extends JInternalFrame implements ActionListener {
 		
 		detials_panel.add(new JScrollPane(onlineStudents_table));
 		
-		
-
-	}
-	
-	private void registerListeners() {
-		
+		setVisible(true);
 	}
 
 	@Override
@@ -197,7 +192,22 @@ public class NewMeeting extends JInternalFrame implements ActionListener {
 	}
 	
 	private void notifyStudentForLiveChat(String studentID) {
+		boolean notified = false;
+		notified = ChatController.sendNotificationToStudent(staff.getID(), studentID, "AVAILABLE");
 		
+		if(notified){
+			JOptionPane.showMessageDialog(workSpaceDesktop, 
+					"Student has been notifed. Please go to Join meeting", 
+					"Notified !",
+					JOptionPane.INFORMATION_MESSAGE);
+			
+			
+		}else {
+			JOptionPane.showMessageDialog(workSpaceDesktop, 
+					"Oops.. Seems the student has been notifed. Maybe a connection error. We'll get back to you", 
+					"Notified !",
+					JOptionPane.INFORMATION_MESSAGE);			
+		}
 	}
 
 }
