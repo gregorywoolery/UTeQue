@@ -2,8 +2,8 @@ package com.controller;
 
 import java.util.ArrayList;
 
-import com.client.Client;
 import com.model.User;
+import com.view.UserLogin;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -13,7 +13,7 @@ public class LoginController {
 	private static final int port = 3309;
 	
 	
-	public static boolean authenticate(Client client, String username, char[] password, String userType) {
+	public static boolean authenticate(String username, char[] password, String userType) {
 
 		ArrayList<Object> sendDetails = new ArrayList<>();
 		
@@ -28,7 +28,7 @@ public class LoginController {
 		sendDetails.add(cmd);
 		sendDetails.add(new User(username, password, userType));
 		
-		authenticateSuccess = (boolean) client.doOperation(sendDetails);
+		authenticateSuccess = (boolean) UserLogin.client.doOperation(sendDetails);
 
 		logger.info("AUTHENTICATION RECIEVED BASED ON USER CREDENTIALS");
 					

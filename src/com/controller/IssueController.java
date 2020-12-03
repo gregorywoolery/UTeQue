@@ -5,14 +5,14 @@ import java.util.ArrayList;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.client.Client;
 import com.model.Issue;
+import com.view.UserLogin;
 
 public class IssueController {
 	private static final Logger logger = LogManager.getLogger(IssueController.class);
 	private static final int port = 3309;
 	
-	public static boolean addIssue(Client client, Issue issue) {
+	public static boolean addIssue(Issue issue) {
 		ArrayList<Object> sendDetails = new ArrayList<>();
 		boolean addIssueSuccess = false;
 		
@@ -21,17 +21,17 @@ public class IssueController {
 		logger.info("Sending ISSUE to SERVER for ADDING");			
 			
 		String cmd = "ADD-ISSUE";
-		
+		logger.info(issue.toString());
 		sendDetails.add(cmd);
 		sendDetails.add(issue);
 		
-		addIssueSuccess = (boolean) client.doOperation(sendDetails);
+		addIssueSuccess = (boolean) UserLogin.client.doOperation(sendDetails);
 		
 		return addIssueSuccess;	
 	}
 	
 	@SuppressWarnings("unchecked")
-	public static ArrayList<Issue> getAllIssuesForStudent(Client client, String studentID) {
+	public static ArrayList<Issue> getAllIssuesForStudent(String studentID) {
 		ArrayList<Object> sendDetails = new ArrayList<>();
 		ArrayList<Issue> foundStudentIssues = new ArrayList<>();
 		
@@ -44,13 +44,13 @@ public class IssueController {
 		sendDetails.add(cmd);
 		sendDetails.add(studentID);
 		
-		foundStudentIssues = (ArrayList<Issue>) client.doOperation(sendDetails);
+		foundStudentIssues = (ArrayList<Issue>) UserLogin.client.doOperation(sendDetails);
 			
 		return foundStudentIssues;	
 	}
 	
 	@SuppressWarnings("unchecked")
-	public static ArrayList<Issue> getStudentIssuesByService(Client client, String studentID, int service) {
+	public static ArrayList<Issue> getStudentIssuesByService(String studentID, int service) {
 		ArrayList<Object> sendDetails = new ArrayList<>();
 		ArrayList<Issue> studentIssues = new ArrayList<>();
 		
@@ -65,12 +65,12 @@ public class IssueController {
 		sendDetails.add(studentID);
 		sendDetails.add(service);
 		
-		studentIssues = (ArrayList<Issue>) client.doOperation(sendDetails);
+		studentIssues = (ArrayList<Issue>) UserLogin.client.doOperation(sendDetails);
 
 		return studentIssues;	
 	}
 	
-	public static int[] getStudentIssueStats(Client client, String studentID){
+	public static int[] getStudentIssueStats(String studentID){
 		ArrayList<Object> sendDetails = new ArrayList<>();
 		int[] stats = new int[3];
 		
@@ -83,13 +83,13 @@ public class IssueController {
 		sendDetails.add(cmd);
 		sendDetails.add(studentID);
 		
-		stats = (int[]) client.doOperation(sendDetails);
+		stats = (int[]) UserLogin.client.doOperation(sendDetails);
 				
 		return stats;
 	}
 	
 	@SuppressWarnings("unchecked")
-	public static ArrayList<String> getMainIssueResponse(Client client, String studentID){
+	public static ArrayList<String> getMainIssueResponse(String studentID){
 		ArrayList<Object> sendDetails = new ArrayList<>();
 		ArrayList<String> tableData = new ArrayList<String>();
 		
@@ -102,13 +102,13 @@ public class IssueController {
 		sendDetails.add(cmd);
 		sendDetails.add(studentID);
 		
-		tableData = (ArrayList<String>) client.doOperation(sendDetails);
+		tableData = (ArrayList<String>) UserLogin.client.doOperation(sendDetails);
 
 		return tableData;		
 		
 	}
 		
-	public static boolean removeIssue(Client client, String issueID) {
+	public static boolean removeIssue(String issueID) {
 		ArrayList<Object> sendDetails = new ArrayList<>();
 		boolean removeIssueSuccess = false;
 	
@@ -122,13 +122,13 @@ public class IssueController {
 		sendDetails.add(cmd);
 		sendDetails.add(issueID);
 			
-		removeIssueSuccess = (boolean) client.doOperation(sendDetails);	
+		removeIssueSuccess = (boolean) UserLogin.client.doOperation(sendDetails);	
 		
 		return removeIssueSuccess;	
 	}
 	
 	@SuppressWarnings("unchecked")
-	public static ArrayList<Issue> getSearchIssuesForStudent(Client client, Issue searchIssue) {
+	public static ArrayList<Issue> getSearchIssuesForStudent(Issue searchIssue) {
 		ArrayList<Object> sendDetails = new ArrayList<>();
 		ArrayList<Issue> foundStudentIssues = new ArrayList<>();
 		
@@ -141,7 +141,7 @@ public class IssueController {
 		sendDetails.add(cmd);
 		sendDetails.add(searchIssue);
 			
-		foundStudentIssues = (ArrayList<Issue>) client.doOperation(sendDetails);	
+		foundStudentIssues = (ArrayList<Issue>) UserLogin.client.doOperation(sendDetails);	
 		
 		return foundStudentIssues;	
 	}
@@ -151,7 +151,7 @@ public class IssueController {
 	 * Students should also be able to view a specific complaint or 
 	 * query and all its associated responses.
 	 */
-	public static Issue viewSpecific(Client client, String issueID) {
+	public static Issue viewSpecific(String issueID) {
 		ArrayList<Object> sendDetails = new ArrayList<>();
 
 		Issue issue = null;
@@ -165,12 +165,12 @@ public class IssueController {
 		sendDetails.add(cmd);
 		sendDetails.add(issueID);
 				
-		issue = (Issue) client.doOperation(sendDetails);	
+		issue = (Issue) UserLogin.client.doOperation(sendDetails);	
 		
 		return issue;	
 	}
 	
-	public static boolean assignRepresentative(Client client, String issueID, String repID){
+	public static boolean assignRepresentative(String issueID, String repID){
 		ArrayList<Object> sendDetails = new ArrayList<>();
 		boolean success = false;
 		
@@ -185,13 +185,13 @@ public class IssueController {
 		sendDetails.add(issueID);
 		sendDetails.add(repID);
 				
-		success = (boolean) client.doOperation(sendDetails);	
+		success = (boolean) UserLogin.client.doOperation(sendDetails);	
 
 		return success;
 	}
 	
 		
-	public static Object[] getIssueRepStudent(Client client, String issueID){
+	public static Object[] getIssueRepStudent(String issueID){
 		ArrayList<Object> sendDetails = new ArrayList<>();
 		Object[] details = new Object[5];
 		
@@ -203,7 +203,7 @@ public class IssueController {
 		sendDetails.add(cmd);
 		sendDetails.add(issueID);
 				
-		details = (Object[]) client.doOperation(sendDetails);	
+		details = (Object[]) UserLogin.client.doOperation(sendDetails);	
 			
 		return details;
 	}

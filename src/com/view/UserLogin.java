@@ -23,7 +23,6 @@ import java.awt.Rectangle;
 import java.awt.Toolkit;
 import java.awt.Cursor;
 import java.awt.Dimension;
-import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
@@ -37,6 +36,7 @@ import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import javax.swing.JRadioButton;
 import javax.swing.JPanel;
@@ -69,7 +69,7 @@ public class UserLogin extends JFrame implements ActionListener{
 	private JButton login_btn;
 	private JLabel auth_message;
 	
-	private Client client;
+	public static Client client;
 	public static User currentUser;
 	String userType = "";
 	
@@ -81,7 +81,7 @@ public class UserLogin extends JFrame implements ActionListener{
 		initializeComponents();
 		registerListeners();
 		
-		this.client = client;
+		UserLogin.client = client;
 		logger.info("Finished initailizing Login interface");
 	}
 	
@@ -340,6 +340,7 @@ public class UserLogin extends JFrame implements ActionListener{
 	
 	private void registerListeners() {
 		logger.info("Registering Listeners");
+		
 		agent_rdbtn.addActionListener(this);
 		student_rdbtn.addActionListener(this);
 		rep_rdbtn.addActionListener(this);
@@ -347,7 +348,7 @@ public class UserLogin extends JFrame implements ActionListener{
 	}
 	
 	//Removes frame from display after use
-	private void disposeFrame() {
+	public void disposeFrame() {
 		this.setVisible(false);
 	}
 	
@@ -391,19 +392,29 @@ public class UserLogin extends JFrame implements ActionListener{
 			else if (rep_rdbtn.isSelected())
 				userType = "REP";
 			
+			if(client.startConnection()) {
+				if(LoginController.authenticate(
+						txtUsername.getText(), txtPassword.getPassword(), userType)
+				){
+					currentUser = new User(txtUsername.getText(), userType);
+					UserController.setCurrentUser(txtUsername.getText(), userType);
+					 
+					chooseDashboard(userType);
+					disposeFrame();
+				}
+				else {
+					loginErrorMessage();
+					client.disconnect();
+				}
+			}else { 
+				JOptionPane.showMessageDialog(this, 
+						"SEEMS THERE IS A CONNECTION ERROR", 
+						"CONNECTION ERROR",
+						JOptionPane.INFORMATION_MESSAGE);
+				client.disconnect();
+				dispose();
+			}
 			
-			if(LoginController.authenticate(client,
-					txtUsername.getText(), txtPassword.getPassword(), userType)
-			){
-				currentUser = new User(txtUsername.getText(), userType);
-				UserController.setCurrentUser(txtUsername.getText(), userType);
-				
-				chooseDashboard(userType);
-				disposeFrame();
-			}
-			else {
-				loginErrorMessage();
-			}
 		}
 		
 	}
@@ -411,16 +422,15 @@ public class UserLogin extends JFrame implements ActionListener{
 	private void chooseDashboard(String userType) {
 		switch(userType) {
 		case "STUDENT":
-			StudentDashboard studentDash = new StudentDashboard(client);
+			StudentDashboard studentDash = new StudentDashboard(this);
 			studentDash.setVisible(true);
 			break;
 			
 		case "REP":
 		case "AGENT":
-			StaffDashboard staffDash = new StaffDashboard(client);
+			StaffDashboard staffDash = new StaffDashboard(this);
 			staffDash.setVisible(true);
 			break;
 		}
 	}
-	
 }

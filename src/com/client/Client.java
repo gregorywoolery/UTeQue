@@ -24,27 +24,7 @@ public class Client {
 		this.hostName = hostName;
 	}
 	
-	public Object doOperation(ArrayList<Object> operand) {
-		Object result = null;		
-		String operation = null;
-		
-		try {
-			serverOut.writeObject(operand);
-			result = serverIn.readObject();	
-			
-		}catch(IOException ioex) {
-			logger.error("ERROR establishing I/O Connection. - " + ioex.getMessage()
-				+ "AT- " + ioex.getStackTrace());			
-		} catch (ClassNotFoundException e) {
-			logger.error("ERROR - " + e.getMessage()
-				+ "AT- " + e.getStackTrace());
-		}
-		
-		return result;
-		
-	}
-
-	public boolean connect() {
+	public boolean startConnection() {
 		try {
 			this.socketConnection = new Socket(hostName, serverPort);
 			this.serverOut = new ObjectOutputStream(socketConnection.getOutputStream());
@@ -53,13 +33,45 @@ public class Client {
 			return true;
 			
 		} catch (IOException e) {
+			disconnect();
 			logger.error("ERROR establishing I/O Connection. - " + e.getMessage()
-								+ "AT- " + e.getStackTrace());
+					+ "AT- " + e.getStackTrace());
 		}
 		
-		return false;
-		
-	}	
+		return false;		
+	}
 	
+	public Object doOperation(ArrayList<Object> operand) {
+		Object result = null;		
+		
+		try {
+			serverOut.writeObject(operand);
+			result = serverIn.readObject();	
+			
+		}catch(IOException ioex) {
+			logger.error("ERROR establishing I/O Connection. - " + ioex.getMessage()
+					+ "AT- " + ioex.getStackTrace());			
+		} catch (ClassNotFoundException e) {
+			logger.error("ERROR - " + e.getMessage()
+					+ "AT- " + e.getStackTrace());
+		}
+		
+		return result;
+		
+	}
+	
+	public void disconnect() {
+		try {
+			serverOut.writeObject("DISCONNECT");
+			
+			serverOut.close();
+			serverIn.close();
+			socketConnection.close();
+		} catch (IOException e) {
+			logger.error("ERROR - " + e.getMessage()
+					+ "AT- " + e.getStackTrace());
+		}
+		
+	}
 	
 }

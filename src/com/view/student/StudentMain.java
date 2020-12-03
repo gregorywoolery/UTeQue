@@ -44,6 +44,7 @@ import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
 import javax.swing.JScrollPane;
 
+import com.client.Client;
 import com.controller.IssueController;
 import com.controller.ServiceController;
 import com.controller.UserController;
@@ -55,11 +56,15 @@ import com.view.UserLogin;
 
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import javax.swing.border.TitledBorder;
 
 @SuppressWarnings("rawtypes")
 public class StudentMain extends JInternalFrame implements ActionListener{
-
+	private static final Logger logger = LogManager.getLogger(StudentMain.class);
 	private static final long serialVersionUID = -8375563652031458336L;
 
 	private JPanel addIssue_panel;
@@ -99,15 +104,17 @@ public class StudentMain extends JInternalFrame implements ActionListener{
 	 * Create the frame.
 	 */
 
-	public StudentMain(JDesktopPane workspace_desktopPane, Client client) {
+	public StudentMain(JDesktopPane workspace_desktopPane) {
 		super("Main",
 				false, 	//resizable
 				true, 	//closable
 				false, 	//maximizable
 				true);	//iconifiable
+		
 		initializeComponents();
 		registerListeners();
 		this.workspace_desktopPane = workspace_desktopPane;
+		
 	}
 	
 	private void initializeComponents() {
@@ -458,9 +465,9 @@ public class StudentMain extends JInternalFrame implements ActionListener{
 			try {
 				currFrame = new AddIssue(workspace_desktopPane, addIssue_comboBox.getSelectedIndex());
 			
-			} catch (ParseException e1) {
-		
-				e1.printStackTrace();
+			} catch (ParseException pex) {
+				logger.error("ERROR - " + pex.getMessage()
+				+ "AT- " + pex.getStackTrace());
 			}
 			workspace_desktopPane.add(currFrame);
 			

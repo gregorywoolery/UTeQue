@@ -6,15 +6,15 @@ import java.util.ArrayList;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.client.Client;
 import com.model.Response;
+import com.view.UserLogin;
 
 
 public class ResponseController {
 	private static final Logger logger = LogManager.getLogger(IssueController.class);
 	
 	
-	public static Response getResponseUsingIssue(Client client, String issueID){
+	public static Response getResponseUsingIssue(String issueID){
 		ArrayList<Object> sendDetails = new ArrayList<>();
 		Response response = new Response();
 		
@@ -26,12 +26,12 @@ public class ResponseController {
 		sendDetails.add(cmd);
 		sendDetails.add(issueID);
 			
-		response = (Response) client.doOperation(sendDetails);
+		response = (Response) UserLogin.client.doOperation(sendDetails);
 
 		return response;
 	}
 	
-	public static boolean postResponse(Client client, Response response) {
+	public static boolean postResponse(Response response) {
 		ArrayList<Object> sendDetails = new ArrayList<>();
 		boolean isPosted = false;
 		
@@ -42,7 +42,7 @@ public class ResponseController {
 		sendDetails.add(cmd);
 		sendDetails.add(response);
 					
-		response = (Response) client.doOperation(sendDetails);
+		response = (Response) UserLogin.client.doOperation(sendDetails);
 		
 		return isPosted;
 	}

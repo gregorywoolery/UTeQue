@@ -37,24 +37,10 @@ public class StaffDashboard extends Dashboard implements ActionListener {
 	private JButton studentDetails_btn;
 	private JInternalFrame currFrame;
 	private User staff;
-
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					StaffDashboard frame = new StaffDashboard();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			} 	
-		});
-	}
-
-	public StaffDashboard() {
+	private UserLogin userlogin;
+	
+	public StaffDashboard(UserLogin userlogin) {
+		this.userlogin = userlogin;
 		initializeComponents();
 		registerListeners();
 	}
@@ -168,8 +154,8 @@ public class StaffDashboard extends Dashboard implements ActionListener {
 	}
 	
 	private void registerListeners(){
+		newMeetingBtn.addActionListener(this);
 		logoutBtn.addActionListener(this);
-		//serviceAssistBtn.addActionListener(this);
 	}
 	
 	@Override
@@ -184,8 +170,7 @@ public class StaffDashboard extends Dashboard implements ActionListener {
 				try {
 					currFrame = new JoinMeeting(workspace_desktopPane);
 				} catch (ParseException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
+					logger.error("ERROR IN CREATING JOIN MEETING VIEW");
 				}
 				workspace_desktopPane.add(currFrame);
 				
@@ -207,12 +192,8 @@ public class StaffDashboard extends Dashboard implements ActionListener {
 				workspace_desktopPane.removeAll();
 				workspace_desktopPane.updateUI();
 				
-				try {
-					currFrame = new NewMeeting(workspace_desktopPane);
-				} catch (ParseException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
+				currFrame = new NewMeeting(workspace_desktopPane);
+
 				workspace_desktopPane.add(currFrame);
 				
 				//Opens JinternalFrame centered in the JDesktopPane
@@ -286,21 +267,12 @@ public class StaffDashboard extends Dashboard implements ActionListener {
 		
 		if(e.getSource().equals(logoutBtn)) {
 			dispose();
-			EventQueue.invokeLater(new Runnable() {
-				public void run() {
-					try {
-						UserController.setCurrentUserNull();
-
-						UserLogin userLoginFrame = new UserLogin();
-						userLoginFrame.setVisible(true);
-					} catch (Exception e) {
-						logger.error("ERROR OCCURED - " + e.getMessage()
-										+ e.getStackTrace());
-					}
-				}
-			});
+			UserController.setCurrentUserNull();
+			UserLogin.client.disconnect();
+	
+			dispose();
+			userlogin.setVisible(true);
 		}
-		
 	}
 	
 	public void addMainInternalFrame() {

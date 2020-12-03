@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.logging.log4j.Level;
@@ -90,14 +91,14 @@ public class ClientHandler extends Thread{
 		}
 	}
 	
-	public void handleLogin(ObjectOutputStream os, ObjectInputStream is, Object aperand) 
+	public void handleLogin(ObjectOutputStream os, ObjectInputStream is, User userAuth) 
 			throws ClassNotFoundException, IOException{
 		boolean success = false;
-		
-		User userAuth = (User) is.readObject();
+		logger.info("Handling login information.");
 		success = LoginAuthentication.authLoginUser(userAuth);
 		os.writeObject(success);
 		
+		logger.info(success +" Access results sent to user.");
 		if(success) {
 			account = UserOperation.getUserInfo(userAuth.getID(), userAuth.getType());
 		}
@@ -118,6 +119,7 @@ public class ClientHandler extends Thread{
 	public void doOperation(ObjectOutputStream os, ObjectInputStream is, Object operand) 
 			throws IOException, ClassNotFoundException{
 		
+		ArrayList<Object> receivedOp = new ArrayList<>();
 		String operation = "", userID = "", issueID= "";
 		String toUserID = "", message = "";
 		User user;
@@ -125,34 +127,41 @@ public class ClientHandler extends Thread{
 
 		boolean success = false;
 		int[] stats = new int[3];
-		int serviceID=0;
+		int serviceID = 0;
 		
+		logger.info("Processing request from CLIENT");
 		
-		operation = (String) operand;
+		receivedOp = (ArrayList<Object>) operand;
+		operation = (String) receivedOp.get(0).toString();
 		
 		switch(operation) {						
 			case "AUTHENTICATE":
-				handleLogin(os, is, operand);
+				handleLogin(os, is, (User) receivedOp.get(1));
 				break;
 				
 			case "LOG-OFF":
 				handleLogOff(os);
 				break;
 				
+			case "DISCONNECT":
+				handleLogOff(os);
+				break;
+				
 			case "ADD-ISSUE":
-				Issue issue = (Issue) is.readObject();
+				Issue issue = (Issue) receivedOp.get(1);
 				success = IssueOperation.insertIssue(issue);
-				os.writeBoolean(success);
+				logger.info(success + "Inside add issue");
+				os.writeObject(success);
 				break;
 				
 			case "GET-STUDENT-ISSUE-STATS":
-				userID = (String) is.readObject();							
+				userID = (String) receivedOp.get(1);						
 				stats = IssueOperation.getUserIssueStats(userID);
 				os.writeObject(stats);
 				break;
 				
 			case "GET-STUDENT-ISSUES":
-				userID = (String) is.readObject();
+				userID = (String) receivedOp.get(1);	
 				os.writeObject(IssueOperation.getAllIssuesForStudent(userID));
 				break;
 				
@@ -161,29 +170,29 @@ public class ClientHandler extends Thread{
 				break;	
 				
 			case "GET-CURRENT-USER":
-				user = (User) is.readObject();
+				user = (User) receivedOp.get(1);	
 				os.writeObject(UserOperation.getUserInfo(user.getID(), user.getType()));
 				break;
 			
 			case "GET-STUDENT-ISSUES-BY-SERVICE":
-				userID = (String) is.readObject();
-				serviceID = (int) is.readObject();
+				userID = (String) receivedOp.get(1);	
+				serviceID = (int) receivedOp.get(2);	
 				os.writeObject(IssueOperation.getIssueByService(userID, serviceID));
 				break;
 			
 			case "GET-ISSUE":
-				issueID = (String) is.readObject();
+				issueID = (String) receivedOp.get(1);	
 				os.writeObject(IssueOperation.getIssue(issueID));
 				break;
 				
 			case "DELETE-ISSUE":
-				issueID = (String) is.readObject();
+				issueID = (String) receivedOp.get(1);	
 				success =  IssueOperation.deleteIssue(issueID);
-				os.writeBoolean(success);
+				os.writeObject(success);
 				break;
 				
 			case "GET-STUDENT-SEARCH ISSUES":
-				Issue searchIssue = (Issue) is.readObject();
+				Issue searchIssue = (Issue) receivedOp.get(1);	
 				System.out.println("UTeQueServer:" + searchIssue.toString());
 				os.writeObject(IssueOperation.getAllSearchIssuesForStudent(searchIssue));
 				break;
@@ -193,34 +202,34 @@ public class ClientHandler extends Thread{
 				break;
 				
 			case "ASSIGN-REP":
-				issueID = (String) is.readObject();
-				userID = (String) is.readObject();
+				issueID = (String) receivedOp.get(1);	
+				userID = (String) receivedOp.get(2);	
 				os.writeObject(IssueOperation.assignRepresentative(issueID, userID));
 				break;
 				
 			case "GET-STUDENT":
-				userID = (String) is.readObject();
+				userID = (String) receivedOp.get(1);	
 				os.writeObject(UserOperation.getStudent(userID));
 				break;
 				
 			case "GET-RESPONSE":
-				issueID = (String) is.readObject();
+				issueID = (String) receivedOp.get(1);	
 				os.writeObject(ResponseOperation.getResponseUsingIssue(issueID));
 				break;
 				
 			case "GET-REP":
-				userID = (String) is.readObject();
+				userID = (String) receivedOp.get(1);	
 				os.writeObject(UserOperation.getRep(userID));
 				break;
 				
 			case "POST-RESPONSE":
-				response = (Response) is.readObject();
+				response = (Response) receivedOp.get(1);	
 				os.writeObject(ResponseOperation.postResponse(response));
 				break;
 				
 			case "RECIEVE-MSG":
-				toUserID = (String) is.readObject();
-				message = (String) is.readObject();
+				toUserID = (String) receivedOp.get(1);	
+				message = (String) receivedOp.get(2);	
 				handleMessage(os, toUserID, message);
 				break;
 		}
@@ -246,11 +255,16 @@ public class ClientHandler extends Thread{
 	
 	public void handleLogOff(ObjectOutputStream os) throws IOException {
 		List<ClientHandler> clients = server.getClients();
-		
+		ArrayList<Object> sendDetails = new ArrayList<>();
+
 		server.removeClientHandler(this);
+
+		String cmd = "OFFLINE";
 		
-		os.writeObject("OFFLINE");
-		os.writeObject(this.account);
+		sendDetails.add(cmd);
+		sendDetails.add(this.account);
+		
+		os.writeObject(sendDetails);
 		
 		try {
 			socketConnection.close();

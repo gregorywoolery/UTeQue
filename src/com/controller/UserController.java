@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.client.Client;
 import com.model.Student;
 import com.model.StudentServicesRep;
 import com.model.User;
@@ -22,9 +21,9 @@ public class UserController {
 
 	}
 	
-	public static User getCurrentUser(Client client) {
+	public static User getCurrentUser() {
 		if(UserLogin.currentUser.getGender() == null && !found) {
-			currentUser = getUserInfo(client);
+			currentUser = getUserInfo();
 			found = true;
 			currentUser.setType(UserLogin.currentUser.getType());
 		}
@@ -39,7 +38,7 @@ public class UserController {
 		found = false;
 	}
 	
-	private static User getUserInfo(Client client) {
+	private static User getUserInfo() {
 		ArrayList<Object> sendDetails = new ArrayList<>();
 		final int port = 3309;
 		
@@ -51,13 +50,13 @@ public class UserController {
 		sendDetails.add(cmd);
 		sendDetails.add(UserLogin.currentUser);
 		
-		currentUser = (User) client.doOperation(sendDetails);
+		currentUser = (User) UserLogin.client.doOperation(sendDetails);
 		
 		return currentUser;
 	}
 	
 	@SuppressWarnings("unchecked")
-	public static ArrayList<String> getAllAvailableRepresentative(Client client){
+	public static ArrayList<String> getAllAvailableRepresentative(){
 		ArrayList<Object> sendDetails = new ArrayList<>();
 		ArrayList<String> representative = new ArrayList<String>();
 		
@@ -68,13 +67,13 @@ public class UserController {
 		
 		sendDetails.add(cmd);
 		
-		representative = (ArrayList<String>) client.doOperation(sendDetails);
+		representative = (ArrayList<String>) UserLogin.client.doOperation(sendDetails);
 		
 		
 		return representative;
 	}
 	
-	public static Student getStudent(Client client, String studentID) {
+	public static Student getStudent(String studentID) {
 		ArrayList<Object> sendDetails = new ArrayList<>();
 		Student student = new Student();
 		
@@ -86,12 +85,12 @@ public class UserController {
 		sendDetails.add(cmd);
 		sendDetails.add(studentID);
 		
-		student = (Student) client.doOperation(sendDetails);
+		student = (Student) UserLogin.client.doOperation(sendDetails);
 		
 		return student;
 	}
 	
-	public static StudentServicesRep getRep(Client client, String repID) {
+	public static StudentServicesRep getRep(String repID) {
 		ArrayList<Object> sendDetails = new ArrayList<>();
 		StudentServicesRep rep = new StudentServicesRep();
 		logger.info("Client Trying to connect using socket at port " + 3309);
@@ -103,7 +102,7 @@ public class UserController {
 		sendDetails.add(cmd);
 		sendDetails.add(repID);
 		
-		rep = (StudentServicesRep) client.doOperation(sendDetails);
+		rep = (StudentServicesRep) UserLogin.client.doOperation(sendDetails);
 		
 		return rep;
 	}

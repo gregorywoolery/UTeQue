@@ -14,17 +14,11 @@ public class Driver {
 	public static void main(String[] args) {
 		try {
 			Client client = new Client(InetAddress.getLocalHost());
-			
-			if(client.connect()) {
-
-				logger.info("Connection established successfully");
+			logger.info("Connection established successfully");
 				
-				@SuppressWarnings("unused")
-				UserLogin userlogin = new UserLogin(client);			
+			@SuppressWarnings("unused")
+			UserLogin userlogin = new UserLogin(client);			
 					
-			}else 
-				logger.error("Connection NOT established successfully");
-		
 		} catch (UnknownHostException e) {
 			logger.error("HOST IP ERROR DETECTED. " + e.getMessage() 
 			+ " AT-" + e.getStackTrace());

@@ -19,7 +19,6 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.SwingConstants;
 
-import com.client.Client;
 import com.controller.UserController;
 import com.model.User;
 import com.view.Dashboard;
@@ -39,20 +38,19 @@ public class StudentDashboard extends Dashboard implements ActionListener{
 	private JButton addBtnDash;
 	private JInternalFrame currFrame;
 	private User student;
-	
-	private Client client;
+	private UserLogin userlogin;
 	
 	/**
 	 * Create the frame.
 	 */
-	public StudentDashboard(Client client) {
+	public StudentDashboard(UserLogin userlogin) {
+		this.userlogin = userlogin;
 		initializeComponents();
 		registerListeners();
-		this.client = client;
 	}
 	
 	public void initializeComponents(){
-		student =  UserController.getCurrentUser(client);
+		student =  UserController.getCurrentUser();
 		username_lbl.setText(student.getFirstname() + " " + student.getLastname());
 	
 		//For resource variables
@@ -152,7 +150,7 @@ public class StudentDashboard extends Dashboard implements ActionListener{
 			workspace_desktopPane.updateUI();
 		}
 		
-		currFrame = new StudentMain(client, workspace_desktopPane);
+		currFrame = new StudentMain(workspace_desktopPane);
 		workspace_desktopPane.add(currFrame);
 		
 		//Opens JinternalFrame centered in the JDesktopPane
@@ -197,7 +195,7 @@ public class StudentDashboard extends Dashboard implements ActionListener{
 				workspace_desktopPane.updateUI();
 
 				try {
-					currFrame = new AddIssue(client, workspace_desktopPane);
+					currFrame = new AddIssue(workspace_desktopPane);
 				} catch (ParseException e1) {
 					e1.printStackTrace();
 				}
@@ -217,19 +215,10 @@ public class StudentDashboard extends Dashboard implements ActionListener{
 		
 		if(e.getSource().equals(logoutBtn)) {
 			dispose();
-			EventQueue.invokeLater(new Runnable() {
-				public void run() {
-					try {
-						UserController.setCurrentUserNull();
-
-						UserLogin userLoginFrame = new UserLogin(client);
-						userLoginFrame.setVisible(true);
-					} catch (Exception e) {
-						logger.error("ERROR OCCURED - " + e.getMessage()
-										+ e.getStackTrace());
-					}
-				}
-			});
+			UserController.setCurrentUserNull();
+			UserLogin.client.disconnect();
+			dispose();
+			userlogin.setVisible(true);
 		}
 	}
 
