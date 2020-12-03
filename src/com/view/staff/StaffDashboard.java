@@ -2,6 +2,8 @@ package com.view.staff;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.text.ParseException;
 
 import javax.swing.ImageIcon;
@@ -13,6 +15,9 @@ import com.view.Dashboard;
 import com.view.UserLogin;
 
 import javax.swing.JLabel;
+import javax.swing.JMenu;
+import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JButton;
 import java.awt.Font;
 import java.awt.Color;
@@ -23,11 +28,23 @@ import org.apache.logging.log4j.Logger;
 
 import java.awt.Dimension;
 import java.awt.Component;
+import java.awt.event.KeyEvent;
 
 public class StaffDashboard extends Dashboard implements ActionListener {
 
 	private static final long serialVersionUID = 8747060055776800514L;
 	private static final Logger logger = LogManager.getLogger(StaffDashboard.class);
+	
+	private JMenu meeting;
+	private JMenuItem exit_menuItem;
+	
+	private JMenuItem newMeeting_menuItem;
+	private JMenuItem joinMeeting_menuItem;
+	private JMenuItem studentIssues_menuItem;
+	private JMenuItem serviceStats_menuItem;
+	
+	private JMenuItem help_menuItem;
+	private JMenuItem about_menuItem;
 	
 	private JLabel livechatTitle_lbl;
 	private JLabel Issues_lbl; 
@@ -60,6 +77,46 @@ public class StaffDashboard extends Dashboard implements ActionListener {
 		else
 			gender = "female";
 		
+		//Adding menu items for Menu Bar
+		exit_menuItem = new JMenuItem("Exit");  
+		exit_menuItem.setToolTipText("Exit UteQue");
+		exit_menuItem.setMnemonic(KeyEvent.VK_E);
+		
+		meeting = new JMenu("Meetings");
+		meeting.setMnemonic(KeyEvent.VK_M);
+		
+		newMeeting_menuItem = new JMenuItem("New", KeyEvent.VK_N);
+		newMeeting_menuItem.setToolTipText("Schedule Meeting");
+		
+		joinMeeting_menuItem = new JMenuItem("Join", KeyEvent.VK_J);
+		
+		joinMeeting_menuItem.setToolTipText("Join Meeting");
+		
+		studentIssues_menuItem=new JMenuItem("Student Issues", KeyEvent.VK_I);  
+		
+		serviceStats_menuItem=new JMenuItem("Service Statistics", KeyEvent.VK_S);  
+		
+		help_menuItem=new JMenuItem("Help", KeyEvent.VK_H);
+		
+		help_menuItem.setToolTipText("Ask for help");
+		help_menuItem.setIcon(new ImageIcon(StaffDashboard.class.getResource("/img/help.png")));
+		
+		about_menuItem=new JMenuItem("About", KeyEvent.VK_A);
+		about_menuItem.setToolTipText("About UTeQue");
+		
+		fileMenu.add(exit_menuItem);
+		
+		optionMenu.add(meeting);
+		meeting.add(newMeeting_menuItem);
+		meeting.add(joinMeeting_menuItem);
+		
+		optionMenu.add(studentIssues_menuItem);
+		optionMenu.add(serviceStats_menuItem);
+		
+		helpMenu.add(help_menuItem);
+		helpMenu.add(about_menuItem);
+		
+		
 		setTitle("UTeQue - Staff Issue System");
 		userAvatar_lbl.setIcon(new ImageIcon(Dashboard.class.getResource("/img/"+ gender +"/staff.png")));
 		
@@ -75,7 +132,7 @@ public class StaffDashboard extends Dashboard implements ActionListener {
 		
 		joinMeetingBtn = new JButton("Join");
 		joinMeetingBtn.setIcon(new ImageIcon(StaffDashboard.class.getResource("/img/dash/new-live-chat.png")));
-		joinMeetingBtn.setAlignmentX(0.3f);
+		joinMeetingBtn.setAlignmentX(0.5f);
 		joinMeetingBtn.setMaximumSize(new Dimension(99, 30));
 		joinMeetingBtn.setHorizontalTextPosition(SwingConstants.RIGHT);
 		joinMeetingBtn.setBorder(null);
@@ -86,7 +143,7 @@ public class StaffDashboard extends Dashboard implements ActionListener {
 		
 		newMeetingBtn = new JButton("New");
 		newMeetingBtn.setIcon(new ImageIcon(StaffDashboard.class.getResource("/img/dash/schedule-live-chat.png")));
-		newMeetingBtn.setAlignmentX(0.3f);
+		newMeetingBtn.setAlignmentX(0.5f);
 		newMeetingBtn.setMaximumSize(new Dimension(99, 30));
 		newMeetingBtn.setHorizontalTextPosition(SwingConstants.RIGHT);
 		newMeetingBtn.setBorder(null);
@@ -107,7 +164,7 @@ public class StaffDashboard extends Dashboard implements ActionListener {
 		
 		studentIssuesBtn = new JButton("<html>Student <br> Issues</html>");
 		studentIssuesBtn.setIcon(new ImageIcon(StaffDashboard.class.getResource("/img/dash/student-issues.png")));
-		studentIssuesBtn.setAlignmentX(0.2f);
+		studentIssuesBtn.setAlignmentX(0.4f);
 		studentIssuesBtn.setMaximumSize(new Dimension(99, 30));
 		studentIssuesBtn.setHorizontalTextPosition(SwingConstants.RIGHT);
 		studentIssuesBtn.setBorder(null);
@@ -128,7 +185,7 @@ public class StaffDashboard extends Dashboard implements ActionListener {
 		
 		serviceAssistBtn = new JButton("<html>Service<br> Stats</html>");
 		serviceAssistBtn.setIcon(new ImageIcon(StaffDashboard.class.getResource("/img/dash/stats.png")));
-		serviceAssistBtn.setAlignmentX(0.2f);
+		serviceAssistBtn.setAlignmentX(0.4f);
 		serviceAssistBtn.setMaximumSize(new Dimension(99, 30));
 		serviceAssistBtn.setHorizontalTextPosition(SwingConstants.RIGHT);
 		serviceAssistBtn.setBorder(null);
@@ -139,9 +196,23 @@ public class StaffDashboard extends Dashboard implements ActionListener {
 		
 		addMainInternalFrame();
 		
+        this.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                UserLogin.client.disconnect();
+            }
+        });
+		
+		
 	}
 	
 	private void registerListeners(){
+		newMeeting_menuItem.addActionListener(this);
+		joinMeeting_menuItem.addActionListener(this);
+		studentIssues_menuItem.addActionListener(this);
+		serviceStats_menuItem.addActionListener(this);
+		help_menuItem.addActionListener(this);
+		about_menuItem.addActionListener(this);
 		joinMeetingBtn.addActionListener(this);
 		newMeetingBtn.addActionListener(this);
 		studentIssuesBtn.addActionListener(this);
@@ -152,7 +223,7 @@ public class StaffDashboard extends Dashboard implements ActionListener {
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		
-		if(e.getSource().equals(joinMeetingBtn)) {
+		if(e.getSource().equals(joinMeetingBtn) || e.getSource().equals(joinMeeting_menuItem)) {
 			//Check if frame to remove is there(not null)
 			if(currFrame !=null) {
 				workspace_desktopPane.removeAll();
@@ -177,7 +248,7 @@ public class StaffDashboard extends Dashboard implements ActionListener {
 			}
 		}
 		
-		if(e.getSource().equals(newMeetingBtn)) {
+		if(e.getSource().equals(newMeetingBtn) || e.getSource().equals(newMeeting_menuItem)) {
 			//Check if frame to remove is there(not null)
 			if(currFrame !=null) {
 				workspace_desktopPane.removeAll();
@@ -199,12 +270,12 @@ public class StaffDashboard extends Dashboard implements ActionListener {
 			}
 		}
 		
-		if(e.getSource().equals(studentIssuesBtn)) {
+		if(e.getSource().equals(studentIssuesBtn) || e.getSource().equals(studentIssues_menuItem)) {
 			if(currFrame.getClass() != IssueMain.class)
 				addMainInternalFrame();
 		}
 		
-		if(e.getSource().equals(serviceAssistBtn)) {
+		if(e.getSource().equals(serviceAssistBtn) || e.getSource().equals(serviceStats_menuItem)) {
 			//Check if frame to remove is there(not null)
 			if(currFrame !=null) {
 				workspace_desktopPane.removeAll();
@@ -229,7 +300,21 @@ public class StaffDashboard extends Dashboard implements ActionListener {
 				}
 			}
 		}
-				
+		
+		if(e.getSource().equals(help_menuItem)) {
+			JOptionPane.showMessageDialog(workspace_desktopPane, 
+					"", 
+					"",
+					JOptionPane.INFORMATION_MESSAGE);
+		}
+		
+		if(e.getSource().equals(about_menuItem)) {
+			JOptionPane.showMessageDialog(workspace_desktopPane, 
+					"", 
+					"",
+					JOptionPane.INFORMATION_MESSAGE);
+		}				
+		
 		if(e.getSource().equals(logoutBtn)) {
 			dispose();
 			UserController.setCurrentUserNull();

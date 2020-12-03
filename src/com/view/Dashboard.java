@@ -25,12 +25,18 @@ import javax.swing.JButton;
 import javax.swing.JMenuBar;
 import javax.swing.BoxLayout;
 import javax.swing.JMenu;
+import java.awt.event.KeyEvent;
 
 
 
 public class Dashboard extends JFrame {
 
 	private static final long serialVersionUID = 2616488795407658092L;
+
+	protected JMenuBar menuBar;
+	protected JMenu fileMenu;
+	protected JMenu optionMenu;
+	protected JMenu helpMenu;
 
 	protected JPanel contentPane;
 	protected JPanel sidebar_panel;
@@ -49,12 +55,6 @@ public class Dashboard extends JFrame {
 	protected JLabel userAvatar_lbl;
 	protected JDesktopPane workspace_desktopPane;
 
-	private JMenuBar menuBar;
-	private JMenu fileMenu;
-	private JMenu mnNewMenu_1;
-	private JMenu mnNewMenu_2;
-
-
 	/**
 	 * Create the frame.
 	 */
@@ -67,13 +67,17 @@ public class Dashboard extends JFrame {
 		setJMenuBar(menuBar);
 		
 		fileMenu = new JMenu("File");
+		fileMenu.setMnemonic(KeyEvent.VK_F);
 		menuBar.add(fileMenu);
 		
-		mnNewMenu_1 = new JMenu("New menu");
-		menuBar.add(mnNewMenu_1);
+		optionMenu = new JMenu("Option");
+		optionMenu.setMnemonic(KeyEvent.VK_O);
+		menuBar.add(optionMenu);
 		
-		mnNewMenu_2 = new JMenu("New menu");
-		menuBar.add(mnNewMenu_2);
+		helpMenu = new JMenu("Help");
+		helpMenu.setMnemonic(KeyEvent.VK_H);
+		menuBar.add(helpMenu);
+		
 		contentPane = new JPanel();
 		contentPane.setBackground(new Color(0,204, 225));
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));

@@ -34,6 +34,8 @@ import javax.swing.JOptionPane;
 import java.awt.Font;
 import java.awt.Dimension;
 import javax.swing.SwingConstants;
+import javax.swing.UIManager;
+
 import java.awt.FlowLayout;
 import javax.swing.JTextArea;
 import javax.swing.JSeparator;
@@ -50,7 +52,9 @@ public class StudentIssueResponse extends JInternalFrame  implements ActionListe
 	private static final long serialVersionUID = 9161869361681829518L;
 	
 	private JLabel titile_lbl;
-	private JLabel help_label;
+	private JButton helpBtn;
+	private ImageIcon helpIcon;
+	private JLabel helpinfo;
 	private JPanel main_panel;
 	private JTextArea issueMessage_txtArea;
 	private JLabel services_lbl;
@@ -123,13 +127,28 @@ public class StudentIssueResponse extends JInternalFrame  implements ActionListe
 		gbc_titile_lbl.gridy = 0;
 		getContentPane().add(titile_lbl, gbc_titile_lbl);
 		
-		help_label = new JLabel();
-		help_label.setIcon(new ImageIcon(StudentIssueResponse.class.getResource("/img/help.png")));
-		GridBagConstraints gbc_help_label = new GridBagConstraints();
-		gbc_help_label.insets = new Insets(5, 0, 5, 0);
-		gbc_help_label.gridx = 1;
-		gbc_help_label.gridy = 0;
-		getContentPane().add(help_label, gbc_help_label);
+		helpBtn = new JButton();
+		helpBtn.setBackground(new Color(0, 0, 51));
+		helpBtn.setBorder(null);
+		helpBtn.setIcon(new ImageIcon(StudentIssueResponse.class.getResource("/img/help.png")));
+		GridBagConstraints gbc_helpBtn = new GridBagConstraints();
+		gbc_helpBtn.insets = new Insets(5, 0, 5, 0);
+		gbc_helpBtn.gridx = 1;
+		gbc_helpBtn.gridy = 0;
+		getContentPane().add(helpBtn, gbc_helpBtn);
+		
+		
+        helpIcon = new ImageIcon(StudentIssueResponse.class.getResource("/img/help.png"));
+
+        helpinfo = new JLabel("<html>Welcome to Your Issue-Response Screen.<br>You can view information about an issue you once made.<br>"
+									+"You can post a comment and reply if it is an answer.<br>There is also the option to view "
+									+"your representiatives name so you may take up this issue personally.<br>Thank you. <br>For any other enquiries contact " 
+									+ "Tier1Support at <br>tier1support@utech.edu.jm </html>");
+        helpinfo.setVerticalAlignment(SwingConstants.BOTTOM);
+        helpinfo.setBounds(0, 0, 250, 100);
+        helpinfo.setFont(new Font("Times New Roman", Font.PLAIN, 13));
+        helpinfo.setHorizontalAlignment(SwingConstants.CENTER);
+		
 		
 		main_panel = new JPanel();
 		main_panel.setBackground(new Color(204, 0, 0));
@@ -309,6 +328,7 @@ public class StudentIssueResponse extends JInternalFrame  implements ActionListe
 		 setVisible(true);
 	}
 	private void registerListeners(){
+		helpBtn.addActionListener(this);
 		response.commentBtn.addActionListener(this);
 		returnBtn.addActionListener(this);
 	}
@@ -345,6 +365,10 @@ public class StudentIssueResponse extends JInternalFrame  implements ActionListe
 							"ERROR",
 							JOptionPane.ERROR_MESSAGE);
 				}
+		}
+		if(e.getSource().equals(helpBtn)) {
+	        JOptionPane.showMessageDialog(workSpaceDesktop, helpinfo, "HELP",
+	                JOptionPane.INFORMATION_MESSAGE, helpIcon);
 		}
 		
 	}

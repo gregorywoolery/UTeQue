@@ -17,6 +17,7 @@ import com.model.Student;
 import com.model.StudentServicesRep;
 import com.model.User;
 import com.services.Identification;
+import com.view.student.StudentIssueResponse;
 
 import java.awt.GridBagLayout;
 import javax.swing.JPanel;
@@ -49,13 +50,16 @@ import javax.swing.JCheckBox;
 
 import java.awt.Cursor;
 import javax.swing.BoxLayout;
+import java.awt.event.KeyEvent;
 
 public class StaffIssueResponse extends JInternalFrame implements ActionListener{
 	
 	private static final long serialVersionUID = 9161869361681829518L;
 	
 	private JLabel titile_lbl;
-	private JLabel help_label;
+	private JButton helpBtn;
+	private ImageIcon helpIcon;
+	private JLabel helpinfo;
 	private JPanel main_panel;
 	private JTextArea issueMessage_txtArea;
 	private JLabel services_lbl;
@@ -127,13 +131,31 @@ public class StaffIssueResponse extends JInternalFrame implements ActionListener
 		gbc_titile_lbl.gridy = 0;
 		getContentPane().add(titile_lbl, gbc_titile_lbl);
 		
-		help_label = new JLabel();
-		help_label.setIcon(new ImageIcon(StaffIssueResponse.class.getResource("/img/help.png")));
-		GridBagConstraints gbc_help_label = new GridBagConstraints();
-		gbc_help_label.insets = new Insets(5, 0, 5, 0);
-		gbc_help_label.gridx = 1;
-		gbc_help_label.gridy = 0;
-		getContentPane().add(help_label, gbc_help_label);
+		helpBtn = new JButton();
+		helpBtn.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+		helpBtn.setMnemonic(KeyEvent.VK_H);
+		helpBtn.setToolTipText("About issue-response");
+		helpBtn.setBorder(null);
+		helpBtn.setBackground(new Color(0, 0, 51));
+		helpBtn.setIcon(new ImageIcon(StaffIssueResponse.class.getResource("/img/help.png")));
+		GridBagConstraints gbc_helpBtn = new GridBagConstraints();
+		gbc_helpBtn.insets = new Insets(5, 0, 5, 0);
+		gbc_helpBtn.gridx = 1;
+		gbc_helpBtn.gridy = 0;
+		getContentPane().add(helpBtn, gbc_helpBtn);
+		
+		
+        helpIcon = new ImageIcon(StudentIssueResponse.class.getResource("/img/help.png"));
+
+        helpinfo = new JLabel("<html>Welcome to Issue-Response Screen.<br>You can view information about an issue a student made.<br>"
+									+"You can post a response to the issue from where the student will see.<br>There is also the option to view "
+									+"student related information to make a informed response.<br>Thank you. <br>For any other enquiries contact " 
+									+ "Tier1Support at <br>tier1support@utech.edu.jm </html>");
+        helpinfo.setVerticalAlignment(SwingConstants.BOTTOM);
+        helpinfo.setBounds(0, 0, 250, 100);
+        helpinfo.setFont(new Font("Times New Roman", Font.PLAIN, 13));
+        helpinfo.setHorizontalAlignment(SwingConstants.CENTER);
+		
 		
 		main_panel = new JPanel();
 		main_panel.setBackground(new Color(204, 0, 0));
@@ -336,6 +358,7 @@ public class StaffIssueResponse extends JInternalFrame implements ActionListener
 	}
 	
 	private void registerListeners(){
+		helpBtn.addActionListener(this);
 		postResponseBtn.addActionListener(this);
 		returnBtn.addActionListener(this);
 	}
@@ -373,6 +396,10 @@ public class StaffIssueResponse extends JInternalFrame implements ActionListener
 							"ERROR",
 							JOptionPane.ERROR_MESSAGE);
 				}
+		}
+		if(e.getSource().equals(helpBtn)) {
+	        JOptionPane.showMessageDialog(workSpaceDesktop, helpinfo, "HELP",
+	                JOptionPane.INFORMATION_MESSAGE, helpIcon);
 		}
 	}
 	
