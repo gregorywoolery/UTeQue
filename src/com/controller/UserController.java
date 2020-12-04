@@ -119,6 +119,7 @@ public class UserController {
 
 		sendDetails.add(cmd);
 		
+		
 		onlineStudents = (ArrayList<User>) UserLogin.client.doOperation(sendDetails);
 		
 		return onlineStudents;

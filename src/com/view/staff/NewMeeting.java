@@ -171,7 +171,7 @@ public class NewMeeting extends JInternalFrame implements ActionListener {
 		onlineStudents = UserController.getOnlineStudents();
 		DefaultTableModel model = (DefaultTableModel) onlineStudents_table.getModel();		
 		
-		if(onlineStudents != null) {
+		if(!onlineStudents.isEmpty() && onlineStudents != null) {
 			model.setRowCount(0);
 			for(User student: onlineStudents) {
 				model.addRow(new Object[]{
@@ -183,7 +183,7 @@ public class NewMeeting extends JInternalFrame implements ActionListener {
 			}			
 		}else {
 			JOptionPane.showMessageDialog(workSpaceDesktop, 
-				"No students have not logged on.", 
+				"No students have logged on.", 
 				"Nobody online",
 				JOptionPane.INFORMATION_MESSAGE);
 		}

@@ -13,6 +13,7 @@ import com.controller.UserController;
 import com.model.User;
 import com.view.Dashboard;
 import com.view.UserLogin;
+import com.view.student.StudentIssueResponse;
 
 import javax.swing.JLabel;
 import javax.swing.JMenu;
@@ -53,6 +54,8 @@ public class StaffDashboard extends Dashboard implements ActionListener {
 	private JButton newMeetingBtn;
 	private JButton studentIssuesBtn;
 	private JButton serviceAssistBtn;
+	private ImageIcon helpIcon;
+	private JLabel aboutInfo;
 	private JInternalFrame currFrame;
 	private User staff;
 	private UserLogin userlogin;
@@ -115,7 +118,6 @@ public class StaffDashboard extends Dashboard implements ActionListener {
 		
 		helpMenu.add(help_menuItem);
 		helpMenu.add(about_menuItem);
-		
 		
 		setTitle("UTeQue - Staff Issue System");
 		userAvatar_lbl.setIcon(new ImageIcon(Dashboard.class.getResource("/img/"+ gender +"/staff.png")));
@@ -194,15 +196,19 @@ public class StaffDashboard extends Dashboard implements ActionListener {
 		serviceAssistBtn.setFont(new Font("Arial Rounded MT Bold", Font.PLAIN, 13));
 		menu_panel.add(serviceAssistBtn);
 		
+		
+		
+        helpIcon = new ImageIcon(StudentIssueResponse.class.getResource("/img/help.png"));
+
+        aboutInfo = new JLabel("<html>Welcome to UTeQue where students and staff<br>can communitcate on the basis of enquieres."
+        		+"<br>Students make enquires and employees are assigned to answer.</html>");
+        
+        aboutInfo.setVerticalAlignment(SwingConstants.BOTTOM);
+        aboutInfo.setBounds(0, 0, 250, 100);
+        aboutInfo.setFont(new Font("Times New Roman", Font.PLAIN, 13));
+        aboutInfo.setHorizontalAlignment(SwingConstants.CENTER);
+		
 		addMainInternalFrame();
-		
-        this.addWindowListener(new WindowAdapter() {
-            @Override
-            public void windowClosing(WindowEvent e) {
-                UserLogin.client.disconnect();
-            }
-        });
-		
 		
 	}
 	
@@ -303,15 +309,15 @@ public class StaffDashboard extends Dashboard implements ActionListener {
 		
 		if(e.getSource().equals(help_menuItem)) {
 			JOptionPane.showMessageDialog(workspace_desktopPane, 
-					"", 
-					"",
-					JOptionPane.INFORMATION_MESSAGE);
+					"<html>Cantact Tier1Support at <br>tier1support@utech.edu.jm</html>", 
+					"HELP",
+					JOptionPane.INFORMATION_MESSAGE, helpIcon);
 		}
 		
 		if(e.getSource().equals(about_menuItem)) {
 			JOptionPane.showMessageDialog(workspace_desktopPane, 
-					"", 
-					"",
+					aboutInfo, 
+					"About",
 					JOptionPane.INFORMATION_MESSAGE);
 		}				
 		

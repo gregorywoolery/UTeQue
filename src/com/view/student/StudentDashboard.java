@@ -10,12 +10,15 @@ import java.awt.Font;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
 import java.text.ParseException;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JInternalFrame;
 import javax.swing.JLabel;
+import javax.swing.JMenu;
+import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.SwingConstants;
 
@@ -23,6 +26,7 @@ import com.controller.UserController;
 import com.model.User;
 import com.view.Dashboard;
 import com.view.UserLogin;
+import com.view.staff.StaffDashboard;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -32,6 +36,16 @@ public class StudentDashboard extends Dashboard implements ActionListener{
 	private static final Logger logger = LogManager.getLogger(StudentDashboard.class);
 	private static final long serialVersionUID = -1418595725623251209L;
 
+	private JMenuItem exit_menuItem;
+	
+	private JMenuItem livechat_menuItem;
+	private JMenuItem addIssue_menuItem;
+	
+	private JMenuItem help_menuItem;
+	private JMenuItem about_menuItem;
+
+	private ImageIcon helpIcon;
+	private JLabel aboutInfo;
 	private JLabel issuesBtn_lbl;
 	private JButton viewBtnDash;
 	private JButton removeBtnDash;
@@ -60,6 +74,33 @@ public class StudentDashboard extends Dashboard implements ActionListener{
 		else
 			gender = "female";
 		
+		//Adding menu items for Menu Bar
+		exit_menuItem = new JMenuItem("Exit");  
+		exit_menuItem.setToolTipText("Exit UteQue");
+		exit_menuItem.setMnemonic(KeyEvent.VK_E);
+		
+		livechat_menuItem = new JMenuItem("Live Chat", KeyEvent.VK_L);
+		livechat_menuItem.setToolTipText("Start Live Chat");
+		
+		addIssue_menuItem = new JMenuItem("Join", KeyEvent.VK_A);
+		addIssue_menuItem.setToolTipText("Join Meeting");
+		
+		
+		help_menuItem=new JMenuItem("Help", KeyEvent.VK_H);
+		
+		help_menuItem.setToolTipText("Ask for help");
+		help_menuItem.setIcon(new ImageIcon(StudentDashboard.class.getResource("/img/help.png")));
+		
+		about_menuItem=new JMenuItem("About", KeyEvent.VK_A);
+		about_menuItem.setToolTipText("About UTeQue");
+		
+		fileMenu.add(exit_menuItem);
+		
+		optionMenu.add(livechat_menuItem);
+		optionMenu.add(addIssue_menuItem);
+		
+		helpMenu.add(help_menuItem);
+		helpMenu.add(about_menuItem);
 		
 		setTitle("UTeQue - Student Issue System");
 		userAvatar_lbl.setIcon(new ImageIcon(Dashboard.class.getResource("/img/"+ gender +"/student.png")));
@@ -138,6 +179,17 @@ public class StudentDashboard extends Dashboard implements ActionListener{
 		menu_panel.add(notificationBtnDash);
 		
 
+		
+        helpIcon = new ImageIcon(StudentIssueResponse.class.getResource("/img/help.png"));
+
+        aboutInfo = new JLabel("<html>Welcome to UTeQue where students and staff<br>can communitcate on the basis of enquieres."
+        		+"<br>Students make enquires and employees are assigned to answer.</html>");
+        
+        aboutInfo.setVerticalAlignment(SwingConstants.BOTTOM);
+        aboutInfo.setBounds(0, 0, 250, 100);
+        aboutInfo.setFont(new Font("Times New Roman", Font.PLAIN, 13));
+        aboutInfo.setHorizontalAlignment(SwingConstants.CENTER);
+		
 		addMainInternalFrame();
 		
 		setVisible(true);
@@ -188,7 +240,7 @@ public class StudentDashboard extends Dashboard implements ActionListener{
 		}
 		
 		
-		if(e.getSource().equals(addBtnDash)) {
+		if(e.getSource().equals(addBtnDash) || e.getSource().equals(addIssue_menuItem)) {
 			//Check if frame to remove is there(not null)
 			if(currFrame !=null) {
 				workspace_desktopPane.removeAll();
@@ -220,6 +272,21 @@ public class StudentDashboard extends Dashboard implements ActionListener{
 			dispose();
 			userlogin.setVisible(true);
 		}
+		
+		if(e.getSource().equals(help_menuItem)) {
+			JOptionPane.showMessageDialog(workspace_desktopPane, 
+					"<html>Cantact Tier1Support at <br>tier1support@utech.edu.jm</html>", 
+					"HELP",
+					JOptionPane.INFORMATION_MESSAGE, helpIcon);
+		}
+		
+		if(e.getSource().equals(about_menuItem)) {
+			JOptionPane.showMessageDialog(workspace_desktopPane, 
+					aboutInfo, 
+					"About",
+					JOptionPane.INFORMATION_MESSAGE);
+		}
+		
 	}
 
 }

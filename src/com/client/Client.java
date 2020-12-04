@@ -51,9 +51,7 @@ public class Client {
 			serverOut.writeObject(operand);
 			
 			result = serverIn.readObject();	
-			
-			
-			
+						
 		}catch(IOException ioex) {
 			logger.error("ERROR establishing I/O Connection. - " + ioex.getMessage()
 					+ "AT- " + ioex.getStackTrace());			

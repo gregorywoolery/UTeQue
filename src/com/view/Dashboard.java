@@ -26,6 +26,8 @@ import javax.swing.JMenuBar;
 import javax.swing.BoxLayout;
 import javax.swing.JMenu;
 import java.awt.event.KeyEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
 
 
@@ -265,6 +267,14 @@ public class Dashboard extends JFrame {
 		gbc_workspace_desktopPane.gridx = 0;
 		gbc_workspace_desktopPane.gridy = 1;
 		home_panel.add(workspace_desktopPane, gbc_workspace_desktopPane);
+		
+		
+        this.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                UserLogin.client.disconnect();
+            }
+        });
 		
 	}
 

@@ -393,6 +393,7 @@ public class UserLogin extends JFrame implements ActionListener{
 				userType = "REP";
 			
 			if(client.startConnection()) {
+				
 				if(LoginController.authenticate(
 						txtUsername.getText(), txtPassword.getPassword(), userType)
 				){

@@ -7,6 +7,8 @@ import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.swing.JOptionPane;
+
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -96,6 +98,7 @@ public class ClientHandler extends Thread{
 	/**
 	 * Accepts Command from ObjectInputStream socket's Connection and executes as stated
 	 */
+	@SuppressWarnings("unchecked")
 	public void doOperation(Object operand) 
 			throws IOException, ClassNotFoundException{
 		
@@ -206,7 +209,7 @@ public class ClientHandler extends Thread{
 				os.writeObject(ResponseOperation.postResponse(response));
 				break;
 				
-			case "RECIEVE-MSG":
+			case "MSG":
 				toUserID = (String) receivedOp.get(1);	
 				message = (String) receivedOp.get(2);	
 				handleMessage(toUserID, message);
@@ -250,15 +253,14 @@ public class ClientHandler extends Thread{
 				os.writeObject("SEND-MSG");
 				os.writeObject(toUserID);
 				os.writeObject(message);
-			}else
-				os.writeObject("USER-NOT-EXIST");
-				
+			}
 		}
+
+		os.writeObject("USER-NOT-EXIST");
 	}
 
 	
 	public void handleLogOff() throws IOException {
-		List<ClientHandler> clients = server.getClients();
 		ArrayList<Object> sendDetails = new ArrayList<>();
 
 		server.removeClientHandler(this);
@@ -280,18 +282,40 @@ public class ClientHandler extends Thread{
 		}
 	}
 	
-	
+	/**
+	 * Send staff all students that are online.
+	 * Loops through connected users on the server. 
+	 * Test:
+	 * 	1) Whether the account reached is not a null value.. continue
+	 *  2) Whether the account reached is not equal to the current account
+	 *  	that the service is being requested
+	 *  3) Whether the account reached is a student
+	 *  
+	 *  If all three conditions are met then the server can now send the 
+	 *  online students to the staff that made the request.
+	 * 
+	 */
 	public void sendOnlineStudents() throws IOException{
 		ArrayList<Object> onlineStudents = new ArrayList<>();
+		ArrayList<User> users = server.getClientAccounts();
 		
-		for(int userCount = 0; userCount < server.getClients().size(); userCount++ )
-			if(!server.getClients().get(userCount).account.equals(null))
-				if(!server.getClients().get(userCount).account.equals(account))
-					if(server.getClients().get(userCount).account.getType() == "STUDENT")
-						onlineStudents.add(server.getClients().get(userCount));		
+		JOptionPane.showMessageDialog(null, 
+				"IN SEND ONLINESTUDENT", 
+				"Notified !",
+				JOptionPane.INFORMATION_MESSAGE);
+		
+		for(int i = 0; i < users.size(); i++)
+			if( users.get(i) != null)
+				if(!users.get(i).getID().equals(this.account.getID()))
+					if(users.get(i).getType() == "STUDENT") {
+						JOptionPane.showMessageDialog(null, 
+								users.get(i).toString(), 
+								"Notified !",
+								JOptionPane.INFORMATION_MESSAGE);
+						onlineStudents.add(users.get(i));		
+					}	
 
 		os.writeObject(onlineStudents);
-		
 	}
 	
 	public void handleLogin(User userAuth) 
@@ -302,19 +326,27 @@ public class ClientHandler extends Thread{
 		os.writeObject(success);
 		
 		logger.info(success +" Access results sent to user.");
+		
 		if(success) {
 			account = UserOperation.getUserInfo(userAuth.getID(), userAuth.getType());
-		}
-	}
-	
-	public void sendLoggedInBroadCast() throws IOException {
-		for(ClientHandler client: server.getClients()) {
-			if(!client.getAccount().getID().equals(account.getID()) && client.getAccount() != null) {
-				os.writeObject("WHO-IS-LOGGED-ON");
-				os.writeObject(client.getAccount());
+			account.setType(userAuth.getType());
+			
+			for(int i = 0; i< server.getClients().size(); i++) {
+				JOptionPane.showMessageDialog(null, 
+						server.getClients().get(i).account.toString(), 
+						"Notified !",
+						JOptionPane.INFORMATION_MESSAGE);
 			}
-		}
+		}else
+			server.removeClientHandler(this);
 	}
-	
 	
 }
+
+
+
+
+
+
+
+

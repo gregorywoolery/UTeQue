@@ -13,20 +13,29 @@ import java.util.concurrent.Executors;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.model.User;
+
 
 public class Server extends Thread{
 	private static final Logger logger = LogManager.getLogger(Server.class);
 	
 	private final int serverPort;
 	private ArrayList<ClientHandler> clients = new ArrayList<>();
-	
+	private ArrayList<User> clientUser = new ArrayList<>();
 	
 	public Server(int serverPort) {
 		this.serverPort = serverPort;
 	}
 	
-	public List<ClientHandler> getClients(){
+	public ArrayList<ClientHandler> getClients(){
 		return clients;
+	}
+	
+	public ArrayList<User> getClientAccounts(){
+		for(int i =0; i < clients.size(); i++) {
+			clientUser.add(clients.get(i).getAccount());
+		}
+		return clientUser;
 	}
 	
 	 @Override
@@ -59,6 +68,7 @@ public class Server extends Thread{
 				ClientHandler client = new ClientHandler(this, socketConnection);
 				clients.add(client);
 				client.start();
+				logger.info(" Server has started - Clients = " + clients.size() );
 				
 			}			
 		} catch (IOException ioex) {
@@ -68,6 +78,7 @@ public class Server extends Thread{
 	 }
 	 
 	 public void removeClientHandler(ClientHandler client){
+		 logger.warn("Removing client");
 		 clients.remove(client);
 	 }
 }
