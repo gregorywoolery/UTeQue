@@ -115,6 +115,7 @@ public class ResponseSlot extends JPanel implements ActionListener {
 		this.add(commentBtn, gbc_commentBtn);
 		
 		commentMessage_textArea = new JTextArea();
+		commentMessage_textArea.setDisabledTextColor(Color.BLACK);
 		commentMessage_textArea.setTabSize(4);
 		commentMessage_textArea.setPreferredSize(new Dimension(250, 22));
 		commentMessage_textArea.setEnabled(false);

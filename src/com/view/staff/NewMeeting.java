@@ -1,8 +1,6 @@
 package com.view.staff;
 
 import java.awt.Color;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
@@ -13,7 +11,6 @@ import javax.swing.border.LineBorder;
 
 import com.controller.ChatController;
 import com.controller.UserController;
-import com.model.Issue;
 import com.model.User;
 import java.awt.FlowLayout;
 import javax.swing.JPanel;
@@ -29,8 +26,9 @@ import java.awt.Point;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.JTableHeader;
 
-public class NewMeeting extends JInternalFrame implements ActionListener {
+public class NewMeeting extends JInternalFrame {
 	private static final long serialVersionUID = -7326864335907473600L;
 
 	private JDesktopPane workSpaceDesktop;
@@ -122,6 +120,12 @@ public class NewMeeting extends JInternalFrame implements ActionListener {
 		onlineStudents_table.setRowSelectionAllowed(true);
 		onlineStudents_table.setColumnSelectionAllowed(false);
 		
+		//Changes table heaver font
+		JTableHeader tableHeader = onlineStudents_table.getTableHeader();
+		tableHeader.setBackground(new Color(0, 0, 51));
+		tableHeader.setForeground(Color.white);
+		tableHeader.setFont(new Font("Times New Roman", Font.PLAIN, 15));
+		
 		updateOnlineStudentsTable();
 		
 		onlineStudents_table.addMouseListener(new MouseAdapter() {
@@ -140,7 +144,7 @@ public class NewMeeting extends JInternalFrame implements ActionListener {
 		        	
 		        	
 		        	int opt = JOptionPane.showConfirmDialog(workSpaceDesktop, 
-							"Notify " + studentName + "that you are available for live chat ?", 
+							"Notify " + studentName + " that you are available for live chat ?", 
 							"Notify for Live Chat",
 							JOptionPane.YES_NO_OPTION,
 							JOptionPane.INFORMATION_MESSAGE);
@@ -158,12 +162,6 @@ public class NewMeeting extends JInternalFrame implements ActionListener {
 		
 		setVisible(true);
 	}
-
-	@Override
-	public void actionPerformed(ActionEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
 	
 	public void updateOnlineStudentsTable() {
 		ArrayList<User> onlineStudents = new ArrayList<>();
@@ -171,8 +169,9 @@ public class NewMeeting extends JInternalFrame implements ActionListener {
 		onlineStudents = UserController.getOnlineStudents();
 		DefaultTableModel model = (DefaultTableModel) onlineStudents_table.getModel();		
 		
-		if(!onlineStudents.isEmpty() && onlineStudents != null) {
-			model.setRowCount(0);
+		model.setRowCount(0);
+		if(!onlineStudents.isEmpty()) {
+			
 			for(User student: onlineStudents) {
 				model.addRow(new Object[]{
 						student.getID(), 
@@ -193,15 +192,13 @@ public class NewMeeting extends JInternalFrame implements ActionListener {
 	
 	private void notifyStudentForLiveChat(String studentID) {
 		boolean notified = false;
-		notified = ChatController.sendNotificationToStudent(staff.getID(), studentID, "AVAILABLE");
+//		notified = ChatController.sendNotificationToStudent(staff.getID(), studentID, "AVAILABLE");
 		
 		if(notified){
 			JOptionPane.showMessageDialog(workSpaceDesktop, 
 					"Student has been notifed. Please go to Join meeting", 
 					"Notified !",
 					JOptionPane.INFORMATION_MESSAGE);
-			
-			
 		}else {
 			JOptionPane.showMessageDialog(workSpaceDesktop, 
 					"Oops.. Seems the student has been notifed. Maybe a connection error. We'll get back to you", 

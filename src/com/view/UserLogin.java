@@ -90,7 +90,7 @@ public class UserLogin extends JFrame implements ActionListener{
 	 * user login view.
 	 */
 	private void initializeComponents(){
-		setTitle("UTeQue - Student Query Environment");
+		setTitle("UTeQue - Student Enquiry Environment");
 		setName("frame");
 		setSize(new Dimension(400, 590));
 		setResizable(false);

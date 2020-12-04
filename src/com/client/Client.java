@@ -10,7 +10,9 @@ import java.util.ArrayList;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.controller.ChatController;
 import com.model.Message;
+import com.model.User;
 
 
 public class Client {
@@ -45,13 +47,12 @@ public class Client {
 	
 	public Object doOperation(ArrayList<Object> operand) {
 		Object result = null;		
-		String testMsg;
-		
+		String opt, whatOpt;
+		ArrayList<Object> operation;
 		try {
 			serverOut.writeObject(operand);
 			
 			result = serverIn.readObject();	
-						
 		}catch(IOException ioex) {
 			logger.error("ERROR establishing I/O Connection. - " + ioex.getMessage()
 					+ "AT- " + ioex.getStackTrace());			
@@ -66,7 +67,10 @@ public class Client {
 	
 	public void disconnect() {
 		try {
-			serverOut.writeObject("DISCONNECT");
+			ArrayList<Object> sendDetails = new ArrayList<>();
+			sendDetails.add("DISCONNECT");
+			
+			serverOut.writeObject(sendDetails);
 			
 			serverOut.close();
 			serverIn.close();

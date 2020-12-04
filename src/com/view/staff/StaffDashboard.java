@@ -71,7 +71,7 @@ public class StaffDashboard extends Dashboard implements ActionListener {
 	 */
 	private void initializeComponents() {
 		staff =  UserController.getCurrentUser();
-		username_lbl.setText(staff.getFirstname() + " " + staff.getLastname());
+		username_lbl.setText(staff.getType() + " : " + staff.getFirstname() + " " + staff.getLastname() );
 	
 		//For resource variables
 		String gender = staff.getGender();
@@ -322,12 +322,17 @@ public class StaffDashboard extends Dashboard implements ActionListener {
 		}				
 		
 		if(e.getSource().equals(logoutBtn)) {
-			dispose();
-			UserController.setCurrentUserNull();
-			UserLogin.client.disconnect();
-	
-			dispose();
-			userlogin.setVisible(true);
+        	int opt = JOptionPane.showConfirmDialog(workspace_desktopPane, 
+					"Are you sure u want to Log off? ", 
+					"LOG OFF",
+					JOptionPane.YES_NO_OPTION,
+					JOptionPane.INFORMATION_MESSAGE);
+        	if(opt == 0) {
+				dispose();
+				UserController.setCurrentUserNull();
+				UserLogin.client.disconnect();
+				userlogin.setVisible(true);
+        	}
 		}
 	}
 	

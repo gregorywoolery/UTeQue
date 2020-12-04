@@ -325,13 +325,15 @@ public class StudentIssueResponse extends JInternalFrame  implements ActionListe
 		response.commentMessage_textArea.setEnabled(true);
 
 		getInformation();
-		 setVisible(true);
+		setVisible(true);
 	}
+	
 	private void registerListeners(){
 		helpBtn.addActionListener(this);
 		response.commentBtn.addActionListener(this);
 		returnBtn.addActionListener(this);
 	}
+	
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if(e.getSource() == returnBtn) {
@@ -386,7 +388,7 @@ public class StudentIssueResponse extends JInternalFrame  implements ActionListe
 		Dimension jInternalFrameSize = currFrame.getSize();
 		
 		//Test if current internal frame is of class AddIssue and renders the frame with that
-		if(currFrame.getClass() == StudentMain.class){
+		if(currFrame.getClass() == StudentIssueResponse.class){
 			currFrame.setLocation((desktopSize.width - jInternalFrameSize.width),
 			    (desktopSize.height- jInternalFrameSize.height)/2);
 		}
@@ -400,19 +402,24 @@ public class StudentIssueResponse extends JInternalFrame  implements ActionListe
 		contactNo_lbl.setText(student.getPhone());
 		
 		issueDetails = IssueController.viewSpecific(issueID);
+		
 		SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
 		String issuedAt = sdf.format(issueDetails.getIssuedAt());
+		
 		StudentServicesRep rep = UserController.getRep(issueDetails.getRepID());
 		representativeName_lbl.setText(rep.getFirstname() + " " + rep.getLastname());
 		
 		if(issueDetails!=null) {
+			
 			type_label.setText("Type: "+ issueDetails.getType());
 			services_lbl.setText("Service: "+ serviceTypes.get(issueDetails.getServiceID()-1) );
 			issueMessage_txtArea.setText( issueDetails.getMessage());
 			issuedAt_lbl.setText( new SimpleDateFormat("dd-MM-yyyy").format(issueDetails.getIssuedAt()) );
 		}
+		
 		rep = UserController.getRep(issueDetails.getRepID());
 		issueResponse = ResponseController.getResponseUsingIssue(issueID);
+		
 		if(issueResponse != null) {
 			//RESPONSE Information
 			response.isAnswer_chckbx.setSelected(issueResponse.isAnswer() );
@@ -423,6 +430,7 @@ public class StudentIssueResponse extends JInternalFrame  implements ActionListe
 			response.commentMessage_textArea.setText(issueResponse.getComment());
 			tabbedPane.addTab(issueResponse.getResponseID(), response);
 			response.isAnswer_chckbx.setEnabled(true);
+		
 		}else{
 			JOptionPane.showMessageDialog(workSpaceDesktop, 
 					"THERE ARE NO RESPONSE POSTED FOR THIS ISSUE", 

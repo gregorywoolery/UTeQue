@@ -1,11 +1,13 @@
 package com.view.staff;
 
 import java.awt.Color;
-import java.awt.EventQueue;
 
 import javax.swing.JDesktopPane;
 import javax.swing.JInternalFrame;
 import javax.swing.border.LineBorder;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import com.controller.IssueController;
 import com.controller.ResponseController;
@@ -53,8 +55,8 @@ import javax.swing.BoxLayout;
 import java.awt.event.KeyEvent;
 
 public class StaffIssueResponse extends JInternalFrame implements ActionListener{
-	
 	private static final long serialVersionUID = 9161869361681829518L;
+	private static final Logger logger = LogManager.getLogger(StaffIssueResponse.class);
 	
 	private JLabel titile_lbl;
 	private JButton helpBtn;
@@ -100,6 +102,7 @@ public class StaffIssueResponse extends JInternalFrame implements ActionListener
 		this.MODE = MODE;
 		initializeComponents();
 		registerListeners();
+		logger.info("Initialized Staff - Issue - Response");
 	}
 	
 	/**
@@ -190,6 +193,7 @@ public class StaffIssueResponse extends JInternalFrame implements ActionListener
 		main_panel.add(issueMessage_txtArea, gbc_issueMessage_txtArea);
 		
 		services_lbl = new JLabel();
+		services_lbl.setToolTipText("Issue service");
 		services_lbl.setForeground(new Color(255, 255, 255));
 		services_lbl.setBackground(new Color(255, 255, 255));
 		services_lbl.setHorizontalAlignment(SwingConstants.CENTER);
@@ -202,6 +206,7 @@ public class StaffIssueResponse extends JInternalFrame implements ActionListener
 		main_panel.add(services_lbl, gbc_services_lbl);
 		
 		type_label = new JLabel();
+		type_label.setToolTipText("Issue type");
 		type_label.setForeground(new Color(255, 255, 255));
 		type_label.setBackground(new Color(255, 255, 255));
 		type_label.setHorizontalAlignment(SwingConstants.CENTER);
@@ -250,6 +255,7 @@ public class StaffIssueResponse extends JInternalFrame implements ActionListener
 		main_panel.add(reponseOption_panel, gbc_reponseOption_panel);
 		
 		postResponseBtn = new JButton("Respond");
+		postResponseBtn.setToolTipText("Respond to this issue");
 		postResponseBtn.setPreferredSize(new Dimension(120, 30));
 		postResponseBtn.setFont(new Font("Arial Rounded MT Bold", Font.PLAIN, 14));
 		postResponseBtn.setBackground(new Color(0, 204, 0));
@@ -267,6 +273,7 @@ public class StaffIssueResponse extends JInternalFrame implements ActionListener
 		side_panel.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 10));
 		
 		issueID_lbl = new JLabel();
+		issueID_lbl.setToolTipText("Issue ID");
 		issueID_lbl.setForeground(new Color(255, 255, 255));
 		issueID_lbl.setHorizontalAlignment(SwingConstants.CENTER);
 		issueID_lbl.setPreferredSize(new Dimension(130, 25));
@@ -274,6 +281,7 @@ public class StaffIssueResponse extends JInternalFrame implements ActionListener
 		side_panel.add(issueID_lbl);
 		
 		issuedAt_lbl = new JLabel();
+		issuedAt_lbl.setToolTipText("Date enquiry was made");
 		issuedAt_lbl.setForeground(new Color(255, 255, 255));
 		side_panel.add(issuedAt_lbl);
 		issuedAt_lbl.setHorizontalAlignment(SwingConstants.CENTER);
@@ -308,8 +316,8 @@ public class StaffIssueResponse extends JInternalFrame implements ActionListener
 		email_lbl = new JLabel();
 		email_lbl.setForeground(new Color(255, 255, 255));
 		email_lbl.setHorizontalAlignment(SwingConstants.CENTER);
-		email_lbl.setPreferredSize(new Dimension(130, 25));
-		email_lbl.setFont(new Font("Arial Rounded MT Bold", Font.PLAIN, 14));
+		email_lbl.setPreferredSize(new Dimension(140, 25));
+		email_lbl.setFont(new Font("Arial Rounded MT Bold", Font.PLAIN, 12));
 		side_panel.add(email_lbl);
 		
 		contactNo_lbl = new JLabel();
@@ -385,15 +393,17 @@ public class StaffIssueResponse extends JInternalFrame implements ActionListener
 			
 			if(opt == 0)
 				if(isPostResponse()) {
+					logger.info("Issue posted");
 					JOptionPane.showMessageDialog(workSpaceDesktop, 
 							"RESPONSE POSTED", 
 							"SUCCESS",
 							JOptionPane.INFORMATION_MESSAGE);
 				}else {
+					logger.warn("Issue not posted");
 					JOptionPane.showMessageDialog(workSpaceDesktop, 
-							"Oops.. Problem occured posting your reponse. "
-									+ "We'll get back to you shortly.", 
-							"ERROR",
+							"Oops.. Seems your response couldnt be posted. "
+									+ "Please check all fields.", 
+							"Reponse not posted",
 							JOptionPane.ERROR_MESSAGE);
 				}
 		}
@@ -424,8 +434,9 @@ public class StaffIssueResponse extends JInternalFrame implements ActionListener
 			}
 			
 		} catch (ParseException e) {
-
-			e.printStackTrace();
+			logger.error("ERROR: " + e.getErrorOffset() 
+				+ " - " + e.getMessage()
+				+ " - " + e.getStackTrace());
 		}
 	}
 	
@@ -449,9 +460,9 @@ public class StaffIssueResponse extends JInternalFrame implements ActionListener
 		issueMessage_txtArea.setText(issueDetails.getMessage());
 		
 		ArrayList<String> serviceTypes = ServiceController.getAllServies();		
-		services_lbl.setText(serviceTypes.get(issueDetails.getServiceID()));
+		services_lbl.setText("Service: " + serviceTypes.get(issueDetails.getServiceID()));
 
-		type_label.setText(issueDetails.getType());
+		type_label.setText("Type: " + issueDetails.getType());
 		
 		SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
 		String issuedAt = sdf.format(issueDetails.getIssuedAt());
@@ -492,6 +503,11 @@ public class StaffIssueResponse extends JInternalFrame implements ActionListener
 				postResponseBtn.setEnabled(false);
 			
 			}else {
+				JOptionPane.showMessageDialog(workSpaceDesktop, 
+						"THERE ARE NO RESPONSE POSTED FOR THIS ISSUE", 
+						"NO RECORDS FOUND",
+						JOptionPane.INFORMATION_MESSAGE);
+				
 				if(MODE == 0) {
 					LocalDate date = LocalDate.now(); // Gets the current date
 					DateTimeFormatter currentDateFormat = DateTimeFormatter.ofPattern("dd-MM-yyyy");
@@ -500,11 +516,6 @@ public class StaffIssueResponse extends JInternalFrame implements ActionListener
 					response.responseID_lbl.setText(Identification.responseID());					
 			
 				}
-			}{
-				JOptionPane.showMessageDialog(workSpaceDesktop, 
-						"THERE ARE NO RESPONSE POSTED FOR THIS ISSUE", 
-						"NO RECORDS FOUND",
-						JOptionPane.INFORMATION_MESSAGE);
 			}
 		}
 	}
@@ -512,23 +523,29 @@ public class StaffIssueResponse extends JInternalFrame implements ActionListener
 	public boolean isPostResponse() {
 		boolean isPosted = false;
 		boolean updateIssueSuccess = false;
-		LocalDate date = LocalDate.now(); // Gets the current date
-		DateTimeFormatter currentDateFormat = DateTimeFormatter.ofPattern("dd-MM-yyyy");
-		java.sql.Date sqlDate = java.sql.Date.valueOf( date );
-		Response postResponse = new Response(	
-				response.responseID_lbl.getText(),
-				issueID,
-				representativeName_lbl.getText(),
-				response.responseMessage_txtArea.getText(),
-				sqlDate,
-				true,
-				null
-				); 
-		updateIssueSuccess = IssueController.updateStatus(issueID);
-		if(updateIssueSuccess) {
-			 isPosted = ResponseController.postResponse(postResponse);
-			 return true;
-		} 
+		
+		if(response.responseMessage_txtArea.getText().trim().length() != 0) {
+			LocalDate date = LocalDate.now(); // Gets the current date
+			DateTimeFormatter currentDateFormat = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+			java.sql.Date sqlDate = java.sql.Date.valueOf( date );
+			
+			Response postResponse = new Response(	
+					response.responseID_lbl.getText(),
+					issueID,
+					representativeName_lbl.getText(),
+					response.responseMessage_txtArea.getText(),
+					sqlDate,
+					true,
+					null
+					); 
+			
+			updateIssueSuccess = IssueController.updateStatus(issueID);
+
+			if(updateIssueSuccess) {
+				 isPosted = ResponseController.postResponse(postResponse);
+				 return true;
+			} 
+		}
 
 		return false;
 	}

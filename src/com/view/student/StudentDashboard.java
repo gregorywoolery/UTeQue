@@ -266,11 +266,17 @@ public class StudentDashboard extends Dashboard implements ActionListener{
 		}
 		
 		if(e.getSource().equals(logoutBtn)) {
-			dispose();
-			UserController.setCurrentUserNull();
-			UserLogin.client.disconnect();
-			dispose();
-			userlogin.setVisible(true);
+        	int opt = JOptionPane.showConfirmDialog(workspace_desktopPane, 
+					"Are you sure u want to Log off? ", 
+					"LOG OFF",
+					JOptionPane.YES_NO_OPTION,
+					JOptionPane.INFORMATION_MESSAGE);
+        	if(opt == 0) {
+				dispose();
+				UserController.setCurrentUserNull();
+				UserLogin.client.disconnect();
+				userlogin.setVisible(true);
+        	}
 		}
 		
 		if(e.getSource().equals(help_menuItem)) {

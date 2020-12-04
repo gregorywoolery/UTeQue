@@ -31,6 +31,7 @@ import java.awt.Point;
 import javax.swing.JSplitPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.JTableHeader;
 
 import com.controller.IssueController;
 import com.controller.ServiceController;
@@ -189,6 +190,14 @@ public class IssueMain extends JInternalFrame implements ActionListener{
 		studentIssues_table.getColumnModel().getColumn(3).setPreferredWidth(110);
 		studentIssues_table.getColumnModel().getColumn(4).setResizable(false);
 		studentIssues_table.getColumnModel().getColumn(4).setPreferredWidth(110);
+		
+		
+		//Changes table heaver font
+		JTableHeader tableHeader = studentIssues_table.getTableHeader();
+		tableHeader.setBackground(new Color(0, 0, 51));
+		tableHeader.setForeground(Color.white);
+		tableHeader.setFont(new Font("Times New Roman", Font.PLAIN, 15));
+		
 		
 		studentIssues_table.addMouseListener(new MouseAdapter() {
 		    public void mousePressed(MouseEvent mouseEvent) {
@@ -388,7 +397,7 @@ public class IssueMain extends JInternalFrame implements ActionListener{
 		
 		if(e.getSource().equals(assignRepBtn)) {
 			int opt = JOptionPane.showConfirmDialog(workSpaceDesktop, 
-					"Are you sure you assaign .. to the Issue ?", 
+					"Are you sure you assaign this rep to the Issue ?", 
 					"Assaign Rep",
 					JOptionPane.YES_NO_OPTION,
 					JOptionPane.QUESTION_MESSAGE);

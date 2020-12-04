@@ -497,6 +497,34 @@ public class StudentMain extends JInternalFrame implements ActionListener{
 		if(e.getSource().equals(searchBtn)) {
 			searchStudentIssue();
 		}
+		
+		if(e.getSource().equals(liveChatBtn)) {
+			/**
+			 * Dispose of current internal frame. Add new internal 
+			 * frame to workspace desktop pane.
+			 */
+			dispose();
+			
+			JInternalFrame currFrame = null;
+			try {
+				currFrame = new LiveChatLobby(workspace_desktopPane);
+			
+			} catch (ParseException pex) {
+				logger.error("ERROR - " + pex.getMessage()
+				+ "AT- " + pex.getStackTrace());
+			}
+			workspace_desktopPane.add(currFrame);
+			
+			//Opens JinternalFrame centered in the JDesktopPane
+			Dimension desktopSize = workspace_desktopPane.getSize();
+			Dimension jInternalFrameSize = currFrame.getSize();
+			
+			//Test if current internal frame is of class AddIssue and renders the frame with that
+			if(currFrame.getClass() == LiveChatLobby.class){
+				currFrame.setLocation((desktopSize.width - jInternalFrameSize.width)/500,
+				    (desktopSize.height- jInternalFrameSize.height)/70);
+			}
+		}
 	}
 	
 	private void updateIssueTable() {

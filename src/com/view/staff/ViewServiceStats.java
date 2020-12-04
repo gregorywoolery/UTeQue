@@ -14,6 +14,7 @@ import java.awt.Dimension;
 import java.awt.Font;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.JTableHeader;
 
 import com.controller.ServiceController;
 
@@ -118,6 +119,13 @@ public class ViewServiceStats extends JInternalFrame implements ActionListener{
 		serviceStats_table.getColumnModel().getColumn(3).setResizable(false);
 		serviceStats_table.getColumnModel().getColumn(3).setPreferredWidth(100);
 		serviceStats_table.getColumnModel().getColumn(3).setMinWidth(20);
+		
+		//Changes table heaver font
+		JTableHeader tableHeader = serviceStats_table.getTableHeader();
+		tableHeader.setBackground(new Color(0, 0, 51));
+		tableHeader.setForeground(Color.white);
+		tableHeader.setFont(new Font("Times New Roman", Font.PLAIN, 15));
+		
 		
 		scrollPane = new JScrollPane(serviceStats_table);
 		scrollPane.setPreferredSize(new Dimension(620, 440));

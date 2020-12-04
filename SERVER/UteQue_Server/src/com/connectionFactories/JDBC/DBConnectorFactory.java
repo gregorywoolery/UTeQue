@@ -39,9 +39,6 @@ public class DBConnectorFactory {
 			//Check if the connection was successful
 			if(dbConn != null) { 
 				logger.info("UTeQue Database was CONNECTED Successfully");
-				JOptionPane.showMessageDialog(null, 
-						"Connection to database server succesful", 
-						"DB Connection Status", JOptionPane.INFORMATION_MESSAGE);
 			}
 			
 		}catch(SQLException e) {
@@ -53,9 +50,7 @@ public class DBConnectorFactory {
 
 			logger.info("UTeQue Database was NOT connected Successfully");
 			
-			JOptionPane.showMessageDialog(null, 
-					"Setting up Database and table", 
-					"DB Connection Status", JOptionPane.WARNING_MESSAGE);
+			logger.warn("Setting up Database and table");
 
 			//Try to connect to the MySQL Server and create database
 			try {
@@ -117,9 +112,12 @@ public class DBConnectorFactory {
 				}
 				
 			}catch(SQLException e1) {
-				logger.error("DATABASE was NOT CREATED Successfully: ERROR(" 
+				logger.error("DATABASE was ERRORS KNOWN: ERROR(" 
 						+ e1.getErrorCode() + ") " 
 						+ e1.getMessage());
+				JOptionPane.showMessageDialog(null, 
+						"Oops.. Seems there is a problem on our part. Sorry About this.", 
+						"CONTACT DEVELOPER", JOptionPane.ERROR_MESSAGE);
 			}
 		
 		}catch(RuntimeException e) {

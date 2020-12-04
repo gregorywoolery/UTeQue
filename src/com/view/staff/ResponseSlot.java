@@ -58,6 +58,7 @@ public class ResponseSlot extends JPanel implements ActionListener {
 		this.add(responseID_lbl, gbc_responseID_lbl);
 		
 		responseMessage_txtArea = new JTextArea();
+		responseMessage_txtArea.setDisabledTextColor(Color.BLACK);
 		responseMessage_txtArea.setLineWrap(true);
 		responseMessage_txtArea.setTabSize(4);
 		responseMessage_txtArea.setPreferredSize(new Dimension(330, 80));
@@ -93,6 +94,7 @@ public class ResponseSlot extends JPanel implements ActionListener {
 		isAnswer_chckbx = new JCheckBox("is Answer ?");
 		isAnswer_chckbx.setBackground(new Color(0, 0, 51));
 		isAnswer_chckbx.setForeground(new Color(255, 255, 255));
+		isAnswer_chckbx.setEnabled(false);
 		GridBagConstraints gbc_isAnswer_chckbx = new GridBagConstraints();
 		gbc_isAnswer_chckbx.anchor = GridBagConstraints.WEST;
 		gbc_isAnswer_chckbx.insets = new Insets(0, 17, 5, 5);
@@ -115,6 +117,7 @@ public class ResponseSlot extends JPanel implements ActionListener {
 		this.add(commentBtn, gbc_commentBtn);
 		
 		commentMessage_textArea = new JTextArea();
+		commentMessage_textArea.setDisabledTextColor(Color.BLACK);
 		commentMessage_textArea.setTabSize(4);
 		commentMessage_textArea.setPreferredSize(new Dimension(250, 22));
 		commentMessage_textArea.setEnabled(false);

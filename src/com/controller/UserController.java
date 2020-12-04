@@ -35,7 +35,7 @@ public class UserController {
 	
 	public static void setCurrentUserNull() {
 		logger.info("Removing current User");
-		currentUser = null;
+		currentUser = new User();
 		found = false;
 	}
 	
@@ -108,6 +108,7 @@ public class UserController {
 		return rep;
 	}
 	
+	@SuppressWarnings("unchecked")
 	public static ArrayList<User> getOnlineStudents(){
 		ArrayList<Object> sendDetails = new ArrayList<>();
 		ArrayList<User> onlineStudents = new ArrayList<>();
@@ -118,7 +119,6 @@ public class UserController {
 		String cmd = "GET-ONLINE-STUDENTS";
 
 		sendDetails.add(cmd);
-		
 		
 		onlineStudents = (ArrayList<User>) UserLogin.client.doOperation(sendDetails);
 		

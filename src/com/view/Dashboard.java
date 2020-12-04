@@ -16,6 +16,9 @@ import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Rectangle;
 import javax.swing.border.LineBorder;
+
+import com.controller.UserController;
+
 import javax.swing.JDesktopPane;
 import java.awt.FlowLayout;
 import javax.swing.JLabel;
@@ -272,6 +275,7 @@ public class Dashboard extends JFrame {
         this.addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
+            	UserController.setCurrentUserNull();
                 UserLogin.client.disconnect();
             }
         });

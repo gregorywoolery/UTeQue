@@ -65,7 +65,7 @@ public class ClientHandler extends Thread{
 				os.flush();
 			}
 		}catch(IOException ioex){
-			logger.error("SERVER ERROR - " + ioex.getMessage() 
+			logger.error("ERROR COMMUNICATING USING I/O - " + ioex.getMessage() 
 					+ "\nAT: " + ioex.getStackTrace());
 			
 		} catch (ClassNotFoundException cnfex) {
@@ -84,15 +84,15 @@ public class ClientHandler extends Thread{
 		logMessage = event.getMessage().getFormattedMessage();
 		log = "CLIENT LOG - [" + event.getThreadName() + "] "+ "{" + event.getSource() + "}" + logMessage;
 		
-		if(loglevel.equals(Level.ERROR)) {
+		if(loglevel.equals(Level.ERROR)) 
 			logger.error(log);
 		
-		}else if(loglevel.equals(Level.INFO)) {
+		else if(loglevel.equals(Level.INFO)) 
 			logger.info(log);
 		
-		}else if(loglevel.equals(Level.WARN)) {
+		else if(loglevel.equals(Level.WARN)) 
 			logger.warn(log);
-		}
+		
 	}
 	
 	/**
@@ -239,11 +239,43 @@ public class ClientHandler extends Thread{
 			case "GET-ONLINE-STUDENTS":
 				sendOnlineStudents();				
 				break;
+			case "NOTIFY-ONILINE":
+				notifyOnline(receivedOp);
 		}
 	}
 	
-	private void handleMessage(String toUserID, String message) 
-			throws IOException{
+	private void notifyOnline(ArrayList<Object> receivedOp) throws IOException{
+		String sender = (String) receivedOp.get(1);
+		String sendTo = (String) receivedOp.get(2);
+		String msg = (String) receivedOp.get(3);
+		
+		ArrayList<Object> sendDetails = new ArrayList<>();
+		User staff = UserOperation.getRep(sender);
+		
+		sendDetails.add("MSG-FROM");
+		sendDetails.add("ONLINE");
+		sendDetails.add(staff);
+		
+		
+		for(int i = 0; i < server.getClientAccounts().size(); i++) {
+			if(server.getClientAccounts().get(i).getID().equals(sendTo)) {
+				server.getClients().get(i).sendMessage(sendDetails);
+				break;
+			}
+		}
+	}
+	
+	
+	private void sendMessage(ArrayList<Object> messageDetails) {
+		try {
+			os.writeObject(messageDetails);
+		} catch (IOException ioex) {
+			logger.error("ERROR COMMUNICATING USING I/O - " + ioex.getMessage() 
+			+ "\nAT: " + ioex.getStackTrace());
+		}
+	}
+
+	private void handleMessage(String toUserID, String message) throws IOException{
 		
 		List<ClientHandler> clients = server.getClients();
 		
@@ -261,16 +293,7 @@ public class ClientHandler extends Thread{
 
 	
 	public void handleLogOff() throws IOException {
-		ArrayList<Object> sendDetails = new ArrayList<>();
-
 		server.removeClientHandler(this);
-
-		String cmd = "OFFLINE";
-		
-		sendDetails.add(cmd);
-		sendDetails.add(this.account);
-		
-		os.writeObject(sendDetails);
 		
 		try {
 			socketConnection.close();
@@ -293,27 +316,17 @@ public class ClientHandler extends Thread{
 	 *  
 	 *  If all three conditions are met then the server can now send the 
 	 *  online students to the staff that made the request.
-	 * 
 	 */
 	public void sendOnlineStudents() throws IOException{
-		ArrayList<Object> onlineStudents = new ArrayList<>();
+		ArrayList<User> onlineStudents = new ArrayList<>();
 		ArrayList<User> users = server.getClientAccounts();
 		
-		JOptionPane.showMessageDialog(null, 
-				"IN SEND ONLINESTUDENT", 
-				"Notified !",
-				JOptionPane.INFORMATION_MESSAGE);
-		
-		for(int i = 0; i < users.size(); i++)
-			if( users.get(i) != null)
-				if(!users.get(i).getID().equals(this.account.getID()))
-					if(users.get(i).getType() == "STUDENT") {
-						JOptionPane.showMessageDialog(null, 
-								users.get(i).toString(), 
-								"Notified !",
-								JOptionPane.INFORMATION_MESSAGE);
-						onlineStudents.add(users.get(i));		
-					}	
+		for(int i = 0; i < users.size(); i++) {
+			if(users.get(i).getType().equals("STUDENT")) {
+				System.out.println(users.get(i).toString());
+				onlineStudents.add(users.get(i));	
+			}
+		}
 
 		os.writeObject(onlineStudents);
 	}
@@ -323,6 +336,7 @@ public class ClientHandler extends Thread{
 		boolean success = false;
 		logger.info("Handling login information.");
 		success = LoginAuthentication.authLoginUser(userAuth);
+		
 		os.writeObject(success);
 		
 		logger.info(success +" Access results sent to user.");
@@ -330,13 +344,6 @@ public class ClientHandler extends Thread{
 		if(success) {
 			account = UserOperation.getUserInfo(userAuth.getID(), userAuth.getType());
 			account.setType(userAuth.getType());
-			
-			for(int i = 0; i< server.getClients().size(); i++) {
-				JOptionPane.showMessageDialog(null, 
-						server.getClients().get(i).account.toString(), 
-						"Notified !",
-						JOptionPane.INFORMATION_MESSAGE);
-			}
 		}else
 			server.removeClientHandler(this);
 	}
