@@ -12,7 +12,7 @@ Staff can be either Representative or an Agent
 Agent is allowed to assaign representatives to specific issues where they can 
 respond, viewing the student credentials.
 
-## Built With - provide the tech stack used 
+## Built With
  1. Java
  2. Hibernate
  3. Native SQL
