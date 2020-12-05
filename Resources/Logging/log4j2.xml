@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="WARN" name="XMLConfigTest">
+  <Properties>
+		<Property name="filename">./log</Property>
+		<Property name="LOG_PATTERN">[%-5level] %d{dd-MM-yyyy HH:mm:ss.SSS} [%t] %c{1} - %msg%n</Property>
+  </Properties>
+
+  <Appenders>
+    <Console name="STDOUT" target="SYSTEM_OUT">
+      <PatternLayout pattern="${LOG_PATTERN}"/>
+    </Console>
+	
+	<Socket name="SOCKET" host="localhost" port="3309" reconnectionDelayMillis="10000">
+		<SerializedLayout/>
+    </Socket>
+	
+  </Appenders>
+
+  <Loggers>	
+	
+    <Root level="trace">
+      <AppenderRef ref="SOCKET"/>
+      <AppenderRef ref="STDOUT"/>    
+	</Root>
+  </Loggers>
+  
+</Configuration>
