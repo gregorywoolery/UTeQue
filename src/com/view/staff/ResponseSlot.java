@@ -92,9 +92,9 @@ public class ResponseSlot extends JPanel implements ActionListener {
 		this.add(respondDate_lbl, gbc_respondDate_lbl);
 		
 		isAnswer_chckbx = new JCheckBox("is Answer ?");
+		isAnswer_chckbx.setEnabled(false);
 		isAnswer_chckbx.setBackground(new Color(0, 0, 51));
 		isAnswer_chckbx.setForeground(new Color(255, 255, 255));
-		isAnswer_chckbx.setEnabled(false);
 		GridBagConstraints gbc_isAnswer_chckbx = new GridBagConstraints();
 		gbc_isAnswer_chckbx.anchor = GridBagConstraints.WEST;
 		gbc_isAnswer_chckbx.insets = new Insets(0, 17, 5, 5);

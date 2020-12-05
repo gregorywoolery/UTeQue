@@ -213,7 +213,7 @@ public class StaffIssueResponse extends JInternalFrame implements ActionListener
 		
 		response = new ResponseSlot();
 		tabbedPane.addTab(" 1 ", response);
-		response.isAnswer_chckbx.setEnabled(true);
+		response.isAnswer_chckbx.setEnabled(false);
 	
 		
 		reponseOption_panel = new JPanel();
@@ -494,9 +494,10 @@ public class StaffIssueResponse extends JInternalFrame implements ActionListener
 				representativeName_lbl.getText(),
 				response.responseMessage_txtArea.getText(),
 				sqlDate,
-				true,
+				false,
 				null
 				); 
+		
 		updateIssueSuccess = IssueController.updateStatus(issueID);
 		if(updateIssueSuccess) {
 			 isPosted = ResponseController.postResponse(postResponse);

@@ -42,7 +42,7 @@ public class ResponseController {
 		sendDetails.add(cmd);
 		sendDetails.add(response);
 					
-		response = (Response) UserLogin.client.doOperation(sendDetails);
+		isPosted = (boolean) UserLogin.client.doOperation(sendDetails);
 		
 		return isPosted;
 	}

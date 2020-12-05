@@ -408,19 +408,23 @@ public class IssueMain extends JInternalFrame implements ActionListener{
 					"Assaign Rep",
 					JOptionPane.YES_NO_OPTION,
 					JOptionPane.QUESTION_MESSAGE);
+			
 			if (opt == 0) {
 				boolean success = assignRepToIssue();
-				if(success)
+				if(success) {
 					JOptionPane.showMessageDialog(workSpaceDesktop, 
 						"REP ADDED TO ISSUE SUCCESSFULLY", 
 						"SUCCESS",
 						JOptionPane.INFORMATION_MESSAGE);
-				else
+				}else {
 					JOptionPane.showMessageDialog(workSpaceDesktop, 
 							"Oops.. There was a problem when assigning Rep. We'll work to solve this.", 
 							"ERROR",
 							JOptionPane.ERROR_MESSAGE);
-					
+				}
+				
+				issueOptions_panel.removeAll();
+				issueOptions_panel.updateUI();
 			}
 		}
 

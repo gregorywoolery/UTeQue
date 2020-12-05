@@ -1,4 +1,4 @@
-package com.controller;
+package main;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
@@ -9,8 +9,8 @@ import org.apache.logging.log4j.Logger;
 import com.client.Client;
 import com.view.UserLogin;
 
-public class Driver {
-	private static final Logger logger = LogManager.getLogger(Driver.class);
+public class UserDriver {
+	private static final Logger logger = LogManager.getLogger(UserDriver.class);
 	
 	@SuppressWarnings("unused")
 	public static void main(String[] args) {
