@@ -5,7 +5,7 @@ import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.ArrayList;
 
 import javax.persistence.Query;
@@ -358,13 +358,12 @@ public class IssueOperation {
 		return false;
 	}
 	
-	@SuppressWarnings("deprecation")
 	public static boolean assignRepresentative(String issueID, String repID) {
 		String hql = "UPDATE Issue set repID = :rep_id, scheduledDateTime = :sdateTime WHERE issueID = :issue_id";
 		int result = 1;
 
-		LocalDateTime date = LocalDateTime.now();
-		Date scheduledDateTime = new Date(date.getYear(), date.getMonthValue(), date.getDayOfMonth());
+		LocalDate date = LocalDate.now();
+		Date scheduledDateTime = java.sql.Date.valueOf(date);
 		
 		Transaction transaction = null;
 		try(Session session = SessionFactoryBuilder
@@ -374,8 +373,8 @@ public class IssueOperation {
 			transaction = session.beginTransaction();
 			
 			Query query = session.createQuery(hql);
-			query.setParameter("sdateTime", scheduledDateTime);
 			query.setParameter("rep_id", repID);
+			query.setParameter("sdateTime", scheduledDateTime);
 			query.setParameter("issue_id", issueID);
 			result = query.executeUpdate();
 			
