@@ -396,44 +396,49 @@ public class IssueOperation {
 		
 	}
 
-	public static int getServiceResolvedCount(int serviceId) {
-		int count = 0;
+	public static int[] getServiceResolvedCount() {
+		int count  [] = new int [8];
+		int [] serviceId = new int [ ] { 1, 2, 3, 4, 5, 6, 7, 8 };
 		
 		String countSQL = "SELECT COUNT(UTeQueDB.issue.issueID) FROM UTeQueDB.issue WHERE UTeQueDB.issue.serviceID = ? AND UTeQueDB.issue.status= 'Resolved'";
-		
-		try (Connection dbConn = DBConnectorFactory.getDatabaseConnection()){
-			PreparedStatement statement = dbConn.prepareStatement(countSQL);
-			statement.setInt(1, serviceId);
-			ResultSet result = statement.executeQuery();
+		for (int i = 0;  i < serviceId.length; i++) {
+			try (Connection dbConn = DBConnectorFactory.getDatabaseConnection()){
+				PreparedStatement statement = dbConn.prepareStatement(countSQL);
+				statement.setInt(1, serviceId [ i ] );
+				ResultSet result = statement.executeQuery();
 
-			while(result.next()) {
-				count = result.getInt(1);
-			}	
-			
-		}catch(SQLException e){
-			logger.error("Error(" + e.getErrorCode()
-								+ ") Occured. " + e.getMessage());
+				while(result.next()) {
+					count[i] = result.getInt(1);
+				}	
+				
+			}catch(SQLException e){
+				logger.error("Error(" + e.getErrorCode()
+									+ ") Occured. " + e.getMessage());
+			}
 		}
+
 		return count;
 	}
 
-	public static int getServiceUnresolvedCount(int serviceId) {
-		int count = 0;
+	public static int[] getServiceUnresolvedCount() {
+		int count  [] = new int [8];
+		int [] serviceId = new int [ ] { 1, 2, 3, 4, 5, 6, 7, 8 };
 		
 		String countSQL = "SELECT COUNT(UTeQueDB.issue.issueID) FROM UTeQueDB.issue WHERE UTeQueDB.issue.serviceID = ? AND UTeQueDB.issue.status= 'Unresolved'";
-		
-		try (Connection dbConn = DBConnectorFactory.getDatabaseConnection()){
-			PreparedStatement statement = dbConn.prepareStatement(countSQL);
-			statement.setInt(1, serviceId);
-			ResultSet result = statement.executeQuery();
+		for (int i = 0;  i < serviceId.length; i++) {
+			try (Connection dbConn = DBConnectorFactory.getDatabaseConnection()){
+				PreparedStatement statement = dbConn.prepareStatement(countSQL);
+				statement.setInt(1, serviceId [ i ] );
+				ResultSet result = statement.executeQuery();
 
-			while(result.next()) {
-				count = result.getInt(1);
-			}	
-			
-		}catch(SQLException e){
-			logger.error("Error(" + e.getErrorCode()
-								+ ") Occured. " + e.getMessage());
+				while(result.next()) {
+					count[i] = result.getInt(1);
+				}	
+				
+			}catch(SQLException e){
+				logger.error("Error(" + e.getErrorCode()
+									+ ") Occured. " + e.getMessage());
+			}
 		}
 		return count;
 	}

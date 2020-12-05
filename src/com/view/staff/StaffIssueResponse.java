@@ -239,7 +239,6 @@ public class StaffIssueResponse extends JInternalFrame implements ActionListener
 		
 		
 		response = new ResponseSlot();
-		tabbedPane.addTab(" 1 ", response);
 		response.isAnswer_chckbx.setEnabled(true);
 	
 		
@@ -493,8 +492,8 @@ public class StaffIssueResponse extends JInternalFrame implements ActionListener
 				
 				String respondedOn = sdf.format(issueResponse.getResponseAt());
 				response.respondDate_lbl.setText(respondedOn);
-				response.responseID_lbl.setText(issueResponse.getResponseID());
 				response.responseMessage_txtArea.setText(issueResponse.getMessage());
+				tabbedPane.addTab(issueResponse.getResponseID(), response);
 				
 				if(issueResponse.getComment() != null)
 					response.commentMessage_textArea.setText(issueResponse.getComment());

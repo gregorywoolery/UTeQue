@@ -227,13 +227,11 @@ public class ClientHandler extends Thread{
 				break;
 
 			case "GET-COUNT-RESOLVED-SERVICEID":
-				serviceID = (int) receivedOp.get(1);
-				os.writeObject(IssueOperation.getServiceResolvedCount(serviceID));
+				os.writeObject(IssueOperation.getServiceResolvedCount());
 				break;
 			
 			case "GET-COUNT-UNRESOLVED-SERVICEID":
-				serviceID = (int) receivedOp.get(1);
-				os.writeObject(IssueOperation.getServiceUnresolvedCount(serviceID));
+				os.writeObject(IssueOperation.getServiceUnresolvedCount());
 				break;
 				
 			case "GET-ONLINE-STUDENTS":
