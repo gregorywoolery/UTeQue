@@ -519,6 +519,10 @@ public class StaffIssueResponse extends JInternalFrame implements ActionListener
 		}
 	}
 
+	/**
+	 * Posts response for the issue is the database
+	 * @return
+	 */
 	public boolean isPostResponse() {
 		boolean isPosted = false;
 		boolean updateIssueSuccess = false;

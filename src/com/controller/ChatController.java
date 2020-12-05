@@ -2,7 +2,6 @@ package com.controller;
 
 import java.util.ArrayList;
 
-import com.model.Message;
 import com.model.User;
 import com.view.UserLogin;
 import com.view.student.LiveChatLobby;

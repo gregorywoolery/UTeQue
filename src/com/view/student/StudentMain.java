@@ -17,14 +17,10 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.font.TextAttribute;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
+
 
 import java.awt.FlowLayout;
 import java.awt.GridBagLayout;
@@ -44,11 +40,9 @@ import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
 import javax.swing.JScrollPane;
 
-import com.client.Client;
 import com.controller.IssueController;
 import com.controller.ServiceController;
 import com.controller.UserController;
-import com.github.lgooddatepicker.components.DatePicker;
 import com.model.Issue;
 import com.model.User;
 import com.view.Dashboard;
@@ -117,6 +111,7 @@ public class StudentMain extends JInternalFrame implements ActionListener{
 		
 	}
 	
+	@SuppressWarnings({ "serial", "unchecked" })
 	private void initializeComponents() {
 		student =  UserController.getCurrentUser();
 		

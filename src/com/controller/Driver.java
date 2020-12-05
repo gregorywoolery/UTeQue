@@ -11,12 +11,14 @@ import com.view.UserLogin;
 
 public class Driver {
 	private static final Logger logger = LogManager.getLogger(Driver.class);
+	
+	@SuppressWarnings("unused")
 	public static void main(String[] args) {
 		try {
 			Client client = new Client(InetAddress.getLocalHost());
 			logger.info("Connection established successfully");
 				
-			@SuppressWarnings("unused")
+			
 			UserLogin userlogin = new UserLogin(client);			
 					
 		} catch (UnknownHostException e) {

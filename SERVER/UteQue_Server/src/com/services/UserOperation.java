@@ -10,7 +10,6 @@ import javax.persistence.Query;
 
 import com.connectionFactories.Hibernate.SessionFactoryBuilder;
 import com.connectionFactories.JDBC.DBConnectorFactory;
-import com.model.Issue;
 import com.model.Student;
 import com.model.StudentServicesRep;
 import com.model.User;
@@ -24,6 +23,14 @@ import org.hibernate.Transaction;
 public class UserOperation {
 	private static final Logger logger = LogManager.getLogger(UserOperation.class);
 	
+	/**
+	 * Gets user info that is requested using USER_TYPE parameters to go into
+	 * separate tables in the database.
+	 * 
+	 * @param username
+	 * @param userType
+	 * @return
+	 */
 	public static User getUserInfo(String username, String userType) {
 		User currentUser = new User();
 		
@@ -69,7 +76,12 @@ public class UserOperation {
 		return null;
 	}	
 	
-	
+	/**
+	 * Get a list of student service reps to display to agents on who is avaialable to be 
+	 * assigned to an issue.
+	 * 
+	 * @return
+	 */
 	@SuppressWarnings("unchecked")
 	public static ArrayList<String> getStudentServiceReps(){
 		ArrayList<StudentServicesRep> representatives = new ArrayList<StudentServicesRep>();
@@ -139,6 +151,7 @@ public class UserOperation {
 		
 		return student;
 	}
+	
 	
 	public static StudentServicesRep getRep(String repID) {
 		StudentServicesRep rep = new StudentServicesRep();

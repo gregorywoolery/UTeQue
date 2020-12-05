@@ -3,7 +3,9 @@ package server;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-
+/**
+ * Starts Server thread
+ */
 public class UTeQueServer {
 	private static final Logger logger = LogManager.getLogger(UTeQueServer.class);
 	private static final int port = 3309;

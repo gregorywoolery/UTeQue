@@ -1,14 +1,32 @@
 package com.view.staff;
 
+import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.text.ParseException;
 
+import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
 import javax.swing.JDesktopPane;
 import javax.swing.JInternalFrame;
+import javax.swing.JLabel;
+import javax.swing.border.LineBorder;
 
-public class JoinMeeting extends JInternalFrame implements ActionListener{
-	
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import com.controller.UserController;
+import com.model.User;
+import java.awt.FlowLayout;
+import javax.swing.JPanel;
+import java.awt.Dimension;
+
+public class JoinMeeting extends JInternalFrame{
+	private static final Logger logger = LogManager.getLogger(IssueMain.class);
+
 	private JDesktopPane workSpaceDesktop;
 	
 	/**
@@ -22,22 +40,35 @@ public class JoinMeeting extends JInternalFrame implements ActionListener{
 				false, 	//maximizable
 				true);	//iconifiable
 		initializeComponents();
-		registerListeners();
 		this.workSpaceDesktop =  workSpaceDesktop;
 	}
 	
-	public void initializeComponents() {
+	private void initializeComponents() {		
+		//Removes top bar from internal frame
+		((javax.swing.plaf.basic.BasicInternalFrameUI)this.getUI()).setNorthPane(null);
 		
-	}
-	
-	public void registerListeners() {
+		setBorder(new LineBorder(new Color(0, 0, 51), 20));
+		setBounds(100, 100, 820, 570);
+		getContentPane().setBackground(new Color(0, 0, 51));
+		getContentPane().setLayout(new FlowLayout(FlowLayout.CENTER, 5, 30));
 		
-	}
+		
+		JPanel main_panel = new JPanel();
+		main_panel.setBackground(new Color(0, 0, 51));
+		main_panel.setPreferredSize(new Dimension(630, 450));
+		getContentPane().add(main_panel);
 
-	@Override
-	public void actionPerformed(ActionEvent arg0) {
-		// TODO Auto-generated method stub
+		BufferedImage myPicture;
+		try {
+			myPicture = ImageIO.read(new File("./Resources/img/under_construction.jpg"));
+			JLabel picLabel = new JLabel(new ImageIcon(myPicture));
+			main_panel.add(picLabel);
+			
+		} catch (IOException e) {
+			logger.error("Cannot load construction image");
+		}
 		
+		this.setVisible(true);
 	}
 
 }

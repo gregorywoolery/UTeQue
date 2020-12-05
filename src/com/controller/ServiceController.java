@@ -2,7 +2,6 @@ package com.controller;
 
 import java.util.ArrayList;
 
-import com.model.Response;
 import com.model.Service;
 import com.view.UserLogin;
 
@@ -14,6 +13,7 @@ public class ServiceController {
 	private static final Logger logger = LogManager.getLogger(ServiceController.class);
 	private static final int port = 3309;
 
+	
 	@SuppressWarnings("unchecked")
 	public static ArrayList<String> getAllServies() {
 		ArrayList<Object> sendDetails = new ArrayList<>();
@@ -49,6 +49,8 @@ public class ServiceController {
 			
 		solvedCount = (int [ ] ) UserLogin.client.doOperation(sendDetails);
 		
+		logger.info("COUNT for ServiceID Recieved from SERVER");	
+		
 		return solvedCount;
 	}
 
@@ -62,6 +64,8 @@ public class ServiceController {
 		sendDetails.add("GET-COUNT-RESOLVED-SERVICEID");
 			
 		resolvedCount = (int [ ] ) UserLogin.client.doOperation(sendDetails);
+		
+		logger.info("COUNT for ServiceID from Received SERVER");
 		
 		return resolvedCount;
 	} 

@@ -6,9 +6,6 @@ import java.net.Socket;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -38,7 +35,8 @@ public class Server extends Thread{
 		return clientUser;
 	}
 	
-	 @Override
+	 @SuppressWarnings("resource")
+	@Override
 	 public void run() {
 		/**
 		 * Creates a server socket that is bound to the port number 3306. 
