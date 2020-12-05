@@ -459,7 +459,7 @@ public class StaffIssueResponse extends JInternalFrame implements ActionListener
 		issueMessage_txtArea.setText(issueDetails.getMessage());
 		
 		ArrayList<String> serviceTypes = ServiceController.getAllServies();		
-		services_lbl.setText("Service: " + serviceTypes.get(issueDetails.getServiceID()));
+		services_lbl.setText("Service: " + serviceTypes.get(issueDetails.getServiceID()-1));
 
 		type_label.setText("Type: " + issueDetails.getType());
 		
