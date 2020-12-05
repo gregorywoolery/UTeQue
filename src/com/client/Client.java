@@ -10,9 +10,7 @@ import java.util.ArrayList;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.controller.ChatController;
 import com.model.Message;
-import com.model.User;
 
 
 public class Client {
@@ -34,6 +32,7 @@ public class Client {
 			this.serverOut = new ObjectOutputStream(socketConnection.getOutputStream());
 			this.serverIn = new ObjectInputStream(socketConnection.getInputStream());
 			
+			logger.info("Sockect Connection, Input, Output Steams created");
 			return true;
 			
 		} catch (IOException e) {
@@ -42,17 +41,18 @@ public class Client {
 					+ "AT- " + e.getStackTrace());
 		}
 		
+		logger.error("Socket Connection, Input, Output Steams not created");		
 		return false;		
 	}
 	
 	public Object doOperation(ArrayList<Object> operand) {
 		Object result = null;		
-		String opt, whatOpt;
-		ArrayList<Object> operation;
+		
 		try {
 			serverOut.writeObject(operand);
 			
 			result = serverIn.readObject();	
+			
 		}catch(IOException ioex) {
 			logger.error("ERROR establishing I/O Connection. - " + ioex.getMessage()
 					+ "AT- " + ioex.getStackTrace());			
@@ -75,6 +75,9 @@ public class Client {
 			serverOut.close();
 			serverIn.close();
 			socketConnection.close();
+			
+			logger.error("Sockect Connection, Input, Output Steams Closed");
+			
 		} catch (IOException e) {
 			logger.error("ERROR - " + e.getMessage()
 					+ "AT- " + e.getStackTrace());

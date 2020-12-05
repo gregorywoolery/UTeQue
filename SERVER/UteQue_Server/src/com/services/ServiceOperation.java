@@ -20,14 +20,20 @@ public class ServiceOperation {
 		String Sql = "SELECT Count(*) FROM UTeQueDB.`Issue` WHERE serviceID=? AND status=?";
 
 		try(Connection dbConn = DBConnectorFactory.getDatabaseConnection()) {
+			
 			PreparedStatement statement = dbConn.prepareStatement(Sql);
 			statement.setInt(1, serviceID);
 			statement.setString(2, status);
+			
 			logger.warn("Receiving results from executed Prepared Statement, Error May Occur");
+			
 			ResultSet result = statement.executeQuery();
 			result.next();
+			
 			int count = result.getInt(1);
+			
 			logger.info("COUNT SQL WAS  SUCCESSFUL");
+			
 			return count;
 		} catch (SQLException e) {
 			logger.error("SQL READ Statement NOT Successful: "
@@ -40,14 +46,21 @@ public class ServiceOperation {
 	
 	public static String retrieveServiceType(int serviceID) {
 		String Sql = "SELECT type FROM UTeQueDB.`Service` WHERE serviceID=?";
+		
 		String type = null;
+		
 		try(Connection dbConn = DBConnectorFactory.getDatabaseConnection()) {
+		
 			PreparedStatement statement = dbConn.prepareStatement(Sql);
 			statement.setInt(1, serviceID);
+			
 			logger.warn("Receiving results from executed Prepared Statement, Error May Occur");
+			
 			ResultSet result = statement.executeQuery();
 			result.next();
+			
 			type = result.getString(1);
+			
 			logger.info("SQL WAS  SUCCESSFUL");
 		} catch (SQLException e) {
 			logger.error("SQL READ Statement NOT Successful: "

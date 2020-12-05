@@ -4,13 +4,11 @@ import java.sql.Connection;
 import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.util.ArrayList;
 
 import javax.persistence.Query;
 
 import com.connectionFactories.Hibernate.SessionFactoryBuilder;
 import com.connectionFactories.JDBC.DBConnectorFactory;
-import com.model.Issue;
 import com.model.Response;
 
 import org.apache.logging.log4j.LogManager;
@@ -52,6 +50,7 @@ public class ResponseOperation {
 	}
 	
 	
+	@SuppressWarnings("unchecked")
 	public static Response getResponseUsingIssue(String issueID) {
 		Response response = new Response();
 		

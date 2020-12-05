@@ -7,8 +7,6 @@ import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.swing.JOptionPane;
-
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -28,8 +26,8 @@ public class ClientHandler extends Thread{
 	
 	private final Server server;
 	private final Socket socketConnection;
-	ObjectOutputStream os;
-	ObjectInputStream is;
+	private ObjectOutputStream os;
+	private ObjectInputStream is;
 	private User account = null;
 	
 	public ClientHandler(Server server, Socket socket) {
@@ -38,6 +36,7 @@ public class ClientHandler extends Thread{
 		this.socketConnection = socket;
 	}
 	
+	//Gets current user logged in using the connection
 	public User getAccount() {
 		return account;
 	}
@@ -74,6 +73,11 @@ public class ClientHandler extends Thread{
 		}	
 	}
 	
+	/**
+	 * Log events received from Client side and delegates to
+	 * respected log levels with Client log information to save
+	 * logs on the server side.
+	 */
 	public void logEvent(Object logEvent) {
 		Level loglevel;
 		String logMessage, log;
@@ -97,6 +101,8 @@ public class ClientHandler extends Thread{
 	
 	/**
 	 * Accepts Command from ObjectInputStream socket's Connection and executes as stated
+	 * Uses a ArrayList<Object> as a wrapper to store the operation to be completed
+	 * as well as the data to act on for some operation.
 	 */
 	@SuppressWarnings("unchecked")
 	public void doOperation(Object operand) 
@@ -245,7 +251,6 @@ public class ClientHandler extends Thread{
 	private void notifyOnline(ArrayList<Object> receivedOp) throws IOException{
 		String sender = (String) receivedOp.get(1);
 		String sendTo = (String) receivedOp.get(2);
-		String msg = (String) receivedOp.get(3);
 		
 		ArrayList<Object> sendDetails = new ArrayList<>();
 		User staff = UserOperation.getRep(sender);
@@ -289,7 +294,13 @@ public class ClientHandler extends Thread{
 		os.writeObject("USER-NOT-EXIST");
 	}
 
-	
+	/**
+	 * Logs user off server by removing current user from list 
+	 * of connected users and closing all connection and input
+	 * and output streams.
+	 * 
+	 * @throws IOException
+	 */
 	public void handleLogOff() throws IOException {
 		server.removeClientHandler(this);
 		
@@ -329,6 +340,16 @@ public class ClientHandler extends Thread{
 		os.writeObject(onlineStudents);
 	}
 	
+	
+	/**
+	 * Logs user that operates in this connection thread to the clientHandler
+	 * It sends a response to the Client to signify whether correct
+	 * credentials have been submitted and acts on this information.
+	 * 
+	 * @param userAuth - The details of the user to be tested for authentication
+	 * @throws ClassNotFoundException
+	 * @throws IOException
+	 */
 	public void handleLogin(User userAuth) 
 			throws ClassNotFoundException, IOException{
 		boolean success = false;

@@ -1,6 +1,5 @@
 package com.services;
 
-import java.io.IOException;
 import java.sql.Connection;
 import java.sql.Date;
 import java.sql.PreparedStatement;
@@ -13,8 +12,6 @@ import javax.persistence.Query;
 
 import com.connectionFactories.JDBC.DBConnectorFactory;
 import com.model.Issue;
-import com.model.Response;
-import com.model.Student;
 import com.connectionFactories.Hibernate.SessionFactoryBuilder;
 
 import org.apache.logging.log4j.LogManager;
@@ -52,6 +49,7 @@ public class IssueOperation {
 		return false;
 	}						
 	
+	@SuppressWarnings("unchecked")
 	public static ArrayList<Issue> getAllIssuesForStudent(String studentID){
 		
 		ArrayList<Issue> studentIssues = new ArrayList<Issue>();
@@ -114,10 +112,10 @@ public class IssueOperation {
 	}
 	
 	//An employee should be able to view all students enquiries by category.
+	@SuppressWarnings("unchecked")
 	public static ArrayList<Issue> getIssuesByType(int serviceID) {
 		
 		ArrayList<Issue> issues = new ArrayList<Issue>();
-		Issue issueObj = new Issue();
 
 		String hql = "FROM Issue I WHERE I.serviceID =:service_ID";
 
@@ -151,6 +149,7 @@ public class IssueOperation {
 	}
 	
 	
+	@SuppressWarnings("unchecked")
 	public static ArrayList<Issue> getIssueByService(String studentID, int serviceID){
 		
 		ArrayList<Issue> studentIssue = new ArrayList<Issue>();
@@ -359,6 +358,7 @@ public class IssueOperation {
 		return false;
 	}
 	
+	@SuppressWarnings("deprecation")
 	public static boolean assignRepresentative(String issueID, String repID) {
 		String hql = "UPDATE Issue set repID = :rep_id, scheduledDateTime = :sdateTime WHERE issueID = :issue_id";
 		int result = 1;

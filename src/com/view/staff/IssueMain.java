@@ -33,6 +33,9 @@ import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import com.controller.IssueController;
 import com.controller.ServiceController;
 import com.controller.UserController;
@@ -53,7 +56,7 @@ import com.model.Student;
 
 @SuppressWarnings("rawtypes")
 public class IssueMain extends JInternalFrame implements ActionListener{
-
+	private static final Logger logger = LogManager.getLogger(IssueMain.class);
 	private static final long serialVersionUID = 4829847214829989376L;
 
 	private JTextField studentSearchID_txtField;
@@ -98,6 +101,7 @@ public class IssueMain extends JInternalFrame implements ActionListener{
 		initializeComponents();
 		registerListeners();
 		this.workSpaceDesktop =  workSpaceDesktop;
+		logger.info("Main Issue Screen for staff loaded");
 	}
 	
 	/**
@@ -391,6 +395,9 @@ public class IssueMain extends JInternalFrame implements ActionListener{
 						studentSearchID_txtField.getText(), 
 						services_comboBox.getSelectedIndex()+1
 						);
+				
+				issueOptions_panel.removeAll();
+				issueOptions_panel.updateUI();
 				displayStudentDetails( studentSearchID_txtField.getText() );
 			}
 		}
@@ -443,7 +450,7 @@ public class IssueMain extends JInternalFrame implements ActionListener{
 		 * Iterates through List of Issues relating to a specified student and displays
 		 * values in the issue table.
 		 */
-		if(studentIssues != null) {
+		if(studentIssues != null && !studentIssues.isEmpty()) {
 			model.setRowCount(0);
 			for(Issue issue: studentIssues) {
 				
@@ -602,11 +609,13 @@ public class IssueMain extends JInternalFrame implements ActionListener{
 			Student student = UserController.getStudent(studentID);
 			
 			if(student!=null) {
+
 				studentID_txtField.setText(student.getID());
 				studentName_textField.setText(student.getFirstname() + " " + student.getLastname());
 				studentEmail_textField.setText(student.getEmail());
 				studentContact_txtField.setText(student.getPhone());
 				getStudntGender_lbl.setText(student.getGender());
+
 			}  else {
 				JOptionPane.showMessageDialog(getDesktopPane(), // getDesktopPane????
 						"Oops.. Student Details could NOT be Found.", 

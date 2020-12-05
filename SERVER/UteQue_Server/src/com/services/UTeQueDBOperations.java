@@ -4,7 +4,6 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -12,50 +11,10 @@ import org.apache.logging.log4j.Logger;
 import com.connectionFactories.JDBC.DBConnectorFactory;
 import com.model.Issue;
 import com.model.Student;
-import com.model.User;
 
 
 public class UTeQueDBOperations {
 	private static final Logger logger = LogManager.getLogger(UTeQueDBOperations.class);
-
-//		public static ArrayList<String> getIssueResponseJoin(String studentID){
-//			ArrayList<String> joinresult = new ArrayList<String>();
-//			
-//			String Sql = "SELECT I.issueID, I.type, I.serviceID, I.status, I.repID, R.responseAt "
-//					+ "FROM Issue I, Response R "
-//					+ "WHERE I.studentID = ? "
-//					+ "AND R."
-//					+ "AND I.issueID = R.issueID ";
-//			
-//			try (Connection dbConn = DBConnectorFactory.getDatabaseConnection()){
-//				PreparedStatement statement = dbConn.prepareStatement(Sql);
-//				statement.setString(1, studentID);
-//				logger.warn("Receiving results from executed Prepared Statement, Error May Occur");
-//				
-//				ResultSet result = statement.executeQuery(Sql);
-//				
-//				while(result.next()) {
-//					student.setID(result.getString(1));
-//					student.setPassword(result.getString(2));
-//					student.setFirstname(result.getString(3));
-//					student.setLastname(result.getString(4));
-//					student.setGender(result.getString(5));
-//					student.setEmail(result.getString(6));
-//					student.setPhone(result.getString(7));
-//					student.setDOB(result.getDate(8));
-//				}
-//				logger.info("SQL WAS  SUCCESSFUL");
-//				
-//				return student;
-//				
-//			} catch (SQLException e) {
-//				logger.error("SQL READ Statement NOT Successful: "
-//						+ "ERROR(" + e.getErrorCode()
-//						+ ") " + e.getMessage());
-//				return null;
-//			}
-//			return result;
-//		}
 
 		//Get Student Details
 		public static Student getStudentDetails(String studentID) {
