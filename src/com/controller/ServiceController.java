@@ -38,34 +38,31 @@ public class ServiceController {
 		return serviceTypes;
 	}
 
-	public static int getServiceUnresolvedCount(int serviceID) {
+	public static int[] getServiceUnresolvedCount() {
 		ArrayList<Object> sendDetails = new ArrayList<>();
-		int count =0;
+		int [ ] solvedCount = new int [8];
 		
 		logger.info("Client Trying to connect using socket at port " + 3309);
 		logger.info("Receiving COUNT for ServiceID from SERVER");			
 			
 		sendDetails.add("GET-COUNT-UNRESOLVED-SERVICEID");
-		sendDetails.add(serviceID);
 			
+		solvedCount = (int [ ] ) UserLogin.client.doOperation(sendDetails);
 		
-		count = (int) UserLogin.client.doOperation(sendDetails);
-		
-		return count;
+		return solvedCount;
 	}
 
-	public static int getServiceResolvedCount(int serviceID) {
+	public static int[] getServiceResolvedCount() {
 		ArrayList<Object> sendDetails = new ArrayList<>();
-		int count =0;
+		int [ ] resolvedCount = new int [8];
 		
 		logger.info("Client Trying to connect using socket at port " + 3309);
 		logger.info("Receiving COUNT for ServiceID from SERVER");			
 	
 		sendDetails.add("GET-COUNT-RESOLVED-SERVICEID");
-		sendDetails.add(serviceID);
 			
-		count = (int) UserLogin.client.doOperation(sendDetails);
+		resolvedCount = (int [ ] ) UserLogin.client.doOperation(sendDetails);
 		
-		return count;
+		return resolvedCount;
 	} 
 }
