@@ -388,8 +388,8 @@ public class StudentIssueResponse extends JInternalFrame  implements ActionListe
 		Dimension jInternalFrameSize = currFrame.getSize();
 		
 		//Test if current internal frame is of class AddIssue and renders the frame with that
-		if(currFrame.getClass() == StudentIssueResponse.class){
-			currFrame.setLocation((desktopSize.width - jInternalFrameSize.width),
+		if(currFrame.getClass() == 	StudentMain.class){
+			currFrame.setLocation((desktopSize.width - jInternalFrameSize.width)/2,
 			    (desktopSize.height- jInternalFrameSize.height)/2);
 		}
 	}
