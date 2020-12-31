@@ -76,7 +76,7 @@ public class Client {
 			serverIn.close();
 			socketConnection.close();
 			
-			logger.error("Sockect Connection, Input, Output Steams Closed");
+			//logger.error("Sockect Connection, Input, Output Steams Closed");
 			
 		} catch (IOException e) {
 			logger.error("ERROR - " + e.getMessage()
